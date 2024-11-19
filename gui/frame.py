@@ -18,6 +18,9 @@ class My_frame(Frame):
         self.fast_forward_button = Button(self, text="Fast Forward", command=parent.fast_forward)
         self.fast_forward_button.pack(side=LEFT)
 
+        self.print_currently_loaded_graph_buttong = Button(self, text="print graph", command=self.print_loaded_graph)
+        self.print_currently_loaded_graph_buttong.pack(side=LEFT)
+
         #create Canvas
         self.canvas = Canvas(self, width=1000, height=1000, bg="white")
         self.canvas.pack()
@@ -41,7 +44,7 @@ class My_frame(Frame):
         # Graph optionen Menu
         self.graph_menu = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Graph", menu=self.graph_menu)
-        self.graph_menu.add_command(label="Load Default Graph", command=self.load_default_graph)
+        self.graph_menu.add_command(label="Load Default Graph", command=parent.load_default_graph)
         self.graph_menu.add_command(label="Clear Graph", command=parent.clear_graph)
 
         # Creation menu
@@ -81,13 +84,15 @@ class My_frame(Frame):
         if self.parent.debug:
             print("Opening settings...")
 
-    def load_default_graph(self):
-        if self.parent.debug:
-            print("Loading default graph...")
-
     def clear_graph(self):
         if self.parent.debug:
             print("Clearing graph...")
+    def print_loaded_graph(self):
+        if self.parent.debug:
+            print("currently Loaded graph: ")
+        print(self.parent.graph)
+        print(self.parent.node_positions)
+
 
     def toggle_node_creation_mode(self):
         if self.parent.debug:
