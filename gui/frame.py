@@ -73,6 +73,7 @@ class My_frame(Frame):
         if self.parent.node_creation_mode == True:
             if self.parent.debug:
                 print("Node_Event triggered by Mouse clicked at", event.x, event.y)
+                self.add_node(event)
         if self.parent.edge_creation_mode == True:
             if self.parent.debug:
                 print("Edge_Event triggered by Mouse clicked at", event.x, event.y)
@@ -98,6 +99,7 @@ class My_frame(Frame):
         print(self.parent.graph)
         print(self.parent.node_positions)
 
+    # select dijkstra mit List as algorithm
     def toggle_dijk_L(self):
         if self.parent.debug:
             print("Toggle to Dijk mit Liste...")
@@ -105,6 +107,7 @@ class My_frame(Frame):
         self.dijk_L.set(True)  # Check the node mode
         self.dijk_PQ.set(False)  # Uncheck edge mode
 
+    #select dijkstra mit Pq as algorithm
     def toggle_dijk_PQ(self):
         if self.parent.debug:
             print("Toggle to Dijk mit PQ...")
@@ -112,7 +115,7 @@ class My_frame(Frame):
         self.dijk_L.set(False)  # Check the node mode
         self.dijk_PQ.set(True)  # Uncheck edge mode
 
-
+    #switch to node creation mode
     def toggle_node_creation_mode(self):
         if self.parent.debug:
             print("Toggling node creation mode...")
@@ -121,6 +124,7 @@ class My_frame(Frame):
         self.node_mode_var.set(True)  # Check the node mode
         self.edge_mode_var.set(False)  # Uncheck edge mode
 
+    #switch to edge creation mode
     def toggle_edge_creation_mode(self):
         if self.parent.debug:
             print("Toggling Edge creation mode...")
@@ -129,5 +133,17 @@ class My_frame(Frame):
         self.node_mode_var.set(False)  # Uncheck node mode
         self.edge_mode_var.set(True)  # Check the edge mode
 
+    #adding new node to the graph
+    def add_node(self, event):
+        if not self.parent.node_creation_mode:
+            return
 
+        x, y = event.x, event.y
+        new_node = f"{len(self.parent.graph) + 1}"
+        self.parent.graph[new_node] = {}
+        self.parent.node_positions[new_node] = (x, y)
+        #.update_gui()
+
+        print(f"Node {new_node} added at ({x}, {y})")
+        self.parent.reset()
 
