@@ -1,11 +1,12 @@
 from tkinter import *
-class My_frame(Frame):
+import math
+class My_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
         #to Access parent variables
         self.parent = parent
 
-        #put the here on screen
+        #put the this frame on screen
         self.pack(pady=20)
 
         #create buttons
@@ -18,8 +19,8 @@ class My_frame(Frame):
         self.fast_forward_button = Button(self, text="Fast Forward", command=parent.fast_forward)
         self.fast_forward_button.pack(side=LEFT)
 
-        self.print_currently_loaded_graph_buttong = Button(self, text="print graph", command=self.print_loaded_graph)
-        self.print_currently_loaded_graph_buttong.pack(side=LEFT)
+        self.print_currently_loaded_graph_button = Button(self, text="print graph", command=self.print_loaded_graph)
+        self.print_currently_loaded_graph_button.pack(side=LEFT)
 
         #create Canvas
         self.canvas = Canvas(self, width=1000, height=1000, bg="white")
@@ -77,6 +78,7 @@ class My_frame(Frame):
         if self.parent.edge_creation_mode == True:
             if self.parent.debug:
                 print("Edge_Event triggered by Mouse clicked at", event.x, event.y)
+                self.add_edge(event)
 
     def toggle_debug_mode(self):
         self.parent.debug = self.debug_mode_var.get()
@@ -147,3 +149,35 @@ class My_frame(Frame):
         print(f"Node {new_node} added at ({x}, {y})")
         self.parent.reset()
 
+    #Kante hinzufügen
+    def add_edge(self, event):
+
+        x, y = event.x, event.y
+        clicked_node = self.get_node_at_position(x, y)
+
+        if clicked_node:
+            self.parent.selected_nodes.append(clicked_node)
+            print(f"Selected node: {clicked_node}")
+
+            if len(self.parent.selected_nodes) == 2:
+                node1, node2 = self.parent.selected_nodes
+                weight = 1  # Default weight for the edge
+
+                # Add the edge based on bidirectional mode
+                self.parent.graph[node1][node2] = weight
+                self.parent.selected_nodes.clear()
+                print(f"Edge added from {node1} to {node2} with weight {weight}")
+
+
+                #self.update_gui()
+
+        self.parent.reset()
+
+
+    # Hilfsfunktion die einen Knoten returned der in einem Radius von 30px zu click coordinaten ist. Wird benötigt für die Erstellung von Kanten
+    def get_node_at_position(self, x, y):
+
+        for node, (nx, ny) in self.parent.node_positions.items():
+            if math.hypot(nx - x, ny - y) <= 30:  # A radius of 30px to detect click
+                return node
+        return None

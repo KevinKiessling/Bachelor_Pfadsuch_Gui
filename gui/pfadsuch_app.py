@@ -5,8 +5,6 @@ class PfadsuchApp(Tk):
     def __init__(self):
         super().__init__()
 
-        #statusvariable
-        self.status = True
         #debug mode
         self.debug = True
 
@@ -15,11 +13,11 @@ class PfadsuchApp(Tk):
         self.start_node = 'D'
         self.steps = []
         self.current_step = -1
-        self.node_creation_mode = False
-        self.edge_creation_mode = False  # New mode for edge creation
+        self.node_creation_mode = False  # Knoten erstellungsmodus
+        self.edge_creation_mode = False  #  Knoten erstellungsmodus
 
-        self.node_positions = {}  # Store dynamic node positions
-        self.selected_nodes = []  # Store selected nodes for edge creation
+        self.node_positions = {}  # speichert Knoten positionen
+        self.selected_nodes = []  #Hilfe um Kanten zu erstellen
         self.selected_algorithm = True # True für dijkstra mit Liste, false für Priority queue
 
 
@@ -27,8 +25,8 @@ class PfadsuchApp(Tk):
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
         self.geometry('1500x1000')
 
-        #create the whole gui frame outside
-        My_frame(self)
+        #create the whole gui frame outside of this class
+        My_Frame(self)
         self.load_default_graph()
 
     def next_step(self):
