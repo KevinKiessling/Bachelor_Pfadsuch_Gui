@@ -59,8 +59,8 @@ class My_frame(Frame):
                                            command=self.toggle_node_creation_mode)
         self.creation_menu.add_checkbutton(label="Add Edge", variable=self.edge_mode_var,
                                            command=self.toggle_edge_creation_mode)
-        self.creation_menu.add_separator()
-        self.creation_menu.add_checkbutton(label="Bidirectional", command=self.toggle_bidirectional_mode)
+
+
 
 
 
@@ -110,8 +110,5 @@ class My_frame(Frame):
         self.node_mode_var.set(False)  # Uncheck node mode
         self.edge_mode_var.set(True)  # Check the edge mode
 
-    def toggle_bidirectional_mode(self):
-        if self.parent.debug:
-            print("Toggling bidirectional mode...")
 
 
