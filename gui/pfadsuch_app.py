@@ -26,8 +26,9 @@ class PfadsuchApp(Tk):
         self.geometry('1500x1000')
 
         #create the whole gui frame outside of this class
-        My_Frame(self)
+        self.gui_frame = My_Frame(self)
         self.load_default_graph()
+        self.update_gui()
 
     def next_step(self):
         if self.debug:
@@ -63,9 +64,9 @@ class PfadsuchApp(Tk):
             print("resetting without clear")
         self.steps = []
         self.current_step = -1
-
+        self.update_gui()
         #self.dijkstra_algorithm.run_dijkstra()  # Correct call to DijkstraAlgorithm's method
-        #self.update_gui()
+
 
     #clear canvas and resets everything to default
     def clear_graph(self):
@@ -75,4 +76,22 @@ class PfadsuchApp(Tk):
         self.steps = []
         self.current_step = -1
         self.node_positions = {}
-        #self.update_gui()
+        self.update_gui()
+    def update_gui(self):
+        #self.clear_graph()
+        self.draw_graph()
+
+    #zeichnet den Graph
+
+    def draw_graph(self):
+        print("Drawing Graph")
+        self.gui_frame.canvas.delete("all")
+        for node, (x, y) in self.node_positions.items():
+            self.gui_frame.canvas.create_oval(x - 10, y - 10, x + 10, y + 10, fill="blue", tags="node")
+            self.gui_frame.canvas.create_text(x, y, text=node, tags="node")
+        for node, edges in self.graph.items():
+            for neighbor, _ in edges.items():
+                if neighbor in self.node_positions:
+                    x1, y1 = self.node_positions[node]
+                    x2, y2 = self.node_positions[neighbor]
+                    self.gui_frame.canvas.create_line(x1, y1, x2, y2, tags="edge")

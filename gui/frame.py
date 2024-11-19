@@ -144,7 +144,7 @@ class My_Frame(Frame):
         new_node = f"{len(self.parent.graph) + 1}"
         self.parent.graph[new_node] = {}
         self.parent.node_positions[new_node] = (x, y)
-        #.update_gui()
+        self.parent.update_gui()
 
         print(f"Node {new_node} added at ({x}, {y})")
         self.parent.reset()
@@ -169,7 +169,7 @@ class My_Frame(Frame):
                 print(f"Edge added from {node1} to {node2} with weight {weight}")
 
 
-                #self.update_gui()
+                self.parent.update_gui()
 
         self.parent.reset()
 
