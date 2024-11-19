@@ -34,7 +34,7 @@ class My_frame(Frame):
         # Optionen Menu
         self.options_menu = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Options", menu=self.options_menu)
-        self.debug_mode_var = BooleanVar(value=False)
+        self.debug_mode_var = BooleanVar(value=True)
         # Add commands to the "Options" menu
         self.options_menu.add_command(label="Setting", command=self.open_settings)
         self.options_menu.add_separator()
@@ -60,7 +60,12 @@ class My_frame(Frame):
         self.creation_menu.add_checkbutton(label="Add Edge", variable=self.edge_mode_var,
                                            command=self.toggle_edge_creation_mode)
 
-
+        self.algorithm_menu = Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="Algorithmen", menu=self.algorithm_menu)
+        self.dijk_L = BooleanVar(value=True)  # Default: Node mode is off
+        self.dijk_PQ = BooleanVar(value=False)
+        self.algorithm_menu.add_checkbutton(label="Dijkstra als Liste", variable=self.dijk_L , command=self.toggle_dijk_L)
+        self.algorithm_menu.add_checkbutton(label="Dijkstra als Priority Queue", variable=self.dijk_PQ, command=self.toggle_dijk_PQ)
 
 
 
@@ -92,6 +97,20 @@ class My_frame(Frame):
             print("currently Loaded graph: ")
         print(self.parent.graph)
         print(self.parent.node_positions)
+
+    def toggle_dijk_L(self):
+        if self.parent.debug:
+            print("Toggle to Dijk mit Liste...")
+        self.parent.selected_algorithm = True
+        self.dijk_L.set(True)  # Check the node mode
+        self.dijk_PQ.set(False)  # Uncheck edge mode
+
+    def toggle_dijk_PQ(self):
+        if self.parent.debug:
+            print("Toggle to Dijk mit PQ...")
+        self.parent.selected_algorithm = False
+        self.dijk_L.set(False)  # Check the node mode
+        self.dijk_PQ.set(True)  # Uncheck edge mode
 
 
     def toggle_node_creation_mode(self):

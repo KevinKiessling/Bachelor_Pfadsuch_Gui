@@ -20,7 +20,7 @@ class PfadsuchApp(Tk):
 
         self.node_positions = {}  # Store dynamic node positions
         self.selected_nodes = []  # Store selected nodes for edge creation
-
+        self.selected_algorithm = True # True für dijkstra mit Liste, false für Priority queue
 
 
         #titel
