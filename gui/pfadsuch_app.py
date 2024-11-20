@@ -1,6 +1,6 @@
 from tkinter import *
 from gui.frame import *
-
+import math
 class PfadsuchApp(Tk):
     def __init__(self):
         super().__init__()
@@ -55,7 +55,7 @@ class PfadsuchApp(Tk):
             'C': {'A': 2, 'B': 5, 'D': 3, 'E': 4},
             'D': {'B': 10, 'C': 3, 'E': 11},
             'E': {'C': 4, 'D': 11, 'P': 5},
-            'P': {'E': 5}
+            'P': {}
         }
         self.node_positions = {'A': (100, 100), 'B': (300, 100), 'C': (300, 300), 'D': (500, 100), 'E': (500, 300),
                                'P': (800, 600)}
@@ -90,15 +90,18 @@ class PfadsuchApp(Tk):
     def draw_graph(self):
         print("Drawing Graph")
         self.gui_frame.canvas.delete("all")
-
+        node_radius = 30  # Radius of the node circle
+        font_size = 16
         #basic draw node
         for node, (x, y) in self.node_positions.items():
 
             if node in self.selected_nodes:
-                self.gui_frame.canvas.create_oval(x - 10, y - 10, x + 10, y + 10, fill="green", tags="node")
+                self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill="green")
+                self.gui_frame.canvas.create_text(x, y, text=node, fill="black", font=("Arial", font_size))
             else:
-                self.gui_frame.canvas.create_oval(x - 10, y - 10, x + 10, y + 10, fill="white", tags="node")
-                self.gui_frame.canvas.create_text(x, y, text=node, tags="node")
+                self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill="lightblue")
+                self.gui_frame.canvas.create_text(x, y, text=node, fill="black", font=("Arial", font_size))
+
 
         # basic draw edge
         for node, edges in self.graph.items():
@@ -106,4 +109,22 @@ class PfadsuchApp(Tk):
                 if neighbor in self.node_positions:
                     x1, y1 = self.node_positions[node]
                     x2, y2 = self.node_positions[neighbor]
-                    self.gui_frame.canvas.create_line(x1, y1, x2, y2, tags="edge")
+                    dx = x2 - x1
+                    dy = y2 - y1
+                    distance = math.sqrt(dx ** 2 + dy ** 2)
+
+                    if distance > 0:  # Vermeidung von Division durch 0
+                        x1_adjusted = x1 + dx / distance * node_radius
+                        y1_adjusted = y1 + dy / distance * node_radius
+                        x2_adjusted = x2 - dx / distance * node_radius
+                        y2_adjusted = y2 - dy / distance * node_radius
+                    else:
+                        x1_adjusted, y1_adjusted, x2_adjusted, y2_adjusted = x1, y1, x2, y2
+
+                    self.gui_frame.canvas.create_line(
+                        x1_adjusted, y1_adjusted, x2_adjusted, y2_adjusted,
+                        width=3,  # Dicke der Linie
+                        arrow="last",  # Pfeil am Ende der Linie
+                        arrowshape=(10, 12, 5),  # (Basisbreite, Höhe, Spitze)
+                        tags="edge"
+                    )
