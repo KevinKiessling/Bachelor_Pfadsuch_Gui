@@ -18,6 +18,8 @@ class My_Frame(Frame):
 
         self.fast_forward_button = Button(self, text="Fast Forward", command=parent.fast_forward)
         self.fast_forward_button.pack(side=LEFT)
+        self.fast_forward_button = Button(self, text="Pause", command=parent.pause)
+        self.fast_forward_button.pack(side=LEFT)
 
         self.print_currently_loaded_graph_button = Button(self, text="print graph", command=self.print_loaded_graph)
         self.print_currently_loaded_graph_button.pack(side=LEFT)
@@ -47,6 +49,8 @@ class My_Frame(Frame):
         self.menu_bar.add_cascade(label="Graph", menu=self.graph_menu)
         self.graph_menu.add_command(label="Load Default Graph", command=parent.load_default_graph)
         self.graph_menu.add_command(label="Clear Graph", command=parent.clear_graph)
+        self.graph_menu.add_command(label="Import Graph", command=self.import_graph)
+        self.graph_menu.add_command(label="Export Graph", command=self.export_graph)
 
         # Creation menu
         self.creation_menu = Menu(self.menu_bar, tearoff=0)
@@ -74,11 +78,11 @@ class My_Frame(Frame):
         if self.parent.node_creation_mode == True:
             if self.parent.debug:
                 print("Node_Event triggered by Mouse clicked at", event.x, event.y)
-                self.add_node(event)
+            self.add_node(event)
         if self.parent.edge_creation_mode == True:
             if self.parent.debug:
                 print("Edge_Event triggered by Mouse clicked at", event.x, event.y)
-                self.add_edge(event)
+            self.add_edge(event)
 
     def toggle_debug_mode(self):
         self.parent.debug = self.debug_mode_var.get()
@@ -181,3 +185,10 @@ class My_Frame(Frame):
             if math.hypot(nx - x, ny - y) <= 30:  # A radius of 30px to detect click
                 return node
         return None
+
+
+    def export_graph(self):
+        print("exporting graph clicked")
+
+    def import_graph(self):
+        print("importing graph clicked")

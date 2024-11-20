@@ -42,6 +42,10 @@ class PfadsuchApp(Tk):
         if self.debug:
             print("fast forward")
 
+    def pause(self):
+        if self.debug:
+            print("pausing")
+
     def load_default_graph(self):
         if self.debug:
             print("Loading default graph")
@@ -78,7 +82,7 @@ class PfadsuchApp(Tk):
         self.node_positions = {}
         self.update_gui()
     def update_gui(self):
-        #self.clear_graph()
+       # self.reset()
         self.draw_graph()
 
     #zeichnet den Graph
@@ -86,9 +90,17 @@ class PfadsuchApp(Tk):
     def draw_graph(self):
         print("Drawing Graph")
         self.gui_frame.canvas.delete("all")
+
+        #basic draw node
         for node, (x, y) in self.node_positions.items():
-            self.gui_frame.canvas.create_oval(x - 10, y - 10, x + 10, y + 10, fill="blue", tags="node")
-            self.gui_frame.canvas.create_text(x, y, text=node, tags="node")
+
+            if node in self.selected_nodes:
+                self.gui_frame.canvas.create_oval(x - 10, y - 10, x + 10, y + 10, fill="green", tags="node")
+            else:
+                self.gui_frame.canvas.create_oval(x - 10, y - 10, x + 10, y + 10, fill="white", tags="node")
+                self.gui_frame.canvas.create_text(x, y, text=node, tags="node")
+
+        # basic draw edge
         for node, edges in self.graph.items():
             for neighbor, _ in edges.items():
                 if neighbor in self.node_positions:
