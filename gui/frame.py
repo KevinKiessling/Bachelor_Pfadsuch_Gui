@@ -153,23 +153,23 @@ class My_Frame(Frame):
     def add_edge(self, event):
 
         x, y = event.x, event.y
-        clicked_node = self.get_node_at_position(x, y)
+        clicked_node = self.get_node_at_position(x, y) # Ausgeheneder Knoten
 
-        if clicked_node:
-            self.parent.selected_nodes.append(clicked_node)
+        if clicked_node: # falls knoten existiert
+            self.parent.selected_nodes.append(clicked_node) #speicher ihne zwischen
             print(f"Selected node: {clicked_node}")
 
-            if len(self.parent.selected_nodes) == 2:
+            if len(self.parent.selected_nodes) == 2:  #wenn 2 noten im Zwischenspeicher sind ,dann füge Kante hinzu
                 node1, node2 = self.parent.selected_nodes
-                weight = 1  # Default weight for the edge
+                weight = 1  # aktuell noch hardcoded auf 1
 
-                # Add the edge based on bidirectional mode
-                self.parent.graph[node1][node2] = weight
-                self.parent.selected_nodes.clear()
+
+                self.parent.graph[node1][node2] = weight # Füge weight hinzu
+                self.parent.selected_nodes.clear() # Resette den Zwischenspeicher
                 print(f"Edge added from {node1} to {node2} with weight {weight}")
 
 
-                self.parent.update_gui()
+                self.parent.update_gui() # Aktualisiere Gui
 
         self.parent.reset()
 
