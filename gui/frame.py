@@ -88,9 +88,6 @@ class My_Frame(Frame):
         self.parent.debug = self.debug_mode_var.get()
         print("Debug mode is now", "on" if self.parent.debug else "off")
 
-    def shutdown(self):
-        if self.parent.debug:
-            print("Shutting down...")
 
     #Hier soll ein Settingsmenu geöffnet werden was settings speichert und beim laden der app läd
     def open_settings(self):
