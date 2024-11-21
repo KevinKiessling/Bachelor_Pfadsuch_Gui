@@ -10,14 +10,14 @@ class PfadsuchApp(Tk):
 
 
         self.graph = {}
-        self.start_node = 'D' # für dijkstra, aktuell hardcoded, später mit eingabe
+        self.start_node = 'D'
         self.steps = []
         self.current_step = -1
-        self.node_creation_mode = False  #Knoten erstellungsmodus
-        self.edge_creation_mode = False  #Kanten erstellungsmodus
+        self.node_creation_mode = False
+        self.edge_creation_mode = False
 
-        self.node_positions = {}  # speichert Knoten positionen
-        self.selected_nodes = []  #Hilfe um Kanten zu erstellen
+        self.node_positions = {}
+        self.selected_nodes = []
         self.selected_algorithm = True # True für dijkstra mit Liste, false für Priority queue
 
 
@@ -71,7 +71,7 @@ class PfadsuchApp(Tk):
         self.steps = []
         self.current_step = -1
         self.update_gui()
-        #self.dijkstra_algorithm.run_dijkstra() # Gewählten Algorithmus starten
+        #self.dijkstra_algorithm.run_dijkstra()
 
 
     #Setzt alles zurück und löscht auch den geladenen Graph
@@ -96,11 +96,11 @@ class PfadsuchApp(Tk):
         self.gui_frame.canvas.delete("all")
         node_radius = 30  # Knoten Größe
         font_size = 16
-        already_drawn_edges = set() #Speichert alle schon gezeichneten Kanten, relevant für Bidirektionale Kanten.
+        already_drawn_edges = set()
         #basic draw node
         for node, (x, y) in self.node_positions.items():
 
-            #hightlight aktuell ausgewählten knoten für kanten erstellung
+            #hightlightet aktuell ausgewählten knoten für kanten erstellung
             if node in self.selected_nodes:
                 self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill="green")
                 self.gui_frame.canvas.create_text(x, y, text=node, fill="black", font=("Arial", font_size))
@@ -109,7 +109,7 @@ class PfadsuchApp(Tk):
                 self.gui_frame.canvas.create_text(x, y, text=node, fill="black", font=("Arial", font_size))
 
 
-        # Zeine alle Kanten, dabei wird zwischen 2 Varianten unterschieden, Direkt oder Bidirekt
+        # Zeichne alle Kanten, dabei wird zwischen 2 Varianten unterschieden, Direkt oder Bidirekt
         for node, edges in self.graph.items():
             for neighbor, weight in edges.items():
 
@@ -125,7 +125,7 @@ class PfadsuchApp(Tk):
                     # berechnet offset, damit kanten nicht in die knoten clippen
                     dx = x2 - x1
                     dy = y2 - y1
-                    distance = math.sqrt(dx ** 2 + dy ** 2) # Berechnet euklidische distanz
+                    distance = math.sqrt(dx ** 2 + dy ** 2)
 
 
                     if distance > 0:
