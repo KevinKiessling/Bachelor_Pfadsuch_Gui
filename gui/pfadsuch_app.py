@@ -28,7 +28,7 @@ class PfadsuchApp(Tk):
         # Auslagern der Gui erstellung in andere Klasse
         self.gui_frame = My_Frame(self)
         self.load_default_graph()
-        self.update_gui()
+        #self.update_gui()
 
     def next_step(self):
         if self.debug:
@@ -145,7 +145,7 @@ class PfadsuchApp(Tk):
 
                     #Erkenne ob die Kante Bidirektional ist um sie anders zu zeichnen
                     is_bidirectional = neighbor in self.graph and node in self.graph[neighbor]
-                    print(is_bidirectional)
+                   # print(is_bidirectional)
 
                     if is_bidirectional:
 
