@@ -29,6 +29,7 @@ class My_Frame(Frame):
         self.canvas.pack()
         #Bind option to canvas
         self.canvas.bind("<Button-1>", self.add_node_or_edge)
+        self.canvas.bind("<Button-3>", self.remove_clicked_element)
         self.focus_set()
         self.bind("<Right>", self.go_to_next_step)
         self.bind("<Left>", self.go_step_back)
@@ -91,6 +92,10 @@ class My_Frame(Frame):
     def toggle_debug_mode(self):
         self.parent.debug = self.debug_mode_var.get()
         print("Debug mode is now", "on" if self.parent.debug else "off")
+
+    def remove_clicked_element(self, event):
+        x, y = event.x, event.y
+        print("removal even at:", event.x, event.y)
 
 
     #Hier soll ein Settingsmenu geöffnet werden was settings speichert und beim laden der app läd

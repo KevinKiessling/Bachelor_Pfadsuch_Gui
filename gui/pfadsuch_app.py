@@ -10,7 +10,7 @@ class PfadsuchApp(Tk):
 
 
         self.graph = {}
-        self.start_node = 'D'
+        self.start_node = '1'
         self.steps = []
         self.current_step = -1
         self.node_creation_mode = False
@@ -51,17 +51,9 @@ class PfadsuchApp(Tk):
     def load_default_graph(self):
         if self.debug:
             print("Loading default graph")
-        self.graph = {
-            'A': {'B': 4, 'C': 2},
-            'B': {'A': 4, 'C': 5, 'D': 10},
-            'C': {'B': 5, 'D': 3, 'E': 4},
-            'D': {'B': 10, 'C': 3, 'E': 11},
-            'E': {'C': 4, 'D': 11, 'P': 5},
-            'P': {}
-        }
-        self.node_positions = {'A': (100, 100), 'B': (300, 100), 'C': (300, 300), 'D': (500, 100), 'E': (500, 300),
-                               'P': (800, 600)}
-        self.start_node = 'D'
+        self.graph = {'1': {'2': 100, '3': 100, '4': 100}, '2': {'4': 100, '5': 100}, '3': {'4': 100, '2': 100}, '4': {}, '5': {'1': 100}}
+        self.node_positions = {'1': (260, 216), '2': (739, 218), '3': (290, 673), '4': (828, 698), '5': (551, 898)}
+        self.start_node = '1'
         self.reset()
 
     #Setzt den Algorithmus komplett zurück, aber behält den Graph geladen
