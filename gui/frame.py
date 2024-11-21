@@ -138,25 +138,25 @@ class My_Frame(Frame):
         if self.parent.debug:
             print("Toggle to Dijk mit Liste...")
         self.parent.selected_algorithm = True
-        self.dijk_L.set(True)  # Check the node mode
-        self.dijk_PQ.set(False)  # Uncheck edge mode
+        self.dijk_L.set(True)
+        self.dijk_PQ.set(False)
 
     #select dijkstra mit Pq as algorithm
     def toggle_dijk_PQ(self):
         if self.parent.debug:
             print("Toggle to Dijk mit PQ...")
         self.parent.selected_algorithm = False
-        self.dijk_L.set(False)  # Check the node mode
-        self.dijk_PQ.set(True)  # Uncheck edge mode
+        self.dijk_L.set(False)
+        self.dijk_PQ.set(True)
 
-    #Node Creation mode
+    #Node Creation mode toggle
     def toggle_node_creation_mode(self):
         if self.parent.debug:
             print("Toggling node creation mode...")
         self.parent.node_creation_mode = True
         self.parent.edge_creation_mode = False
-        self.node_mode_var.set(True)  # Check the node mode
-        self.edge_mode_var.set(False)  # Uncheck edge mode
+        self.node_mode_var.set(True)
+        self.edge_mode_var.set(False)
 
     #Edge Creation mode
     def toggle_edge_creation_mode(self):
@@ -164,8 +164,8 @@ class My_Frame(Frame):
             print("Toggling Edge creation mode...")
         self.parent.node_creation_mode = False
         self.parent.edge_creation_mode = True
-        self.node_mode_var.set(False)  # Uncheck node mode
-        self.edge_mode_var.set(True)  # Check the edge mode
+        self.node_mode_var.set(False)
+        self.edge_mode_var.set(True)
 
     #Knoten hinzufügen
     def add_node(self, event):
