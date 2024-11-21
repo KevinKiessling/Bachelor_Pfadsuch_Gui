@@ -62,7 +62,7 @@ class My_Frame(Frame):
         self.menu_bar.add_cascade(label="Create", menu=self.creation_menu)
 
         #display current mode with  checkmark
-        self.node_mode_var = BooleanVar(value=False)  # Default: Node mode is off
+        self.node_mode_var = BooleanVar(value=False)
         self.edge_mode_var = BooleanVar(value=False)
 
         self.creation_menu.add_checkbutton(label="Add Node", variable=self.node_mode_var,
@@ -72,7 +72,7 @@ class My_Frame(Frame):
 
         self.algorithm_menu = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Algorithmen", menu=self.algorithm_menu)
-        self.dijk_L = BooleanVar(value=True)  # Default: Node mode is off
+        self.dijk_L = BooleanVar(value=True)
         self.dijk_PQ = BooleanVar(value=False)
         self.algorithm_menu.add_checkbutton(label="Dijkstra als Liste", variable=self.dijk_L , command=self.toggle_dijk_L)
         self.algorithm_menu.add_checkbutton(label="Dijkstra als Priority Queue", variable=self.dijk_PQ, command=self.toggle_dijk_PQ)
@@ -96,6 +96,13 @@ class My_Frame(Frame):
     def remove_clicked_element(self, event):
         x, y = event.x, event.y
         print("removal even at:", event.x, event.y)
+
+        node = self.get_node_at_position(x, y)
+        if node:
+            print("deleting node at: Position noch genau bestimmen, nicht vom event sondern vom knoten")
+            # hier dann trigger node delete!
+
+        #wie eine Kante finden?
 
 
     #Hier soll ein Settingsmenu geöffnet werden was settings speichert und beim laden der app läd
