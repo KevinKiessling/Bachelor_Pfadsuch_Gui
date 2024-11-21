@@ -29,7 +29,11 @@ class My_Frame(Frame):
         self.canvas.pack()
         #Bind option to canvas
         self.canvas.bind("<Button-1>", self.add_node_or_edge)
-
+        self.focus_set()
+        self.bind("<Right>", self.go_to_next_step)
+        self.bind("<Left>", self.go_step_back)
+        self.bind("<Up>", self.go_fast_forward)
+        self.bind("<Down>", self.pause_fast_forward)
         # Menü Bar oben
         self.menu_bar = Menu(parent)
         parent.config(menu=self.menu_bar)
@@ -93,6 +97,21 @@ class My_Frame(Frame):
     def open_settings(self):
         if self.parent.debug:
             print("Opening settings...")
+
+    # hilfsunktion um die parent funktion zu callen für die Keybinds
+    def go_to_next_step(self, event):
+        print("testkeybind forward")
+        self.parent.next_step()
+    def go_step_back(self, event):
+        print("testkeybind back")
+        self.parent.prev_step()
+
+    def go_fast_forward(self, event):
+        print("testkeybind auto")
+        self.parent.fast_forward()
+    def pause_fast_forward(self, event):
+        print("testkeybind pause")
+        self.parent.pause()
 
 
     # gibt den aktuellen graphen auf der Konsole aus -> debug optionen
