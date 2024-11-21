@@ -92,13 +92,13 @@ class My_Frame(Frame):
         if self.parent.debug:
             print("Shutting down...")
 
+    #Hier soll ein Settingsmenu geöffnet werden was settings speichert und beim laden der app läd
     def open_settings(self):
         if self.parent.debug:
             print("Opening settings...")
 
-    def clear_graph(self):
-        if self.parent.debug:
-            print("Clearing graph...")
+
+    # gibt den aktuellen graphen auf der Konsole aus -> debug optionen
     def print_loaded_graph(self):
         if self.parent.debug:
             print("currently Loaded graph: ")
@@ -121,7 +121,7 @@ class My_Frame(Frame):
         self.dijk_L.set(False)  # Check the node mode
         self.dijk_PQ.set(True)  # Uncheck edge mode
 
-    #switch to node creation mode
+    #Node Creation mode
     def toggle_node_creation_mode(self):
         if self.parent.debug:
             print("Toggling node creation mode...")
@@ -130,7 +130,7 @@ class My_Frame(Frame):
         self.node_mode_var.set(True)  # Check the node mode
         self.edge_mode_var.set(False)  # Uncheck edge mode
 
-    #switch to edge creation mode
+    #Edge Creation mode
     def toggle_edge_creation_mode(self):
         if self.parent.debug:
             print("Toggling Edge creation mode...")
@@ -139,7 +139,7 @@ class My_Frame(Frame):
         self.node_mode_var.set(False)  # Uncheck node mode
         self.edge_mode_var.set(True)  # Check the edge mode
 
-    #adding new node to the graph
+    #Knoten hinzufügen
     def add_node(self, event):
         if not self.parent.node_creation_mode:
             return
@@ -148,7 +148,7 @@ class My_Frame(Frame):
         new_node = f"{len(self.parent.graph) + 1}"
         self.parent.graph[new_node] = {}
         self.parent.node_positions[new_node] = (x, y)
-        self.parent.update_gui()
+        #self.parent.update_gui()
 
         print(f"Node {new_node} added at ({x}, {y})")
         self.parent.reset()
@@ -160,15 +160,16 @@ class My_Frame(Frame):
         clicked_node = self.get_node_at_position(x, y) # Ausgeheneder Knoten
 
         if clicked_node: # falls knoten existiert
-            self.parent.selected_nodes.append(clicked_node) #speicher ihne zwischen
+            self.parent.selected_nodes.append(clicked_node) #speicher ihn zwischen
             print(f"Selected node: {clicked_node}")
 
+            # !!!!!!!!!checke das 2. knoten != 1. knoten. und neue kante soll alte überschreiben, keine mehrfachen kann zwischen 2 knoten
             if len(self.parent.selected_nodes) == 2:  #wenn 2 noten im Zwischenspeicher sind ,dann füge Kante hinzu
                 node1, node2 = self.parent.selected_nodes
-                weight = 1  # aktuell noch hardcoded auf 1
+                weight = 100  # aktuell noch hardcoded auf 1
 
-
-                self.parent.graph[node1][node2] = weight # Füge weight hinzu
+                if not node1 == node2:
+                    self.parent.graph[node1][node2] = weight # Füge weight hinzu
                 self.parent.selected_nodes.clear() # Resette den Zwischenspeicher
                 print(f"Edge added from {node1} to {node2} with weight {weight}")
 
@@ -182,13 +183,13 @@ class My_Frame(Frame):
     def get_node_at_position(self, x, y):
 
         for node, (nx, ny) in self.parent.node_positions.items():
-            if math.hypot(nx - x, ny - y) <= 30:  # A radius of 30px to detect click
+            if math.hypot(nx - x, ny - y) <= 30:
                 return node
         return None
 
 
     def export_graph(self):
-        print("exporting graph clicked")
+        print("Todo:exporting graph clicked")
 
     def import_graph(self):
-        print("importing graph clicked")
+        print("Todo:importing graph clicked")

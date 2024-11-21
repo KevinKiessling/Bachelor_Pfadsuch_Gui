@@ -10,11 +10,11 @@ class PfadsuchApp(Tk):
 
 
         self.graph = {}
-        self.start_node = 'D'
+        self.start_node = 'D' # für dijkstra, aktuell hardcoded, später mit eingabe
         self.steps = []
         self.current_step = -1
-        self.node_creation_mode = False  # Knoten erstellungsmodus
-        self.edge_creation_mode = False  #  Knoten erstellungsmodus
+        self.node_creation_mode = False  #Knoten erstellungsmodus
+        self.edge_creation_mode = False  #Kanten erstellungsmodus
 
         self.node_positions = {}  # speichert Knoten positionen
         self.selected_nodes = []  #Hilfe um Kanten zu erstellen
@@ -25,34 +25,36 @@ class PfadsuchApp(Tk):
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
         self.geometry('1500x1000')
 
-        #create the whole gui frame outside of this class
+        # Auslagern der Gui erstellung in andere Klasse
         self.gui_frame = My_Frame(self)
         self.load_default_graph()
         self.update_gui()
 
     def next_step(self):
         if self.debug:
-            print("next step")
+            print("TODO:next step")
 
     def prev_step(self):
         if self.debug:
-            print("prev step")
+            print("TODO:prev step")
 
     def fast_forward(self):
         if self.debug:
-            print("fast forward")
+            print("TODO:fast forward")
 
     def pause(self):
         if self.debug:
-            print("pausing")
+            print("TODO:pausing")
 
+
+    # Läd default graph beim starten der App und auf wunsch
     def load_default_graph(self):
         if self.debug:
             print("Loading default graph")
         self.graph = {
             'A': {'B': 4, 'C': 2},
             'B': {'A': 4, 'C': 5, 'D': 10},
-            'C': {'A': 2, 'B': 5, 'D': 3, 'E': 4},
+            'C': {'B': 5, 'D': 3, 'E': 4},
             'D': {'B': 10, 'C': 3, 'E': 11},
             'E': {'C': 4, 'D': 11, 'P': 5},
             'P': {}
@@ -62,17 +64,17 @@ class PfadsuchApp(Tk):
         self.start_node = 'D'
         self.reset()
 
-    #resets algorithm, but keeps loaded graph
+    #Setzt den Algorithmus komplett zurück, aber behält den Graph geladen
     def reset(self):
         if self.debug:
             print("resetting without clear")
         self.steps = []
         self.current_step = -1
         self.update_gui()
-        #self.dijkstra_algorithm.run_dijkstra()  # Correct call to DijkstraAlgorithm's method
+        #self.dijkstra_algorithm.run_dijkstra() # Gewählten Algorithmus starten
 
 
-    #clear canvas and resets everything to default
+    #Setzt alles zurück und löscht auch den geladenen Graph
     def clear_graph(self):
         if self.debug:
             print("clearing everything")
@@ -81,20 +83,24 @@ class PfadsuchApp(Tk):
         self.current_step = -1
         self.node_positions = {}
         self.update_gui()
+
+    # Gui Update hier wird der on Screen stuff generiert Später
     def update_gui(self):
        # self.reset()
         self.draw_graph()
 
-    #zeichnet den Graph
 
+    #zeichnet den Graph
     def draw_graph(self):
         print("Drawing Graph")
         self.gui_frame.canvas.delete("all")
-        node_radius = 30  # Radius of the node circle
+        node_radius = 30  # Knoten Größe
         font_size = 16
+        already_drawn_edges = set() #Speichert alle schon gezeichneten Kanten, relevant für Bidirektionale Kanten.
         #basic draw node
         for node, (x, y) in self.node_positions.items():
 
+            #hightlight aktuell ausgewählten knoten für kanten erstellung
             if node in self.selected_nodes:
                 self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill="green")
                 self.gui_frame.canvas.create_text(x, y, text=node, fill="black", font=("Arial", font_size))
@@ -103,28 +109,120 @@ class PfadsuchApp(Tk):
                 self.gui_frame.canvas.create_text(x, y, text=node, fill="black", font=("Arial", font_size))
 
 
-        # basic draw edge
+        # Zeine alle Kanten, dabei wird zwischen 2 Varianten unterschieden, Direkt oder Bidirekt
         for node, edges in self.graph.items():
-            for neighbor, _ in edges.items():
+            for neighbor, weight in edges.items():
+
+                #falls kante schonmal behandelt wurde, skip
+                if (node, neighbor) in already_drawn_edges or (neighbor, node) in already_drawn_edges:
+                    continue
+
                 if neighbor in self.node_positions:
+                    #Knoten Positionen
                     x1, y1 = self.node_positions[node]
                     x2, y2 = self.node_positions[neighbor]
+
+                    # berechnet offset, damit kanten nicht in die knoten clippen
                     dx = x2 - x1
                     dy = y2 - y1
-                    distance = math.sqrt(dx ** 2 + dy ** 2)
+                    distance = math.sqrt(dx ** 2 + dy ** 2) # Berechnet euklidische distanz
 
-                    if distance > 0:  # Vermeidung von Division durch 0
-                        x1_adjusted = x1 + dx / distance * node_radius
-                        y1_adjusted = y1 + dy / distance * node_radius
-                        x2_adjusted = x2 - dx / distance * node_radius
-                        y2_adjusted = y2 - dy / distance * node_radius
+
+                    if distance > 0:
+                        x1_no_node_clip = x1 + dx / distance * node_radius
+                        y1_no_node_clip = y1 + dy / distance * node_radius
+                        x2_no_node_clip = x2 - dx / distance * node_radius
+                        y2_no_node_clip = y2 - dy / distance * node_radius
                     else:
-                        x1_adjusted, y1_adjusted, x2_adjusted, y2_adjusted = x1, y1, x2, y2
+                        x1_no_node_clip, y1_no_node_clip, x2_no_node_clip, y2_no_node_clip = x1, y1, x2, y2
 
-                    self.gui_frame.canvas.create_line(
-                        x1_adjusted, y1_adjusted, x2_adjusted, y2_adjusted,
-                        width=3,  # Dicke der Linie
-                        arrow="last",  # Pfeil am Ende der Linie
-                        arrowshape=(10, 12, 5),  # (Basisbreite, Höhe, Spitze)
-                        tags="edge"
-                    )
+
+                    #Kante teilen um das Gewicht zu zeigen
+                    middle_space = 0.12  # platz für das gewicht in der mitte
+
+                    segment_dx = dx / distance * middle_space * distance
+                    segment_dy = dy / distance * middle_space * distance
+
+                    #Erkenne ob die Kante Bidirektional ist um sie anders zu zeichnen
+                    is_bidirectional = neighbor in self.graph and node in self.graph[neighbor]
+                    print(is_bidirectional)
+
+                    if is_bidirectional:
+
+                        # Offset um die bidirektionale kante einzufügen
+                        offset = 10
+                        # Beide Kanten auseinander "Ziehen"
+                        perp_dx = -dy / distance * offset
+                        perp_dy = dx / distance * offset
+                        # 1. Kante koordinaten
+                        x1_offset = x1_no_node_clip + perp_dx
+                        y1_offset = y1_no_node_clip + perp_dy
+                        x2_offset = x2_no_node_clip + perp_dx
+                        y2_offset = y2_no_node_clip + perp_dy
+                        middle_x = (x1_offset + x2_offset) / 2
+                        middle_y = (y1_offset + y2_offset) / 2
+                        #print(x1_offset, x2_offset, y1_offset, y2_no_node_clip)
+
+                        # Kante in 2 teile trennen
+                        self.gui_frame.canvas.create_line(
+                            x1_offset, y1_offset, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
+                            width=3, tags="edge"
+                        )
+                        self.gui_frame.canvas.create_line(
+                            middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_offset, y2_offset,
+                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5)
+                        )
+                        self.gui_frame.canvas.create_text(
+                            middle_x, middle_y,
+                            text=str(weight), fill="black", font=("Arial", 14), tags="weight"
+                        )
+
+                        #offset für die 2. Kante
+                        x1_offset = x1_no_node_clip - perp_dx
+                        y1_offset = y1_no_node_clip - perp_dy
+                        x2_offset = x2_no_node_clip - perp_dx
+                        y2_offset = y2_no_node_clip - perp_dy
+                        #print(x1_offset, x2_offset, y1_offset, y2_no_node_clip)
+                        middle_x = (x1_offset + x2_offset) / 2
+                        middle_y = (y1_offset + y2_offset) / 2
+
+                        # Kante in 2 Teile trennen
+                        self.gui_frame.canvas.create_line(
+                            x2_offset, y2_offset, middle_x + segment_dx / 2, middle_y + segment_dy / 2,
+                            width=3, tags="edge"
+                        )
+                        self.gui_frame.canvas.create_line(
+                            middle_x - segment_dx / 2, middle_y - segment_dy / 2, x1_offset, y1_offset,
+                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5)
+                        )
+                        #gewicht in die Mitte schreiben
+                        self.gui_frame.canvas.create_text(
+                            middle_x, middle_y, text=str(self.graph[neighbor][node]), font=("Arial", 14), tags="weight"
+                        )
+                    #zeichne normale kante
+                    else:
+
+                        # Einzelne Kante auch wieder mittig teilen für das Gewicht
+                        middle_x = (x1_no_node_clip + x2_no_node_clip) / 2
+                        middle_y = (y1_no_node_clip + y2_no_node_clip) / 2
+
+                        self.gui_frame.canvas.create_line(
+                            x1_no_node_clip, y1_no_node_clip, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
+                            width=3, tags="edge"
+                        )
+                        self.gui_frame.canvas.create_line(
+                            middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_no_node_clip, y2_no_node_clip,
+                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5)
+                        )
+                        self.gui_frame.canvas.create_text(
+                            middle_x, middle_y,
+                            text=str(weight),
+                            fill="black",
+                            font=("Arial", 14),
+                            tags="weight"
+                        )
+                    # Speichere Kanten die bereits gezeichnet wurden, damit bidirektionale kanten nicht 4x gezeichnet werden
+                    already_drawn_edges.add((node, neighbor))
+
+
+
