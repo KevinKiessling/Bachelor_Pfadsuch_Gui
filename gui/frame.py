@@ -1,3 +1,4 @@
+import tkinter.simpledialog
 from tkinter import *
 import math
 class My_Frame(Frame):
@@ -194,7 +195,10 @@ class My_Frame(Frame):
             # !!!!!!!!!checke das 2. knoten != 1. knoten. und neue kante soll alte überschreiben, keine mehrfachen kann zwischen 2 knoten
             if len(self.parent.selected_nodes) == 2:  #wenn 2 noten im Zwischenspeicher sind ,dann füge Kante hinzu
                 node1, node2 = self.parent.selected_nodes
-                weight = 100  # aktuell noch hardcoded auf 1
+
+                #dialog öffnen der nach gewicht fragt
+
+                weight = tkinter.simpledialog.askinteger("Input edge weight", "Input Edge Weight as a Integer")
 
                 if not node1 == node2:
                     self.parent.graph[node1][node2] = weight # Füge weight hinzu
