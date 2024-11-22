@@ -1,3 +1,4 @@
+import random
 import tkinter.simpledialog
 from tkinter import *
 import math
@@ -9,7 +10,7 @@ class My_Frame(Frame):
 
         #put the this frame on screen
         self.pack(pady=20)
-        self.random_edge_mode = False
+        self.random_edge_mode = True
         #create buttons
         self.next_button = Button(self, text="Next Step", command=parent.next_step)
         self.next_button.pack(side=LEFT)
@@ -84,8 +85,8 @@ class My_Frame(Frame):
 
     def toggle_random_edge_weight(self):
 
-        self.random_edge_mode = not self.random_edge_mode
-        print("Random edge weights : ", self.random_edge_mode)
+        self.random_edge_mode = self.edge_mode_random_var.get()
+        print("Random edge weight mode is now", "on" if self.random_edge_mode else "off")
 
 
 
@@ -236,7 +237,7 @@ class My_Frame(Frame):
                 #dialog öffnen der nach gewicht fragt
                 if self.random_edge_mode:
                     print("random mode")
-                    weight = tkinter.simpledialog.askinteger("Input edge weight", "Input Edge Weight as a Integer")
+                    weight = random.randint(0, 100)
                 else:
                     print("input mode")
                     weight = tkinter.simpledialog.askinteger("Input edge weight", "Input Edge Weight as a Integer")
