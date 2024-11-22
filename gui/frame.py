@@ -222,6 +222,10 @@ class My_Frame(Frame):
         clicked_node = self.get_node_at_position(x, y) # Ausgeheneder Knoten
 
         if clicked_node: # falls knoten existiert
+            if len(self.parent.selected_nodes) == 2:
+                self.parent.selected_nodes = []
+                self.parent.reset()
+
             self.parent.selected_nodes.append(clicked_node) #speicher ihn zwischen
             print(f"Selected node: {clicked_node}")
 
@@ -230,17 +234,20 @@ class My_Frame(Frame):
                 node1, node2 = self.parent.selected_nodes
 
                 #dialog öffnen der nach gewicht fragt
-
-                weight = tkinter.simpledialog.askinteger("Input edge weight", "Input Edge Weight as a Integer")
-
+                if self.random_edge_mode:
+                    print("random mode")
+                    weight = tkinter.simpledialog.askinteger("Input edge weight", "Input Edge Weight as a Integer")
+                else:
+                    print("input mode")
+                    weight = tkinter.simpledialog.askinteger("Input edge weight", "Input Edge Weight as a Integer")
 
                 if not node1 == node2 and weight is not None:
-                    self.parent.graph[node1][node2] = weight # Füge weight hinzu
-                    self.parent.selected_nodes.clear() # Resette den Zwischenspeicher
+                    self.parent.graph[node1][node2] = weight#Füge weight hinzu
+                    self.parent.selected_nodes.clear()#Resette den Zwischenspeicher
                     print(f"Edge added from {node1} to {node2} with weight {weight}")
 
 
-                self.parent.update_gui() # Aktualisiere Gui
+            self.parent.update_gui() # Aktualisiere Gui
 
         self.parent.reset()
 

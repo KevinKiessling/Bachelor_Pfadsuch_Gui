@@ -221,11 +221,11 @@ class PfadsuchApp(Tk):
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x - segment_dx / 2, middle_y - segment_dy / 2, x1_offset, y1_offset,
-                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5), smooth=TRUE
+                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5)
                         )
                         #gewicht in die Mitte schreiben
                         self.gui_frame.canvas.create_text(
-                            middle_x, middle_y, text=str(self.graph[neighbor][node]), font=("Arial", 14), tags="weight", smooth=TRUE
+                            middle_x, middle_y, text=str(self.graph[neighbor][node]), font=("Arial", 14), tags="weight"
                         )
                     #zeichne normale kante
                     else:
@@ -236,11 +236,11 @@ class PfadsuchApp(Tk):
 
                         self.gui_frame.canvas.create_line(
                             x1_no_node_clip, y1_no_node_clip, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
-                            width=3, tags="edge", smooth=TRUE
+                            width=3, tags="edge"
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_no_node_clip, y2_no_node_clip,
-                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5), smooth=TRUE
+                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5)
                         )
                         self.gui_frame.canvas.create_text(
                             middle_x, middle_y,
