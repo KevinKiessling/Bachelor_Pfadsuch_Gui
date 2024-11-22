@@ -9,7 +9,7 @@ class My_Frame(Frame):
 
         #put the this frame on screen
         self.pack(pady=20)
-
+        self.random_edge_mode = False
         #create buttons
         self.next_button = Button(self, text="Next Step", command=parent.next_step)
         self.next_button.pack(side=LEFT)
@@ -65,11 +65,14 @@ class My_Frame(Frame):
         #display current mode with  checkmark
         self.node_mode_var = BooleanVar(value=False)
         self.edge_mode_var = BooleanVar(value=False)
+        self.edge_mode_random_var = BooleanVar(value=True)
 
         self.creation_menu.add_checkbutton(label="Add Node", variable=self.node_mode_var,
                                            command=self.toggle_node_creation_mode)
         self.creation_menu.add_checkbutton(label="Add Edge", variable=self.edge_mode_var,
                                            command=self.toggle_edge_creation_mode)
+        self.creation_menu.add_checkbutton(label="random Edge weight mode", variable=self.edge_mode_random_var,
+                                           command=self.toggle_random_edge_weight)
 
         self.algorithm_menu = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Algorithmen", menu=self.algorithm_menu)
@@ -77,6 +80,12 @@ class My_Frame(Frame):
         self.dijk_PQ = BooleanVar(value=False)
         self.algorithm_menu.add_checkbutton(label="Dijkstra als Liste", variable=self.dijk_L , command=self.toggle_dijk_L)
         self.algorithm_menu.add_checkbutton(label="Dijkstra als Priority Queue", variable=self.dijk_PQ, command=self.toggle_dijk_PQ)
+
+
+    def toggle_random_edge_weight(self):
+
+        self.random_edge_mode = not self.random_edge_mode
+        print("Random edge weights : ", self.random_edge_mode)
 
 
 
@@ -119,9 +128,10 @@ class My_Frame(Frame):
                 del nb[node]
         if node in self.parent.node_positions:
             del self.parent.node_positions[node]
+        self.parent.selected_nodes = []
+        print(f"Knoten {node} gelöscht")
+        self.parent.reset()
 
-        print (f"Knoten {node} gelöscht")
-        self.parent.update_gui()
     #Hier soll ein Settingsmenu geöffnet werden was settings speichert und beim laden der app läd
     def open_settings(self):
         if self.parent.debug:
@@ -205,7 +215,7 @@ class My_Frame(Frame):
             newid += 1
         return str(newid)
 
-    #Kante hinzufügen
+    #Kante hinzufügen, MAYBE RANDOM EDGE WEIGHT MODE?
     def add_edge(self, event):
 
         x, y = event.x, event.y
@@ -223,10 +233,11 @@ class My_Frame(Frame):
 
                 weight = tkinter.simpledialog.askinteger("Input edge weight", "Input Edge Weight as a Integer")
 
-                if not node1 == node2:
+
+                if not node1 == node2 and weight is not None:
                     self.parent.graph[node1][node2] = weight # Füge weight hinzu
-                self.parent.selected_nodes.clear() # Resette den Zwischenspeicher
-                print(f"Edge added from {node1} to {node2} with weight {weight}")
+                    self.parent.selected_nodes.clear() # Resette den Zwischenspeicher
+                    print(f"Edge added from {node1} to {node2} with weight {weight}")
 
 
                 self.parent.update_gui() # Aktualisiere Gui

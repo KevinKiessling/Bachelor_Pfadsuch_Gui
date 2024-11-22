@@ -1,10 +1,13 @@
-# main.py
 
-#from gui.interface import create_interface
+'''
+
+Main Entry Point, navigate to the directory and run via: " python pfadsuche.py  "
+
+'''
 from gui.pfadsuch_app import PfadsuchApp
 import tkinter as tk
 
-# Main Funktion, Programm mit python pfadsuche.py starten
+
 def main():
 
     pfadsuch_app = PfadsuchApp()

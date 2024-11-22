@@ -1,6 +1,8 @@
 from tkinter import *
 from gui.frame import *
 from gui.pseudocode_frame import *
+from algorithmen.dijkstra_pq import *
+from algorithmen.dijkstra_list import *
 import math
 class PfadsuchApp(Tk):
     def __init__(self):
@@ -29,6 +31,20 @@ class PfadsuchApp(Tk):
         # Auslagern der Gui erstellung in andere Klasse
         self.gui_frame = My_Frame(self)
         self.code_frame = Pseudocode_Frame(self)
+
+        #initialisiere Dijkstra
+
+        if self.selected_algorithm == True:
+            print("dijkstra mit List")
+            self.dijkstra_l = Dijkstra_List()
+            self.dijkstra_l.run_dijkstra_list(self.graph)
+
+        else:
+            print("dijkstra mit pq")
+            self.dijkstra_pq = Dijkstra_Pq()
+            self.dijkstra_pq.run_dijkstra_pq(self.graph)
+
+
         self.load_default_graph()
         #self.update_gui()
 
@@ -70,6 +86,7 @@ class PfadsuchApp(Tk):
         self.graph = {'1': {'2': 100, '3': 100, '4': 100}, '2': {'4': 100, '5': 100}, '3': {'4': 100, '2': 100}, '4': {}, '5': {'1': 100}}
         self.node_positions = {'1': (260, 216), '2': (739, 218), '3': (290, 673), '4': (828, 698), '5': (551, 898)}
         self.start_node = '1'
+        self.selected_nodes = []
         self.reset()
 
     #Setzt den Algorithmus komplett zurück, aber behält den Graph geladen
@@ -78,7 +95,9 @@ class PfadsuchApp(Tk):
             print("resetting without clear")
         self.steps = []
         self.current_step = -1
+
         self.update_gui()
+
         #self.dijkstra_algorithm.run_dijkstra()
 
 
@@ -90,6 +109,7 @@ class PfadsuchApp(Tk):
         self.steps = []
         self.current_step = -1
         self.node_positions = {}
+        self.selected_nodes = []
         self.update_gui()
 
     # Gui Update hier wird der on Screen stuff generiert Später
