@@ -71,7 +71,7 @@ class PfadsuchApp(Tk):
         if self.current_step < len(self.steps) -1:
             self.current_step += 1
             self.update_gui()
-            self.after(500,self.fast_forward())
+            self.after(500,self.fast_forward)
 
 
     def pause(self):
