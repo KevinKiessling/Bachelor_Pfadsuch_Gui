@@ -96,16 +96,32 @@ class My_Frame(Frame):
 
     def remove_clicked_element(self, event):
         x, y = event.x, event.y
-        print("removal even at:", event.x, event.y)
+        print("removal event at:", event.x, event.y)
 
         node = self.get_node_at_position(x, y)
         if node:
             print("deleting node at: Position noch genau bestimmen, nicht vom event sondern vom knoten")
-            # hier dann trigger node delete!
-
-        #wie eine Kante finden?
+            self.delete_note(node)
 
 
+        # später, aktuell keine edge deletion möglich
+        '''edge = self.get_edge_at_coordinates(x, y)
+        if edge:
+            print("deleting edge at: ", x, y)
+        #wie eine Kante finden?'''
+
+    def delete_note(self, node):
+        if node in self.parent.graph:
+            del self.parent.graph[node]
+
+        for nb in self.parent.graph.values():
+            if node in nb:
+                del nb[node]
+        if node in self.parent.node_positions:
+            del self.parent.node_positions[node]
+
+        print (f"Knoten {node} gelöscht")
+        self.parent.update_gui()
     #Hier soll ein Settingsmenu geöffnet werden was settings speichert und beim laden der app läd
     def open_settings(self):
         if self.parent.debug:
@@ -174,13 +190,20 @@ class My_Frame(Frame):
             return
 
         x, y = event.x, event.y
-        new_node = f"{len(self.parent.graph) + 1}"
+        new_node = self.get_next_id()
         self.parent.graph[new_node] = {}
         self.parent.node_positions[new_node] = (x, y)
-        #self.parent.update_gui()
 
         print(f"Node {new_node} added at ({x}, {y})")
         self.parent.reset()
+
+    # hilfs funktion damit löschen von knoten nicht der erstellen verhindert, da sonst duplikate erstellt werden, was alles breaked
+    def get_next_id(self):
+        ex_id = {int (node) for node in self.parent.graph.keys()}
+        newid  = 1
+        while newid in ex_id:
+            newid += 1
+        return str(newid)
 
     #Kante hinzufügen
     def add_edge(self, event):
@@ -219,6 +242,26 @@ class My_Frame(Frame):
                 return node
         return None
 
+    def get_edge_at_coordinates(self, x, y):
+        for node_s, neighbor in self.parent.graph.items():
+            for node_e in neighbor:
+                print(node_s, node_e)
+                '''if node_s in self.parent.node_position.items() and node_e in self.parent.node_positions.items():
+                    j, l = self.parent.node_position[node_s]
+                    w, z = self.parent.node_position[node_e]'''
+                distanz = 0 #self.dis_p_to_l(x, y, j, l , w, z)
+                if distanz <= 10:
+                    return(node_s,node_e)
+
+
+    # um die distanz zu berechnen, damit man später edges löschen kann
+    def dis_p_to_l(self, x, y, j, l, w, z):
+        if(j, l) == (w, z):
+            return math.hypot(x - j, y - l)
+
+        num = abs((z -l) * x - (w - j) * y + w * l - z * j)
+        den = math.hypot(w - j, z - l)
+        return num/den
 
     def export_graph(self):
         print("Todo:exporting graph clicked")

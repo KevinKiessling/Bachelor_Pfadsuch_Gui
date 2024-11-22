@@ -1,5 +1,6 @@
 from tkinter import *
 from gui.frame import *
+from gui.pseudocode_frame import *
 import math
 class PfadsuchApp(Tk):
     def __init__(self):
@@ -27,6 +28,7 @@ class PfadsuchApp(Tk):
 
         # Auslagern der Gui erstellung in andere Klasse
         self.gui_frame = My_Frame(self)
+        self.code_frame = Pseudocode_Frame(self)
         self.load_default_graph()
         #self.update_gui()
 
@@ -34,13 +36,27 @@ class PfadsuchApp(Tk):
         if self.debug:
             print("TODO:next step")
 
+        if self.current_step < len(self.steps) -1:
+            self.current_step += 1
+            self.update_gui()
+
+
     def prev_step(self):
         if self.debug:
             print("TODO:prev step")
 
+        if self.current_step > -1:
+            self.current_step -= 1
+            self.update_gui()
+
     def fast_forward(self):
         if self.debug:
             print("TODO:fast forward")
+        if self.current_step < len(self.steps) -1:
+            self.current_step += 1
+            self.update_gui()
+            self.after(500,self.fast_forward())
+
 
     def pause(self):
         if self.debug:
@@ -185,11 +201,11 @@ class PfadsuchApp(Tk):
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x - segment_dx / 2, middle_y - segment_dy / 2, x1_offset, y1_offset,
-                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5)
+                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5), smooth=TRUE
                         )
                         #gewicht in die Mitte schreiben
                         self.gui_frame.canvas.create_text(
-                            middle_x, middle_y, text=str(self.graph[neighbor][node]), font=("Arial", 14), tags="weight"
+                            middle_x, middle_y, text=str(self.graph[neighbor][node]), font=("Arial", 14), tags="weight", smooth=TRUE
                         )
                     #zeichne normale kante
                     else:
@@ -200,11 +216,11 @@ class PfadsuchApp(Tk):
 
                         self.gui_frame.canvas.create_line(
                             x1_no_node_clip, y1_no_node_clip, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
-                            width=3, tags="edge"
+                            width=3, tags="edge", smooth=TRUE
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_no_node_clip, y2_no_node_clip,
-                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5)
+                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5), smooth=TRUE
                         )
                         self.gui_frame.canvas.create_text(
                             middle_x, middle_y,
