@@ -22,9 +22,12 @@ class My_Frame(Frame):
         self.fast_forward_button.pack(side=LEFT)
         self.fast_forward_button = Button(self, text="Pause", command=parent.pause)
         self.fast_forward_button.pack(side=LEFT)
-
         self.print_currently_loaded_graph_button = Button(self, text="print graph", command=self.print_loaded_graph)
         self.print_currently_loaded_graph_button.pack(side=LEFT)
+        self.starting_button = Button(self, text="select Starting node", command=parent.start_algorithm)
+        self.starting_button.pack(padx=400)
+
+
 
         #create Canvas
         self.canvas = Canvas(self, width=1000, height=1000, bg="white")

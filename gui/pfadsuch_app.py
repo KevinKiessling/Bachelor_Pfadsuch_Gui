@@ -13,7 +13,7 @@ class PfadsuchApp(Tk):
 
 
         self.graph = {}
-        self.start_node = '1'
+        self.start_node = ''
         self.steps = []
         self.current_step = -1
         self.node_creation_mode = False
@@ -31,22 +31,26 @@ class PfadsuchApp(Tk):
         # Auslagern der Gui erstellung in andere Klasse
         self.gui_frame = My_Frame(self)
         self.code_frame = Pseudocode_Frame(self)
-
-        #initialisiere Dijkstra
-
-        if self.selected_algorithm == True:
-            print("dijkstra mit List")
-            self.dijkstra_l = Dijkstra_List()
-            self.dijkstra_l.run_dijkstra_list(self.graph)
-
-        else:
-            print("dijkstra mit pq")
-            self.dijkstra_pq = Dijkstra_Pq()
-            self.dijkstra_pq.run_dijkstra_pq(self.graph)
-
-
         self.load_default_graph()
+        #
+
+
+
         #self.update_gui()
+    def start_algorithm(self):
+        start_node = tkinter.simpledialog.askinteger("Input starting node", "Input starting node")
+        if start_node is None:
+            return
+        if str(start_node) not in self.graph:
+            tkinter.messagebox.showerror("Invalid Node", "The starting node does not exist in the graph.")
+            return
+        self.start_node = str(start_node)
+        if not self.selected_algorithm:
+            self.dijkstra_l = Dijkstra_List()
+            print(self.dijkstra_l.run_dijkstra_list(self.graph, self.start_node))
+        else:
+            print("not implemented yet")
+
 
     def next_step(self):
         if self.debug:
