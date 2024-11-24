@@ -21,12 +21,12 @@ class PfadsuchApp(Tk):
 
         self.node_positions = {}
         self.selected_nodes = []
-        self.selected_algorithm = True # True für dijkstra mit Liste, false für Priority queue
+        self.selected_algorithm = "Dijkstra_PQ" # True für dijkstra mit Liste, false für Priority queue
 
 
         #titel
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
-        self.geometry('1500x1000')
+        self.geometry('1500x1200')
 
         # Auslagern der Gui erstellung in andere Klasse
         self.gui_frame = My_Frame(self)
@@ -47,19 +47,21 @@ class PfadsuchApp(Tk):
         self.start_node = str(start_node)
 
 
-        if not self.selected_algorithm:
+        if self.selected_algorithm == "Dijkstra_PQ":
             self.dijkstra_pq = Dijkstra_Priority_Queue()
             self.update_gui()
             self.steps_finished_algorithm = self.dijkstra_pq.run_dijkstra_list(self.graph, self.start_node)
             print(self.steps_finished_algorithm)
 
-        else:
+        if self.selected_algorithm == "Dijkstra_List":
             print("not implemented yet")
 
 
     def next_step(self):
         if self.debug:
-            print("TODO:next step")
+            print("next step")
+        if self.steps_finished_algorithm == []:
+            print("no algorithm loaded")
 
         if self.current_step < len(self.steps_finished_algorithm) -1:
             self.current_step += 1
@@ -68,15 +70,18 @@ class PfadsuchApp(Tk):
 
     def prev_step(self):
         if self.debug:
-            print("TODO:prev step")
-
+            print("prev step")
+        if self.steps_finished_algorithm == []:
+            print("no algorithm loaded")
         if self.current_step > -1:
             self.current_step -= 1
             self.update_gui()
 
     def fast_forward(self):
         if self.debug:
-            print("TODO:fast forward")
+            print("fast forward")
+        if self.steps_finished_algorithm == []:
+            print("no algorithm loaded")
         if self.current_step < len(self.steps_finished_algorithm) -1:
             self.current_step += 1
             self.update_gui()
@@ -86,6 +91,8 @@ class PfadsuchApp(Tk):
     def pause(self):
         if self.debug:
             print("TODO:pausing")
+        if self.steps_finished_algorithm == []:
+            print("no algorithm loaded")
 
 
     # Läd default graph beim starten der App und auf wunsch

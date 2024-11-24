@@ -11,27 +11,44 @@ class My_Frame(Frame):
         #put the this frame on screen
         self.pack(pady=20)
         self.random_edge_mode = True
-        #create buttons
-        self.next_button = Button(self, text="Next Step", command=parent.next_step)
-        self.next_button.pack(side=LEFT)
 
-        self.prev_button = Button(self, text="Previous Step", command=parent.prev_step)
-        self.prev_button.pack(side=LEFT)
-
-        self.fast_forward_button = Button(self, text="Fast Forward", command=parent.fast_forward)
-        self.fast_forward_button.pack(side=LEFT)
-        self.fast_forward_button = Button(self, text="Pause", command=parent.pause)
-        self.fast_forward_button.pack(side=LEFT)
-        self.print_currently_loaded_graph_button = Button(self, text="print graph", command=self.print_loaded_graph)
-        self.print_currently_loaded_graph_button.pack(side=LEFT)
-        self.starting_button = Button(self, text="select Starting node", command=parent.start_algorithm)
-        self.starting_button.pack(padx=400)
-
-
-
-        #create Canvas
+        self.grid_columnconfigure(0, weight=1, minsize=150)
+        self.grid_columnconfigure(1, weight=1, minsize=150)
+        self.grid_columnconfigure(2, weight=1, minsize=150)
+        self.grid_columnconfigure(3, weight=1, minsize=150)
+        self.grid_columnconfigure(4, weight=1, minsize=150)
+        self.grid_columnconfigure(5, weight=1, minsize=150)
+        # create Canvas
         self.canvas = Canvas(self, width=1000, height=1000, bg="white")
-        self.canvas.pack()
+        self.canvas.grid(row=0, column=0, padx=10, columnspan=6)
+        #create buttons
+
+        self.button_frame = Frame(self)
+        self.button_frame.grid(row=1, column=0, columnspan=6, pady=10)
+
+        self.next_button = Button(self.button_frame, text="Next Step", command=parent.next_step)
+        self.next_button.grid(row=1, column=0, padx=5, sticky="w")
+
+        self.prev_button = Button(self.button_frame, text="Previous Step", command=parent.prev_step)
+        self.prev_button.grid(row=1, column=1, padx=5, sticky="w")
+
+        self.fast_forward_button = Button(self.button_frame, text="Fast Forward", command=parent.fast_forward)
+        self.fast_forward_button.grid(row=1, column=2, padx=5, sticky="w")
+        self.fast_forward_button = Button(self.button_frame, text="Pause", command=parent.pause)
+        self.fast_forward_button.grid(row=1, column=3, padx=5, sticky="w")
+
+        self.print_currently_loaded_graph_button = Button(self.button_frame, text="print graph", command=self.print_loaded_graph)
+        self.print_currently_loaded_graph_button.grid(row=1, column=4, padx=5, sticky="w")
+
+        self.button_frame_alg = Frame(self)
+        self.button_frame_alg.grid(row=0, column=6, pady=10)
+
+        self.starting_button = Button(self.button_frame_alg, text="select Starting node", command=parent.start_algorithm)
+        self.starting_button.grid(row=0, column=0, padx=5, sticky="w")
+
+
+
+
         #Bind option to canvas
         self.canvas.bind("<Button-1>", self.add_node_or_edge)
         self.canvas.bind("<Button-3>", self.remove_clicked_element)
@@ -80,8 +97,8 @@ class My_Frame(Frame):
 
         self.algorithm_menu = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Algorithmen", menu=self.algorithm_menu)
-        self.dijk_L = BooleanVar(value=True)
-        self.dijk_PQ = BooleanVar(value=False)
+        self.dijk_L = BooleanVar(value=False)
+        self.dijk_PQ = BooleanVar(value=True)
         self.algorithm_menu.add_checkbutton(label="Dijkstra als Liste", variable=self.dijk_L , command=self.toggle_dijk_L)
         self.algorithm_menu.add_checkbutton(label="Dijkstra als Priority Queue", variable=self.dijk_PQ, command=self.toggle_dijk_PQ)
 
@@ -169,7 +186,7 @@ class My_Frame(Frame):
     def toggle_dijk_L(self):
         if self.parent.debug:
             print("Toggle to Dijk mit Liste...")
-        self.parent.selected_algorithm = True
+        self.parent.selected_algorithm = "Dijkstra_List"
         self.dijk_L.set(True)
         self.dijk_PQ.set(False)
 
@@ -177,7 +194,7 @@ class My_Frame(Frame):
     def toggle_dijk_PQ(self):
         if self.parent.debug:
             print("Toggle to Dijk mit PQ...")
-        self.parent.selected_algorithm = False
+        self.parent.selected_algorithm = "Dijkstra_PQ"
         self.dijk_L.set(False)
         self.dijk_PQ.set(True)
 
