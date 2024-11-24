@@ -37,7 +37,7 @@ class My_Frame(Frame):
         self.fast_forward_button = Button(self.button_frame, text="Pause", command=parent.pause)
         self.fast_forward_button.grid(row=1, column=3, padx=5, sticky="w")
 
-        self.print_currently_loaded_graph_button = Button(self.button_frame, text="print graph", command=self.print_loaded_graph)
+        self.print_currently_loaded_graph_button = Button(self.button_frame, text="print graph to console", command=self.print_loaded_graph)
         self.print_currently_loaded_graph_button.grid(row=1, column=4, padx=5, sticky="w")
 
         self.button_frame_alg = Frame(self)
