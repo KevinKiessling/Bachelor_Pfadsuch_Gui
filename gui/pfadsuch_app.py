@@ -141,7 +141,7 @@ class PfadsuchApp(Tk):
 
     # Gui Update hier wird der on Screen stuff generiert Später
     def update_gui(self):
-        print(self.current_step)
+
         self.gui_frame.canvas.delete("all")
 
         if self.current_step == -1:
@@ -153,10 +153,10 @@ class PfadsuchApp(Tk):
         neighbor = step["neighbor"]
         distances = step["distances"]
         priority_queue = step["priority_queue"]
-        print(priority_queue)
+
         visited = step["visited"]
         visited_edges = step["visited_edges"]
-
+        print(step)
         if step["step_type"] == "Algorithm Finished":
             self.draw_graph(None, None, distances, visited, visited_edges)
             return
@@ -168,7 +168,6 @@ class PfadsuchApp(Tk):
         print("Todo")
     #zeichnet den Graph
     def draw_graph(self, current_node, neighbor_list, distances, visited, visited_edges, highlight_only_edge=False):
-        print("Drawing Graph")
         self.gui_frame.canvas.delete("all")
         node_radius = 30
         font_size = 16
@@ -217,8 +216,7 @@ class PfadsuchApp(Tk):
                 edge_color = "black"
                 if (node, neighbor) in visited_edges:
                     edge_color = "lawn green"
-                elif (neighbor, node) in visited_edges:
-                    edge_color = "lawn green"
+
 
                 # Highlight edge for the current step (if it's the active edge)
                 if node == current_node and neighbor == neighbor_list:
@@ -290,8 +288,8 @@ class PfadsuchApp(Tk):
                         reverse_edge_color = "black"
 
                         # Only color reverse edge if it's visited
-                        if (neighbor, node) in visited_edges:
-                            reverse_edge_color = "lawn green"
+                        '''if (neighbor, node) in visited_edges:
+                            reverse_edge_color = "lawn green"'''
 
                         if neighbor == current_node and node == neighbor_list:
                             reverse_edge_color = "red"
