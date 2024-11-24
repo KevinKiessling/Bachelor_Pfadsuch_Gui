@@ -49,7 +49,7 @@ class PfadsuchApp(Tk):
 
         if not self.selected_algorithm:
             self.dijkstra_pq = Dijkstra_Priority_Queue()
-
+            self.update_gui()
             self.steps_finished_algorithm = self.dijkstra_pq.run_dijkstra_list(self.graph, self.start_node)
             print(self.steps_finished_algorithm)
 
@@ -103,7 +103,7 @@ class PfadsuchApp(Tk):
             print("resetting without clear")
         self.steps_finished_algorithm = []
         self.current_step = -1
-
+        self.start_node = ""
         self.update_gui()
 
 
@@ -114,42 +114,78 @@ class PfadsuchApp(Tk):
         if self.debug:
             print("clearing everything")
         self.graph = {}
-        #self.steps = []
+        self.steps_finished_algorithm = []
         self.current_step = -1
         self.node_positions = {}
         self.selected_nodes = []
+        self.start_node = ""
         self.update_gui()
 
     # Gui Update hier wird der on Screen stuff generiert Später
     def update_gui(self):
         print(self.current_step)
+        self.gui_frame.canvas.delete("all")
 
-        if self.steps_finished_algorithm == []:
+        if self.current_step == -1:
+            self.draw_graph(None, None, {node: 0 for node in self.graph}, set(), set())
+            return
 
-            self.draw_graph()
+        step = self.steps_finished_algorithm[self.current_step]
+        current_node = step["current_node"]
+        neighbor = step["neighbor"]
+        distances = step["distances"]
+        priority_queue = step["priority_queue"]
+        print(priority_queue)
+        visited = step["visited"]
+        visited_edges = step["visited_edges"]
+
+        if step["step_type"] == "Algorithm Finished":
+            self.draw_graph(None, None, distances, visited, visited_edges)
+            return
+        if step["step_type"] == "Highlight Edge":
+            self.draw_graph(current_node, neighbor, distances, visited, visited_edges, highlight_only_edge=True)
         else:
-            self.draw_graph_algorithm()
-
-
+            self.draw_graph(current_node, neighbor, distances, visited, visited_edges)
     def draw_graph_algorithm(self):
         print("Todo")
     #zeichnet den Graph
-    def draw_graph(self):
+    def draw_graph(self, current_node, neighbor_list, distances, visited, visited_edges, highlight_only_edge=False):
         print("Drawing Graph")
         self.gui_frame.canvas.delete("all")
-        node_radius = 30  # Knoten Größe
+        node_radius = 30
         font_size = 16
         already_drawn_edges = set()
+
         #basic draw node
         for node, (x, y) in self.node_positions.items():
+            color = "lightblue"
+            if node == current_node:
+                color = "yellow"
+            elif node in visited:
+                color = "bisque2"
+
 
             #hightlightet aktuell ausgewählten knoten für kanten erstellung
+            distance_text = distances.get(node, float('inf'))
+            display_text = f"{node}\n{distance_text if distance_text < float('inf') else 'inf'}"
+
             if node in self.selected_nodes:
                 self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill="green")
-                self.gui_frame.canvas.create_text(x, y, text=node, fill="black", font=("Arial", font_size))
+
+                self.gui_frame.canvas.create_text(x, y, text=display_text, fill="black", font=("Arial", font_size))
+                if node == self.start_node:
+                    self.gui_frame.canvas.create_text(x, y, text="Start", fill="black", font=("Arial", font_size))
+                else:
+                    self.gui_frame.canvas.create_text(x, y, text=display_text, fill="black", font=("Arial", font_size))
             else:
-                self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill="lightblue")
-                self.gui_frame.canvas.create_text(x, y, text=node, fill="black", font=("Arial", font_size))
+                self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill=color)
+
+
+                if node == self.start_node:
+                    self.gui_frame.canvas.create_text(x, y, text="Start", fill="black", font=("Arial", font_size))
+                else:
+                    self.gui_frame.canvas.create_text(x, y, text=display_text, fill="black", font=("Arial", font_size))
+
 
 
         # Zeichne alle Kanten, dabei wird zwischen 2 Varianten unterschieden, Direkt oder Bidirekt
@@ -159,6 +195,12 @@ class PfadsuchApp(Tk):
                 #falls kante schonmal behandelt wurde, skip
                 if (node, neighbor) in already_drawn_edges or (neighbor, node) in already_drawn_edges:
                     continue
+                if (node, neighbor) in visited_edges:
+                    edge_color = "blue"
+                elif node == current_node and neighbor == neighbor_list:
+                    edge_color = "red"  # Highlight the current edge in red
+                else:
+                    edge_color = "black"
 
                 if neighbor in self.node_positions:
                     #Knoten Positionen
@@ -209,11 +251,11 @@ class PfadsuchApp(Tk):
                         # Kante in 2 teile trennen
                         self.gui_frame.canvas.create_line(
                             x1_offset, y1_offset, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
-                            width=3, tags="edge"
+                            width=3, tags="edge", fill=edge_color
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_offset, y2_offset,
-                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5)
+                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color
                         )
                         self.gui_frame.canvas.create_text(
                             middle_x, middle_y,
@@ -228,15 +270,17 @@ class PfadsuchApp(Tk):
                         #print(x1_offset, x2_offset, y1_offset, y2_no_node_clip)
                         middle_x = (x1_offset + x2_offset) / 2
                         middle_y = (y1_offset + y2_offset) / 2
-
+                        reverse_edge_color = "blue" if (neighbor, node) in visited_edges else "black"
+                        if neighbor == current_node and node == neighbor_list:
+                            reverse_edge_color = "red"
                         # Kante in 2 Teile trennen
                         self.gui_frame.canvas.create_line(
                             x2_offset, y2_offset, middle_x + segment_dx / 2, middle_y + segment_dy / 2,
-                            width=3, tags="edge"
+                            width=3, tags="edge", fill=reverse_edge_color
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x - segment_dx / 2, middle_y - segment_dy / 2, x1_offset, y1_offset,
-                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5)
+                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_edge_color
                         )
                         #gewicht in die Mitte schreiben
                         self.gui_frame.canvas.create_text(
@@ -251,11 +295,11 @@ class PfadsuchApp(Tk):
 
                         self.gui_frame.canvas.create_line(
                             x1_no_node_clip, y1_no_node_clip, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
-                            width=3, tags="edge"
+                            width=3, tags="edge", fill=edge_color
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_no_node_clip, y2_no_node_clip,
-                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5)
+                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color
                         )
                         self.gui_frame.canvas.create_text(
                             middle_x, middle_y,

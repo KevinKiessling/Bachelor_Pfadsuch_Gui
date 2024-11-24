@@ -19,6 +19,19 @@ class Dijkstra_Priority_Queue():
         prev_nodes = {}
         visited = set()
         visited_edges = set()
+        self.save_state(
+            step_type="Initialization",
+            current_node=None,
+            current_distance=None,
+            neighbor=None,
+            edge_weight=None,
+            distances=distances,
+            prev_nodes=prev_nodes,
+            visited=visited,
+            visited_edges=visited_edges,
+            priority_queue=priority_queue
+        )
+
         while priority_queue:
             current_distance, current_node = heapq.heappop(priority_queue)
             if current_node in visited:
@@ -41,7 +54,8 @@ class Dijkstra_Priority_Queue():
             )
 
             for neighbor, edge_weight in graph[current_node].items():
-
+                if neighbor in visited:
+                    continue
                 new_distance = current_distance + edge_weight
                 self.save_state(
                     step_type="Highlight Edge",
