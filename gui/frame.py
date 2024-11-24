@@ -163,6 +163,7 @@ class My_Frame(Frame):
             print("currently Loaded graph: ")
         print(self.parent.graph)
         print(self.parent.node_positions)
+        print(self.parent.steps_finished_algorithm)
 
     # select dijkstra mit List as algorithm
     def toggle_dijk_L(self):

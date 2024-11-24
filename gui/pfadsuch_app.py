@@ -1,8 +1,8 @@
 from tkinter import *
 from gui.frame import *
 from gui.pseudocode_frame import *
-from algorithmen.dijkstra_pq import *
 from algorithmen.dijkstra_list import *
+from algorithmen.dijkstra_Priority_queue import *
 import math
 class PfadsuchApp(Tk):
     def __init__(self):
@@ -10,11 +10,11 @@ class PfadsuchApp(Tk):
 
         #debug mode
         self.debug = True
-
+        self.steps_finished_algorithm = []
 
         self.graph = {}
         self.start_node = ''
-        self.steps = []
+        #self.steps = []
         self.current_step = -1
         self.node_creation_mode = False
         self.edge_creation_mode = False
@@ -45,9 +45,14 @@ class PfadsuchApp(Tk):
             tkinter.messagebox.showerror("Invalid Node", "The starting node does not exist in the graph.")
             return
         self.start_node = str(start_node)
+
+
         if not self.selected_algorithm:
-            self.dijkstra_l = Dijkstra_List()
-            print(self.dijkstra_l.run_dijkstra_list(self.graph, self.start_node))
+            self.dijkstra_pq = Dijkstra_Priority_Queue()
+
+            self.steps_finished_algorithm = self.dijkstra_pq.run_dijkstra_list(self.graph, self.start_node)
+            print(self.steps_finished_algorithm)
+
         else:
             print("not implemented yet")
 
@@ -56,7 +61,7 @@ class PfadsuchApp(Tk):
         if self.debug:
             print("TODO:next step")
 
-        if self.current_step < len(self.steps) -1:
+        if self.current_step < len(self.steps_finished_algorithm) -1:
             self.current_step += 1
             self.update_gui()
 
@@ -72,7 +77,7 @@ class PfadsuchApp(Tk):
     def fast_forward(self):
         if self.debug:
             print("TODO:fast forward")
-        if self.current_step < len(self.steps) -1:
+        if self.current_step < len(self.steps_finished_algorithm) -1:
             self.current_step += 1
             self.update_gui()
             self.after(500,self.fast_forward)
@@ -89,7 +94,6 @@ class PfadsuchApp(Tk):
             print("Loading default graph")
         self.graph = {'1': {'2': 100, '3': 100, '4': 100}, '2': {'4': 100, '5': 100}, '3': {'4': 100, '2': 100}, '4': {}, '5': {'1': 100}}
         self.node_positions = {'1': (260, 216), '2': (739, 218), '3': (290, 673), '4': (828, 698), '5': (551, 898)}
-        self.start_node = '1'
         self.selected_nodes = []
         self.reset()
 
@@ -97,12 +101,12 @@ class PfadsuchApp(Tk):
     def reset(self):
         if self.debug:
             print("resetting without clear")
-        self.steps = []
+        self.steps_finished_algorithm = []
         self.current_step = -1
 
         self.update_gui()
 
-        #self.dijkstra_algorithm.run_dijkstra()
+
 
 
     #Setzt alles zurück und löscht auch den geladenen Graph
@@ -110,7 +114,7 @@ class PfadsuchApp(Tk):
         if self.debug:
             print("clearing everything")
         self.graph = {}
-        self.steps = []
+        #self.steps = []
         self.current_step = -1
         self.node_positions = {}
         self.selected_nodes = []
@@ -118,10 +122,17 @@ class PfadsuchApp(Tk):
 
     # Gui Update hier wird der on Screen stuff generiert Später
     def update_gui(self):
-       # self.reset()
-        self.draw_graph()
+        print(self.current_step)
+
+        if self.steps_finished_algorithm == []:
+
+            self.draw_graph()
+        else:
+            self.draw_graph_algorithm()
 
 
+    def draw_graph_algorithm(self):
+        print("Todo")
     #zeichnet den Graph
     def draw_graph(self):
         print("Drawing Graph")

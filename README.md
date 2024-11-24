@@ -12,11 +12,11 @@ Benötigte Pip Imports:
 
 
 Aktueller Stand:
-- Graph Erstellung scheint zu funktionieren.
+- Graph Erstellung + lazy dijkstra ohne schrittweise sollte gehen
 
 
 Nächster Schritte:
-- Morgen: Dijkstra schrittweise, um step by step die Berechnungen zu visualisieren.
+- Morgen: Dijkstra schrittweise 
 
 Ziel bis ende november:
 - funktionierendes Schrittweise Dijkstra.
