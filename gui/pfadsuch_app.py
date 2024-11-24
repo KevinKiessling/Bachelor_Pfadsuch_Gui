@@ -159,6 +159,7 @@ class PfadsuchApp(Tk):
         print(step)
         if step["step_type"] == "Algorithm Finished":
             self.draw_graph(None, None, distances, visited, visited_edges)
+            print(distances)
             return
         if step["step_type"] == "Highlight Edge":
             self.draw_graph(current_node, neighbor, distances, visited, visited_edges, highlight_only_edge=True)
@@ -212,9 +213,11 @@ class PfadsuchApp(Tk):
                 if (node, neighbor) in already_drawn_edges or (neighbor, node) in already_drawn_edges:
                     continue
 
-                # Determine the edge color based on whether it was visited
+
                 edge_color = "black"
-                if (node, neighbor) in visited_edges:
+                # Nicht richtig, aber temp. lösung einfach alles grün zu färben
+                if (node, neighbor) in visited_edges or (neighbor, node) in visited_edges:
+
                     edge_color = "lawn green"
 
 
@@ -250,6 +253,21 @@ class PfadsuchApp(Tk):
                     is_bidirectional = neighbor in self.graph and node in self.graph[neighbor]
 
                     if is_bidirectional:
+                        #Current edge bestimmen die rot ist, reverse edge is immer nur black
+
+                        forward_colour = "black"
+                        reverse_colour = "black"
+
+
+                        if (node, neighbor) in visited_edges:
+                            forward_colour = "lawn green"
+                        if (neighbor, node) in visited_edges:
+                            reverse_colour = "lawn green"
+                        if (node == current_node and neighbor == neighbor_list):
+                            forward_colour = "red"
+                        if (neighbor == current_node and node == neighbor_list):
+                            reverse_colour = "red"
+
                         # Offset um die bidirektionale Kante einzufügen
                         offset = 10
                         # Beide Kanten auseinander "ziehen"
@@ -267,11 +285,11 @@ class PfadsuchApp(Tk):
                         # Kante in 2 Teile trennen
                         self.gui_frame.canvas.create_line(
                             x1_offset, y1_offset, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
-                            width=4, tags="edge", fill=edge_color
+                            width=4, tags="edge", fill=forward_colour
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_offset, y2_offset,
-                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=forward_colour
                         )
                         self.gui_frame.canvas.create_text(
                             middle_x, middle_y,
@@ -285,23 +303,18 @@ class PfadsuchApp(Tk):
                         y2_offset = y2_no_node_clip - perp_dy
                         middle_x = (x1_offset + x2_offset) / 2
                         middle_y = (y1_offset + y2_offset) / 2
-                        reverse_edge_color = "black"
 
-                        # Only color reverse edge if it's visited
-                        '''if (neighbor, node) in visited_edges:
-                            reverse_edge_color = "lawn green"'''
 
-                        if neighbor == current_node and node == neighbor_list:
-                            reverse_edge_color = "red"
+
 
                         # Kante in 2 Teile trennen
                         self.gui_frame.canvas.create_line(
                             x2_offset, y2_offset, middle_x + segment_dx / 2, middle_y + segment_dy / 2,
-                            width=4, tags="edge", fill=reverse_edge_color
+                            width=4, tags="edge", fill=reverse_colour
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x - segment_dx / 2, middle_y - segment_dy / 2, x1_offset, y1_offset,
-                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_edge_color
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_colour
                         )
 
                         # Gewicht in die Mitte schreiben
@@ -331,6 +344,4 @@ class PfadsuchApp(Tk):
 
                     # Speichere Kanten die bereits gezeichnet wurden, damit bidirektionale Kanten nicht 4x gezeichnet werden
                     already_drawn_edges.add((node, neighbor))
-
-
 
