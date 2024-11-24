@@ -162,12 +162,12 @@ class PfadsuchApp(Tk):
             if node == current_node:
                 color = "yellow"
             elif node in visited:
-                color = "bisque2"
+                color = "lawn green"
 
 
             #hightlightet aktuell ausgewählten knoten für kanten erstellung
             distance_text = distances.get(node, float('inf'))
-            display_text = f"{node}\n{distance_text if distance_text < float('inf') else 'inf'}"
+            display_text = f"{node}:{distance_text if distance_text < float('inf') else 'inf'}"
 
             if node in self.selected_nodes:
                 self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill="green")
@@ -196,9 +196,9 @@ class PfadsuchApp(Tk):
                 if (node, neighbor) in already_drawn_edges or (neighbor, node) in already_drawn_edges:
                     continue
                 if (node, neighbor) in visited_edges:
-                    edge_color = "blue"
+                    edge_color = "lawn green"
                 elif node == current_node and neighbor == neighbor_list:
-                    edge_color = "red"  # Highlight the current edge in red
+                    edge_color = "red"
                 else:
                     edge_color = "black"
 
@@ -251,11 +251,11 @@ class PfadsuchApp(Tk):
                         # Kante in 2 teile trennen
                         self.gui_frame.canvas.create_line(
                             x1_offset, y1_offset, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
-                            width=3, tags="edge", fill=edge_color
+                            width=4, tags="edge", fill=edge_color
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_offset, y2_offset,
-                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color
                         )
                         self.gui_frame.canvas.create_text(
                             middle_x, middle_y,
@@ -276,11 +276,11 @@ class PfadsuchApp(Tk):
                         # Kante in 2 Teile trennen
                         self.gui_frame.canvas.create_line(
                             x2_offset, y2_offset, middle_x + segment_dx / 2, middle_y + segment_dy / 2,
-                            width=3, tags="edge", fill=reverse_edge_color
+                            width=4, tags="edge", fill=reverse_edge_color
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x - segment_dx / 2, middle_y - segment_dy / 2, x1_offset, y1_offset,
-                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_edge_color
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_edge_color
                         )
                         #gewicht in die Mitte schreiben
                         self.gui_frame.canvas.create_text(
@@ -295,11 +295,11 @@ class PfadsuchApp(Tk):
 
                         self.gui_frame.canvas.create_line(
                             x1_no_node_clip, y1_no_node_clip, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
-                            width=3, tags="edge", fill=edge_color
+                            width=4, tags="edge", fill=edge_color
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_no_node_clip, y2_no_node_clip,
-                            width=3, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color
                         )
                         self.gui_frame.canvas.create_text(
                             middle_x, middle_y,
