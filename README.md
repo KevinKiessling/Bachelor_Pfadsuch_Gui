@@ -11,14 +11,17 @@ Benötigte Pip Imports:
 - 
 
 
-Aktueller Stand:
-- Graph Erstellung + lazy dijkstra ohne schrittweise sollte gehen
+Aktueller Stand 24.11:
+- Graph Erstellung + lazy dijkstra funktioniert schrittweise.
 
 
-Nächster Schritte:
-- Morgen: Dijkstra schrittweise 
+Nächste Schritte:
+- Pseudocode on screen
+- tabelle mit aktuellen distanzen
+- 
 
 Ziel bis ende november:
 - funktionierendes Schrittweise Dijkstra.
 - Pseudocode aus Grundlagen bei dem jeder Schritt highlighted wird.
 - Visualisierung der Unterliegenden Datenstruktur, also Liste, PQ.
+- import & export von graph als Adjazenzliste + coordinates
