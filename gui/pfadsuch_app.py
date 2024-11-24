@@ -19,6 +19,8 @@ class PfadsuchApp(Tk):
         self.node_creation_mode = False
         self.edge_creation_mode = False
 
+        # um den pause button zu implementieren
+        self.fast_forward_paused = False
         self.node_positions = {}
         self.selected_nodes = []
         self.selected_algorithm = "Dijkstra_PQ" # True für dijkstra mit Liste, false für Priority queue
@@ -82,10 +84,14 @@ class PfadsuchApp(Tk):
             print("fast forward")
         if self.steps_finished_algorithm == []:
             print("no algorithm loaded")
+        if self.fast_forward_paused:
+            return
         if self.current_step < len(self.steps_finished_algorithm) -1:
             self.current_step += 1
             self.update_gui()
             self.after(500,self.fast_forward)
+        else:
+            print("finished algorithm")
 
 
     def pause(self):
@@ -93,6 +99,10 @@ class PfadsuchApp(Tk):
             print("TODO:pausing")
         if self.steps_finished_algorithm == []:
             print("no algorithm loaded")
+            return
+        self.fast_forward_paused = True
+        print("fast forward stopped bei schritt : ", self.current_step)
+
 
 
     # Läd default graph beim starten der App und auf wunsch
@@ -198,27 +208,30 @@ class PfadsuchApp(Tk):
         # Zeichne alle Kanten, dabei wird zwischen 2 Varianten unterschieden, Direkt oder Bidirekt
         for node, edges in self.graph.items():
             for neighbor, weight in edges.items():
-
-                #falls kante schonmal behandelt wurde, skip
+                # Falls Kante schonmal behandelt wurde, skip
                 if (node, neighbor) in already_drawn_edges or (neighbor, node) in already_drawn_edges:
                     continue
+
+                # Determine the edge color based on whether it was visited
+                edge_color = "black"
                 if (node, neighbor) in visited_edges:
                     edge_color = "lawn green"
-                elif node == current_node and neighbor == neighbor_list:
+                elif (neighbor, node) in visited_edges:
+                    edge_color = "lawn green"
+
+                # Highlight edge for the current step (if it's the active edge)
+                if node == current_node and neighbor == neighbor_list:
                     edge_color = "red"
-                else:
-                    edge_color = "black"
 
                 if neighbor in self.node_positions:
-                    #Knoten Positionen
+                    # Knoten Positionen
                     x1, y1 = self.node_positions[node]
                     x2, y2 = self.node_positions[neighbor]
 
-                    # berechnet offset, damit kanten nicht in die knoten clippen
+                    # Berechnet Offset, damit Kanten nicht in die Knoten clippen
                     dx = x2 - x1
                     dy = y2 - y1
                     distance = math.sqrt(dx ** 2 + dy ** 2)
-
 
                     if distance > 0:
                         x1_no_node_clip = x1 + dx / distance * node_radius
@@ -228,34 +241,31 @@ class PfadsuchApp(Tk):
                     else:
                         x1_no_node_clip, y1_no_node_clip, x2_no_node_clip, y2_no_node_clip = x1, y1, x2, y2
 
-
-                    #Kante teilen um das Gewicht zu zeigen
-                    middle_space = 0.12  # platz für das gewicht in der mitte
+                    # Kante teilen um das Gewicht zu zeigen
+                    middle_space = 0.12
 
                     segment_dx = dx / distance * middle_space * distance
                     segment_dy = dy / distance * middle_space * distance
 
-                    #Erkenne ob die Kante Bidirektional ist um sie anders zu zeichnen
+                    # Erkenne ob die Kante Bidirektional ist, um sie anders zu zeichnen
                     is_bidirectional = neighbor in self.graph and node in self.graph[neighbor]
-                   # print(is_bidirectional)
 
                     if is_bidirectional:
-
-                        # Offset um die bidirektionale kante einzufügen
+                        # Offset um die bidirektionale Kante einzufügen
                         offset = 10
-                        # Beide Kanten auseinander "Ziehen"
+                        # Beide Kanten auseinander "ziehen"
                         perp_dx = -dy / distance * offset
                         perp_dy = dx / distance * offset
-                        # 1. Kante koordinaten
+
+                        # 1. Kante Koordinaten
                         x1_offset = x1_no_node_clip + perp_dx
                         y1_offset = y1_no_node_clip + perp_dy
                         x2_offset = x2_no_node_clip + perp_dx
                         y2_offset = y2_no_node_clip + perp_dy
                         middle_x = (x1_offset + x2_offset) / 2
                         middle_y = (y1_offset + y2_offset) / 2
-                        #print(x1_offset, x2_offset, y1_offset, y2_no_node_clip)
 
-                        # Kante in 2 teile trennen
+                        # Kante in 2 Teile trennen
                         self.gui_frame.canvas.create_line(
                             x1_offset, y1_offset, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
                             width=4, tags="edge", fill=edge_color
@@ -269,17 +279,22 @@ class PfadsuchApp(Tk):
                             text=str(weight), fill="black", font=("Arial", 14), tags="weight"
                         )
 
-                        #offset für die 2. Kante
+                        # Offset für die 2. Kante
                         x1_offset = x1_no_node_clip - perp_dx
                         y1_offset = y1_no_node_clip - perp_dy
                         x2_offset = x2_no_node_clip - perp_dx
                         y2_offset = y2_no_node_clip - perp_dy
-                        #print(x1_offset, x2_offset, y1_offset, y2_no_node_clip)
                         middle_x = (x1_offset + x2_offset) / 2
                         middle_y = (y1_offset + y2_offset) / 2
-                        reverse_edge_color = "blue" if (neighbor, node) in visited_edges else "black"
+                        reverse_edge_color = "black"
+
+                        # Only color reverse edge if it's visited
+                        if (neighbor, node) in visited_edges:
+                            reverse_edge_color = "lawn green"
+
                         if neighbor == current_node and node == neighbor_list:
                             reverse_edge_color = "red"
+
                         # Kante in 2 Teile trennen
                         self.gui_frame.canvas.create_line(
                             x2_offset, y2_offset, middle_x + segment_dx / 2, middle_y + segment_dy / 2,
@@ -289,14 +304,13 @@ class PfadsuchApp(Tk):
                             middle_x - segment_dx / 2, middle_y - segment_dy / 2, x1_offset, y1_offset,
                             width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_edge_color
                         )
-                        #gewicht in die Mitte schreiben
+
+                        # Gewicht in die Mitte schreiben
                         self.gui_frame.canvas.create_text(
                             middle_x, middle_y, text=str(self.graph[neighbor][node]), font=("Arial", 14), tags="weight"
                         )
-                    #zeichne normale kante
                     else:
-
-                        # Einzelne Kante auch wieder mittig teilen für das Gewicht
+                        # Zeichne normale Kante
                         middle_x = (x1_no_node_clip + x2_no_node_clip) / 2
                         middle_y = (y1_no_node_clip + y2_no_node_clip) / 2
 
@@ -315,7 +329,8 @@ class PfadsuchApp(Tk):
                             font=("Arial", 14),
                             tags="weight"
                         )
-                    # Speichere Kanten die bereits gezeichnet wurden, damit bidirektionale kanten nicht 4x gezeichnet werden
+
+                    # Speichere Kanten die bereits gezeichnet wurden, damit bidirektionale Kanten nicht 4x gezeichnet werden
                     already_drawn_edges.add((node, neighbor))
 
 

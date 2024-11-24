@@ -168,6 +168,7 @@ class My_Frame(Frame):
 
     def go_fast_forward(self, event):
         print("testkeybind auto")
+        self.parent.fast_forward_paused = False
         self.parent.fast_forward()
     def pause_fast_forward(self, event):
         print("testkeybind pause")

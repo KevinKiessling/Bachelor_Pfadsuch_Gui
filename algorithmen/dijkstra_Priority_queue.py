@@ -56,7 +56,7 @@ class Dijkstra_Priority_Queue():
             for neighbor, edge_weight in graph[current_node].items():
                 if neighbor in visited:
                     continue
-                new_distance = current_distance + edge_weight
+                visited_edges.add((current_node, neighbor))
                 self.save_state(
                     step_type="Highlight Edge",
                     current_node=current_node,
@@ -69,13 +69,28 @@ class Dijkstra_Priority_Queue():
                     visited_edges=visited_edges,
                     priority_queue=priority_queue
                 )
+                new_distance = current_distance + edge_weight
+
+                self.save_state(
+                    step_type="Compare Distance",
+                    current_node=current_node,
+                    current_distance=current_distance,
+                    neighbor=neighbor,
+                    edge_weight=edge_weight,
+                    distances=distances,
+                    prev_nodes=prev_nodes,
+                    visited=visited,
+                    visited_edges=visited_edges,
+                    priority_queue=priority_queue
+                )
+
                 if new_distance < distances[neighbor]:
                     distances[neighbor] = new_distance
 
                     if neighbor not in node_in_queue or new_distance < node_in_queue[neighbor]:
                         heapq.heappush(priority_queue, (new_distance, neighbor))
-                        node_in_queue[neighbor] = new_distance  # Update tracking
-                        visited_edges.add((current_node, neighbor))
+                        node_in_queue[neighbor] = new_distance
+                       # visited_edges.add((current_node, neighbor))
                         self.save_state(
                             step_type="Update Distance",
                             current_node=current_node,
