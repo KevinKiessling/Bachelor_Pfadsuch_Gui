@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox
 from gui.frame import *
 from gui.pseudocode_frame import *
 from algorithmen.dijkstra_list import *
@@ -49,7 +50,7 @@ class PfadsuchApp(Tk):
         if start_node is None:
             return
         if str(start_node) not in self.graph:
-            tkinter.messagebox.showerror("Invalid Node", "The starting node does not exist in the graph.")
+            messagebox.showerror("Invalid Node", "The starting node does not exist in the graph.")
             return
         self.start_node = str(start_node)
 
@@ -94,7 +95,7 @@ class PfadsuchApp(Tk):
         if self.current_step < len(self.steps_finished_algorithm) -1:
             self.current_step += 1
             self.update_gui()
-            self.after(500,self.fast_forward)
+            self.after(500, self.fast_forward)
         else:
             print("finished algorithm")
 
