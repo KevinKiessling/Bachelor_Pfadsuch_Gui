@@ -9,7 +9,7 @@ class My_Frame(Frame):
         self.parent = parent
 
         #put the this frame on screen
-        self.pack(pady=20)
+        self.grid(row=0, column=0)
         self.random_edge_mode = True
 
         self.grid_columnconfigure(0, weight=1, minsize=150)
@@ -50,6 +50,7 @@ class My_Frame(Frame):
 
 
         #Bind option to canvas
+
         self.canvas.bind("<Button-1>", self.add_node_or_edge)
         self.canvas.bind("<Button-3>", self.remove_clicked_element)
         self.focus_set()
@@ -57,6 +58,7 @@ class My_Frame(Frame):
         self.bind("<Left>", self.go_step_back)
         self.bind("<Up>", self.go_fast_forward)
         self.bind("<Down>", self.pause_fast_forward)
+
         # Menü Bar oben
         self.menu_bar = Menu(parent)
         parent.config(menu=self.menu_bar)

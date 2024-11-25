@@ -28,14 +28,18 @@ class PfadsuchApp(Tk):
 
         #titel
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
-        self.geometry('1500x1200')
+        self.geometry('1850x1100')
 
         # Auslagern der Gui erstellung in andere Klasse
-        self.gui_frame = My_Frame(self)
         self.code_frame = Pseudocode_Frame(self)
+        self.gui_frame = My_Frame(self)
+        self.bind_all("<FocusIn>", self.global_focus_control)
         self.load_default_graph()
         #
 
+    def global_focus_control(self, event):
+        if event.widget in self.code_frame.winfo_children():
+            self.gui_frame.focus_set()
 
 
         #self.update_gui()
