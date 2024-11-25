@@ -169,8 +169,7 @@ class PfadsuchApp(Tk):
             self.draw_graph(current_node, neighbor, distances, visited, visited_edges, highlight_only_edge=True)
         else:
             self.draw_graph(current_node, neighbor, distances, visited, visited_edges)
-    def draw_graph_algorithm(self):
-        print("Todo")
+
     #zeichnet den Graph
     def draw_graph(self, current_node, neighbor_list, distances, visited, visited_edges, highlight_only_edge=False):
         self.gui_frame.canvas.delete("all")

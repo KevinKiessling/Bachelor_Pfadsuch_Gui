@@ -190,6 +190,8 @@ class My_Frame(Frame):
         if self.parent.debug:
             print("Toggle to Dijk mit Liste...")
         self.parent.selected_algorithm = "Dijkstra_List"
+        self.parent.code_frame.set_algorithm("Dijkstra_List")
+        self.parent.reset()
         self.dijk_L.set(True)
         self.dijk_PQ.set(False)
 
@@ -198,6 +200,8 @@ class My_Frame(Frame):
         if self.parent.debug:
             print("Toggle to Dijk mit PQ...")
         self.parent.selected_algorithm = "Dijkstra_PQ"
+        self.parent.code_frame.set_algorithm("Dijkstra_PQ")
+        self.parent.reset()
         self.dijk_L.set(False)
         self.dijk_PQ.set(True)
 
