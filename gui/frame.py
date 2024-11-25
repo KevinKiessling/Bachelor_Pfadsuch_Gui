@@ -342,5 +342,34 @@ class My_Frame(Frame):
         except Exception as e:
             print(f"Error:{e}")
 
+    # import funktion, um einen Graphen als .json zu importieren
     def import_graph(self):
-        print("Todo:importing graph clicked")
+        default_dir = os.path.join(os.getcwd(), "save_files")
+        os.makedirs(default_dir, exist_ok=True)
+
+        filepath = filedialog.askopenfilename(
+            title="Graph .json file zum Importieren auswählen",
+            initialdir=default_dir,
+            defaultextension=".json",
+            filetypes=[("JSON Files", "*.json"), ("All Files", "*.*")]
+        )
+
+        if not filepath:
+            return
+
+        try:
+            with open(filepath, 'r') as file:
+                data = json.load(file)
+
+            if "graph" in data and "node_position" in data:
+                self.parent.graph = data["graph"]
+                self.parent.node_positions = {node: tuple(pos) for node, pos in data["node_position"].items()}
+
+                print(f"imported graph from {filepath}")
+                self.parent.update_gui()
+
+            else:
+                print("format not supported, check input file")
+
+        except Exception as e:
+            print(f"Importing error : {e}")
