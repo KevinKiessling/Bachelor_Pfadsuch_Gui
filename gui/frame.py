@@ -319,7 +319,6 @@ class My_Frame(Frame):
     def export_graph(self):
         default_dir = os.path.join(os.getcwd(), "save_files")
         os.makedirs(default_dir, exist_ok=True)
-
         filepath = filedialog.asksaveasfilename(
             initialdir=default_dir,
             initialfile="Exported_Graph.json",
@@ -328,16 +327,13 @@ class My_Frame(Frame):
         )
         if not filepath:
             return
-
         try:
             data = {
                 "graph": self.parent.graph,
                 "node_position": self.parent.node_positions
             }
-
             with open(filepath, 'w') as file:
                 json.dump(data, file, indent=4)
-
             print(f"exported to {filepath}")
         except Exception as e:
             print(f"Error:{e}")
@@ -346,30 +342,23 @@ class My_Frame(Frame):
     def import_graph(self):
         default_dir = os.path.join(os.getcwd(), "save_files")
         os.makedirs(default_dir, exist_ok=True)
-
         filepath = filedialog.askopenfilename(
             title="Graph .json file zum Importieren auswählen",
             initialdir=default_dir,
             defaultextension=".json",
             filetypes=[("JSON Files", "*.json"), ("All Files", "*.*")]
         )
-
         if not filepath:
             return
-
         try:
             with open(filepath, 'r') as file:
                 data = json.load(file)
-
             if "graph" in data and "node_position" in data:
                 self.parent.graph = data["graph"]
                 self.parent.node_positions = {node: tuple(pos) for node, pos in data["node_position"].items()}
-
                 print(f"imported graph from {filepath}")
                 self.parent.update_gui()
-
             else:
                 print("format not supported, check input file")
-
         except Exception as e:
             print(f"Importing error : {e}")
