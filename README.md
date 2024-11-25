@@ -11,12 +11,12 @@ Benötigte Pip Imports:
 - 
 
 
-Aktueller Stand 24.11:
-- Graph Erstellung + lazy dijkstra funktioniert schrittweise.
+Aktueller Stand 25.11:
+- Haufen fixes für Schrittweise darstellung und Pseudocode in Sceen
 
 
 Nächste Schritte:
-- Pseudocode on screen
+- Pseudocode highlighting
 - tabelle mit aktuellen distanzen
 - 
 

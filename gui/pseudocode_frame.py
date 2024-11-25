@@ -61,4 +61,11 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display.insert(END, pcode)
         self.pseudocode_display.config(state=DISABLED)
 
+    def set_algorithm(self, algorithm):
+        if algorithm == "":
+            print("no alg")
+        if algorithm == "":
+            print("todo")
 
+    def set_step(self, steptype):
+        print("setting step to :", steptype)
