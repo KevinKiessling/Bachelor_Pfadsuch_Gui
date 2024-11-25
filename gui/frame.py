@@ -1,7 +1,12 @@
+import os.path
 import random
 import tkinter.simpledialog
 from tkinter import *
 import math
+from tkinter import filedialog
+import json
+
+
 class My_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -310,8 +315,32 @@ class My_Frame(Frame):
         den = math.hypot(w - j, z - l)
         return num/den
 
+    # export funktion, Hier wird der Graph als .json file gespeichert. Default directory ist dafür der save_files ordner
     def export_graph(self):
-        print("Todo:exporting graph clicked")
+        default_dir = os.path.join(os.getcwd(), "save_files")
+        os.makedirs(default_dir, exist_ok=True)
+
+        filepath = filedialog.asksaveasfilename(
+            initialdir=default_dir,
+            initialfile="Exported_Graph.json",
+            defaultextension=".json",
+            filetypes=[("JSON Files", "*.json"), ("All Files", "*.*")]
+        )
+        if not filepath:
+            return
+
+        try:
+            data = {
+                "graph": self.parent.graph,
+                "node_position": self.parent.node_positions
+            }
+
+            with open(filepath, 'w') as file:
+                json.dump(data, file, indent=4)
+
+            print(f"exported to {filepath}")
+        except Exception as e:
+            print(f"Error:{e}")
 
     def import_graph(self):
         print("Todo:importing graph clicked")
