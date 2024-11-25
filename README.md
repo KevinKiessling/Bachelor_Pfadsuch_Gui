@@ -1,5 +1,5 @@
 # Bachelor
-Stand 22.11.24
+
 
 Bachelorarbeit zum Thema "Eine GUI zur Visualisierung von Pfadsuch-Algorithmen"
 
