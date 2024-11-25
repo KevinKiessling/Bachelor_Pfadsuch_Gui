@@ -38,11 +38,34 @@ class Pseudocode_Frame(Frame):
 
     def set_algorithm(self, algorithm):
         if algorithm == "Dijkstra_List":
-            self.pcode = """Todo"""
+            self.pcode = """Pseudocode: Dijkstra mit Liste
+Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten s ∈ V
+2: for each v ∈ V do
+3:      discovered[v] ← false 
+4: end for
+5: for each v ∈ V do 
+6:      d(v) ← ∞ 
+7: end for
+8: d(s) ← 0 
+9: L ← []
+10: for each v ∈ V do 
+11:     L.add(v) 
+12: end for
+13: while not L.empty() do 
+14:     wähle u ∈ L mit kleinstem Wert d[u] 
+15:     L.remove(u) 
+16:     discovered[u] ← true 
+17:     for each (u, v) ∈ E do 
+18:         if not discovered[v] then
+19:             d[v] ← min(d[v], d[u] + ω(u, v)) 
+20:         end if
+21:     end for
+22: end while          
+"""
 
 
         if algorithm == "Dijkstra_PQ":
-            self.pcode = """ Pseudocode: Dijkstra mit Priority Queue
+            self.pcode = """ Pseudocode: Dijkstra mit Priority Queue(mit Lazy Deletion)
 1: Input: Gerichteter Graph G = (V, E), Gewichtsfunktion w : E → N, Startknoten s ∈ V
 2: for each v ∈ V do
 3:      discovered[v] ← false 
