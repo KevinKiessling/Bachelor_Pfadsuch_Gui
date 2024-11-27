@@ -78,10 +78,10 @@ class My_Frame(Frame):
         self.options_menu.add_command(label="Setting", command=self.open_settings)
         self.options_menu.add_separator()
         self.options_menu.add_command(label="Quit", command=parent.quit)
-        self.options_menu.add_checkbutton(label="Toggle Debug mode", variable=self.debug_mode_var, command=self.toggle_debug_mode)
+        self.options_menu.add_checkbutton(label="Toggle Debug", variable=self.debug_mode_var, command=self.toggle_debug_mode)
         self.edge_mode_random_var = BooleanVar(value=True)
 
-        self.options_menu.add_checkbutton(label="random Edge weight mode", variable=self.edge_mode_random_var,
+        self.options_menu.add_checkbutton(label="Random Edge weight", variable=self.edge_mode_random_var,
                                            command=self.toggle_random_edge_weight)
 
         # Graph optionen Menu
@@ -119,15 +119,21 @@ class My_Frame(Frame):
 
         node = self.get_node_at_position(x, y)
         if node:
-            print("deleting node at: Position noch genau bestimmen, nicht vom event sondern vom knoten")
+            print("Knoten gelöscht")
             self.delete_note(node)
+            return
 
+        kante = self.get_edge_at_coordinates(x, y)
+        if kante:
 
-        # später, aktuell keine edge deletion möglich
-        '''edge = self.get_edge_at_coordinates(x, y)
-        if edge:
-            print("deleting edge at: ", x, y)
-        #wie eine Kante finden?'''
+            s, e = kante
+            if e in self.parent.graph[s]:
+                del self.parent.graph[s][e]
+                print(f" Kante {s}, {e} gelöscht")
+                self.parent.reset()
+                return
+            else:
+                print("Error, keine Kante gefunden")
 
     def delete_note(self, node):
         if node in self.parent.graph:
@@ -196,8 +202,6 @@ class My_Frame(Frame):
 
     #Knoten hinzufügen
     def add_node(self, event):
-        '''if not self.parent.node_creation_mode:
-            return'''
 
         x, y = event.x, event.y
         new_node = self.get_next_id()
@@ -262,25 +266,24 @@ class My_Frame(Frame):
 
     def get_edge_at_coordinates(self, x, y):
         for node_s, neighbor in self.parent.graph.items():
+            node_s_pos = self.parent.node_positions[node_s]
+
             for node_e in neighbor:
-                print(node_s, node_e)
-                '''if node_s in self.parent.node_position.items() and node_e in self.parent.node_positions.items():
-                    j, l = self.parent.node_position[node_s]
-                    w, z = self.parent.node_position[node_e]'''
-                distanz = 0 #self.dis_p_to_l(x, y, j, l , w, z)
-                if distanz <= 10:
+                node_e_pos = self.parent.node_positions[node_e]
+                distance = self.distance_to_edge(x, y, *node_s_pos, *node_e_pos)
+
+
+                if distance <= 10:
                     return(node_s,node_e)
 
+    # Berechnet die distanz von einem punkt zu einer Linie
+    def distance_to_edge(self, x, y, x2, y2, x3 , y3):
+        if (x2, y2) == (x3, y3):
+            return math.hypot(x - x2, y - y2)
 
-    # um die distanz zu berechnen, damit man später edges löschen kann
-    def dis_p_to_l(self, x, y, j, l, w, z):
-        if(j, l) == (w, z):
-            return math.hypot(x - j, y - l)
-
-        num = abs((z -l) * x - (w - j) * y + w * l - z * j)
-        den = math.hypot(w - j, z - l)
-        return num/den
-
+        num = abs((y3 - y2) * x -(x3 - x2) * y + x3 * y2 - y3 * x2)
+        den = math.hypot(x3 - x2 , y3 - y2)
+        return num / den
     # export funktion, Hier wird der Graph als .json file gespeichert. Default directory ist dafür der save_files ordner
     def export_graph(self):
         default_dir = os.path.join(os.getcwd(), "save_files")

@@ -188,7 +188,7 @@ class PfadsuchApp(Tk):
 
             #hightlightet aktuell ausgewählten knoten für kanten erstellung
             distance_text = distances.get(node, float('inf'))
-            display_text = f"{node}:{distance_text if distance_text < float('inf') else 'inf'}"
+            display_text = f"{node}\n{distance_text if distance_text < float('inf') else 'inf'}"
 
             if node in self.selected_nodes:
                 self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill="green")
