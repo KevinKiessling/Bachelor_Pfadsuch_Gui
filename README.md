@@ -11,8 +11,8 @@ Benötigte Pip Imports:
 - 
 
 
-Aktueller Stand 26.11:
-- Überarbeitung Grundlagenkapitel
+Aktueller Stand 27.11:
+- Graph Erstellung Verbesserungen
 
 
 Nächste Schritte:
