@@ -57,7 +57,7 @@ class My_Frame(Frame):
         #Bind option to canvas
 
         #self.canvas.bind("<Button-1>", self.add_node_or_edge)
-        self.canvas.bind("<Double-1>", self.add_node)
+        self.canvas.bind("<Button-1>", self.add_node)
         self.canvas.bind("<Button-3>", self.add_edge)
         self.canvas.bind("<Button-2>", self.remove_clicked_element)
         self.focus_set()
@@ -79,6 +79,10 @@ class My_Frame(Frame):
         self.options_menu.add_separator()
         self.options_menu.add_command(label="Quit", command=parent.quit)
         self.options_menu.add_checkbutton(label="Toggle Debug mode", variable=self.debug_mode_var, command=self.toggle_debug_mode)
+        self.edge_mode_random_var = BooleanVar(value=True)
+
+        self.options_menu.add_checkbutton(label="random Edge weight mode", variable=self.edge_mode_random_var,
+                                           command=self.toggle_random_edge_weight)
 
         # Graph optionen Menu
         self.graph_menu = Menu(self.menu_bar, tearoff=0)
@@ -88,16 +92,6 @@ class My_Frame(Frame):
         self.graph_menu.add_command(label="Import Graph", command=self.import_graph)
         self.graph_menu.add_command(label="Export Graph", command=self.export_graph)
 
-        # Creation menu
-        self.creation_menu = Menu(self.menu_bar, tearoff=0)
-        self.menu_bar.add_cascade(label="Create", menu=self.creation_menu)
-
-        #display current mode with  checkmark
-
-        self.edge_mode_random_var = BooleanVar(value=True)
-
-        self.creation_menu.add_checkbutton(label="random Edge weight mode", variable=self.edge_mode_random_var,
-                                           command=self.toggle_random_edge_weight)
 
         self.algorithm_menu = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Algorithmen", menu=self.algorithm_menu)
