@@ -98,7 +98,8 @@ class My_Frame(Frame):
     def toggle_random_edge_weight(self):
 
         self.random_edge_mode = self.edge_mode_random_var.get()
-        print("Random edge weight mode is now", "on" if self.random_edge_mode else "off")
+        if self.parent.debug:
+            print("Random edge weight mode is now", "on" if self.random_edge_mode else "off")
 
 
 
@@ -110,11 +111,13 @@ class My_Frame(Frame):
     #Löscht Knoten oder Kante an Klick position,
     def remove_clicked_element(self, event):
         x, y = event.x, event.y
-        print("removal event at:", event.x, event.y)
+        if self.parent.debug:
+            print("removal event at:", event.x, event.y)
 
         node = self.get_node_at_position(x, y)
         if node:
-            print("Knoten gelöscht")
+            if self.parent.debug:
+                print("Knoten gelöscht")
             self.delete_note(node)
             return
 
@@ -124,11 +127,13 @@ class My_Frame(Frame):
             s, e = kante
             if e in self.parent.graph[s]:
                 del self.parent.graph[s][e]
-                print(f" Kante {s}, {e} gelöscht")
+                if self.parent.debug:
+                    print(f" Kante {s}, {e} gelöscht")
                 self.parent.reset()
                 return
             else:
-                print("Error, keine Kante gefunden")
+                if self.parent.debug:
+                    print("Error, keine Kante gefunden")
 
     #Löscht übergebenen Knoten
     def delete_note(self, node):
@@ -141,35 +146,40 @@ class My_Frame(Frame):
         if node in self.parent.node_positions:
             del self.parent.node_positions[node]
         self.parent.selected_nodes = []
-        print(f"Knoten {node} gelöscht")
+        if self.parent.debug:
+            print(f"Knoten {node} gelöscht")
         self.parent.reset()
 
     #Hier soll ein Settingsmenu geöffnet werden was settings speichert und beim laden der app läd
     def open_settings(self):
         if self.parent.debug:
-            print("Opening settings...")
+            print("Öffne Einstellungen, kommt später")
 
     # hilfsunktion um die parent funktion zu callen für die Keybinds
     def go_to_next_step(self, event):
-        print("testkeybind forward")
+        if self.parent.debug:
+            print("1 Schritt vor")
         self.parent.next_step()
     def go_step_back(self, event):
-        print("testkeybind back")
+        if self.parent.debug:
+            print("1 Schritt zurück")
         self.parent.prev_step()
 
     def go_fast_forward(self, event):
-        print("testkeybind auto")
+        if self.parent.debug:
+            print("Vorspulen aktiviert")
         self.parent.fast_forward_paused = False
         self.parent.fast_forward()
     def pause_fast_forward(self, event):
-        print("testkeybind pause")
+        if self.parent.debug:
+            print("Vorspulen pausiert")
         self.parent.pause()
 
 
     # gibt den aktuellen graphen auf der Konsole aus -> debug optionen
     def print_loaded_graph(self):
         if self.parent.debug:
-            print("currently Loaded graph: ")
+            print("Aktuell geladener Graph: ")
         print(self.parent.graph)
         print(self.parent.node_positions)
         print(self.parent.steps_finished_algorithm)
@@ -177,7 +187,7 @@ class My_Frame(Frame):
     # select dijkstra mit List as algorithm
     def toggle_dijk_L(self):
         if self.parent.debug:
-            print("Toggle to Dijk mit Liste...")
+            print("Wechsel zu Dijkstram mit Liste")
         self.parent.selected_algorithm = "Dijkstra_List"
         self.parent.code_frame.set_algorithm("Dijkstra_List")
         self.parent.reset()
@@ -187,7 +197,7 @@ class My_Frame(Frame):
     #select dijkstra mit Pq as algorithm
     def toggle_dijk_PQ(self):
         if self.parent.debug:
-            print("Toggle to Dijk mit PQ...")
+            print("Wechsel zu Dijkstram mit Priority Queue")
         self.parent.selected_algorithm = "Dijkstra_PQ"
         self.parent.code_frame.set_algorithm("Dijkstra_PQ")
         self.parent.reset()
@@ -203,8 +213,8 @@ class My_Frame(Frame):
         new_node = self.get_next_id()
         self.parent.graph[new_node] = {}
         self.parent.node_positions[new_node] = (x, y)
-
-        print(f"Node {new_node} added at ({x}, {y})")
+        if self.parent.debug:
+            print(f"Knoten {new_node} hinzugefügt an Position ({x}, {y})")
         self.parent.reset()
 
     # hilfs funktion damit löschen von knoten nicht der erstellen verhindert, da sonst duplikate erstellt werden, was alles breaked
@@ -227,7 +237,8 @@ class My_Frame(Frame):
                 self.parent.reset()
 
             self.parent.selected_nodes.append(clicked_node)
-            print(f"Selected node: {clicked_node}")
+            if self.parent.debug:
+                print(f"Startknoten gewählt : {clicked_node}")
 
 
             if len(self.parent.selected_nodes) == 2:
@@ -235,16 +246,19 @@ class My_Frame(Frame):
 
                 #dialog öffnen der nach gewicht fragt
                 if self.random_edge_mode:
-                    print("random mode")
+                    if self.parent.debug:
+                        print("random mode")
                     weight = random.randint(0, 100)
                 else:
-                    print("input mode")
-                    weight = tkinter.simpledialog.askinteger("Input edge weight", "Input Edge Weight as a Integer")
+                    if self.parent.debug:
+                        print("input mode")
+                    weight = tkinter.simpledialog.askinteger("Kantengewicht Eingeben", "Kantengewicht Eingeben")
 
                 if not node1 == node2 and weight is not None:
                     self.parent.graph[node1][node2] = weight
                     self.parent.selected_nodes.clear()
-                    print(f"Edge added from {node1} to {node2} with weight {weight}")
+                    if self.parent.debug:
+                        print(f"Kante von {node1} zu {node2} mit Gewicht {weight} hinzugefügt")
 
 
             self.parent.update_gui() # Aktualisiere Gui
@@ -270,7 +284,7 @@ class My_Frame(Frame):
 
                 if node_s in self.parent.node_positions and node_e in self.parent.node_positions:
                     x1, y1 = self.parent.node_positions[node_s]
-                    x2, y2= self.parent.node_positions[node_e]
+                    x2, y2 = self.parent.node_positions[node_e]
                     dis = self.distance_to_edge(x, y, x1, y1, x2, y2)
 
                     if dis < min and dis <=10:
@@ -327,9 +341,10 @@ class My_Frame(Frame):
             if "graph" in data and "node_position" in data:
                 self.parent.graph = data["graph"]
                 self.parent.node_positions = {node: tuple(pos) for node, pos in data["node_position"].items()}
-                print(f"imported graph from {filepath}")
+                if self.parent.debug:
+                    print(f" Graph von {filepath} wurde erfolgreich importiert")
                 self.parent.update_gui()
             else:
-                print("format not supported, check input file")
+                print("Fehlerhafte Input datei, Graph oder Node_Position nicht gefunden")
         except Exception as e:
             print(f"Importing error : {e}")

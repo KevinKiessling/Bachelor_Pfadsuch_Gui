@@ -88,7 +88,8 @@ class PfadsuchApp(Tk):
         if self.debug:
             print("fast forward")
         if self.steps_finished_algorithm == []:
-            print("no algorithm loaded")
+            if self.debug:
+                print("no algorithm loaded")
         if self.fast_forward_paused:
             return
         if self.current_step < len(self.steps_finished_algorithm) -1:
@@ -96,17 +97,19 @@ class PfadsuchApp(Tk):
             self.update_gui()
             self.after(500, self.fast_forward)
         else:
-            print("finished algorithm")
+            if self.debug:
+                print("finished algorithm")
 
 
     def pause(self):
-        if self.debug:
-            print("TODO:pausing")
+
         if self.steps_finished_algorithm == []:
-            print("no algorithm loaded")
+            if self.debug:
+                print("no algorithm loaded")
             return
         self.fast_forward_paused = True
-        print("fast forward stopped bei schritt : ", self.current_step)
+        if self.debug:
+            print("fast forward stopped bei schritt : ", self.current_step)
 
 
 
