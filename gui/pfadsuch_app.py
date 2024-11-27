@@ -17,8 +17,7 @@ class PfadsuchApp(Tk):
         self.start_node = ''
         #self.steps = []
         self.current_step = -1
-        self.node_creation_mode = False
-        self.edge_creation_mode = False
+
 
         # um den pause button zu implementieren
         self.fast_forward_paused = False

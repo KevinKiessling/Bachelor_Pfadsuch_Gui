@@ -56,8 +56,10 @@ class My_Frame(Frame):
 
         #Bind option to canvas
 
-        self.canvas.bind("<Button-1>", self.add_node_or_edge)
-        self.canvas.bind("<Button-3>", self.remove_clicked_element)
+        #self.canvas.bind("<Button-1>", self.add_node_or_edge)
+        self.canvas.bind("<Double-1>", self.add_node)
+        self.canvas.bind("<Button-3>", self.add_edge)
+        self.canvas.bind("<Button-2>", self.remove_clicked_element)
         self.focus_set()
         self.bind("<Right>", self.go_to_next_step)
         self.bind("<Left>", self.go_step_back)
@@ -91,14 +93,9 @@ class My_Frame(Frame):
         self.menu_bar.add_cascade(label="Create", menu=self.creation_menu)
 
         #display current mode with  checkmark
-        self.node_mode_var = BooleanVar(value=False)
-        self.edge_mode_var = BooleanVar(value=False)
+
         self.edge_mode_random_var = BooleanVar(value=True)
 
-        self.creation_menu.add_checkbutton(label="Add Node", variable=self.node_mode_var,
-                                           command=self.toggle_node_creation_mode)
-        self.creation_menu.add_checkbutton(label="Add Edge", variable=self.edge_mode_var,
-                                           command=self.toggle_edge_creation_mode)
         self.creation_menu.add_checkbutton(label="random Edge weight mode", variable=self.edge_mode_random_var,
                                            command=self.toggle_random_edge_weight)
 
@@ -117,15 +114,6 @@ class My_Frame(Frame):
 
 
 
-    def add_node_or_edge(self, event):
-        if self.parent.node_creation_mode == True:
-            if self.parent.debug:
-                print("Node_Event triggered by Mouse clicked at", event.x, event.y)
-            self.add_node(event)
-        if self.parent.edge_creation_mode == True:
-            if self.parent.debug:
-                print("Edge_Event triggered by Mouse clicked at", event.x, event.y)
-            self.add_edge(event)
 
     def toggle_debug_mode(self):
         self.parent.debug = self.debug_mode_var.get()
@@ -210,28 +198,12 @@ class My_Frame(Frame):
         self.dijk_L.set(False)
         self.dijk_PQ.set(True)
 
-    #Node Creation mode toggle
-    def toggle_node_creation_mode(self):
-        if self.parent.debug:
-            print("Toggling node creation mode...")
-        self.parent.node_creation_mode = True
-        self.parent.edge_creation_mode = False
-        self.node_mode_var.set(True)
-        self.edge_mode_var.set(False)
 
-    #Edge Creation mode
-    def toggle_edge_creation_mode(self):
-        if self.parent.debug:
-            print("Toggling Edge creation mode...")
-        self.parent.node_creation_mode = False
-        self.parent.edge_creation_mode = True
-        self.node_mode_var.set(False)
-        self.edge_mode_var.set(True)
 
     #Knoten hinzufügen
     def add_node(self, event):
-        if not self.parent.node_creation_mode:
-            return
+        '''if not self.parent.node_creation_mode:
+            return'''
 
         x, y = event.x, event.y
         new_node = self.get_next_id()
