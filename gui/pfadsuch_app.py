@@ -287,11 +287,11 @@ class PfadsuchApp(Tk):
                         # Kante in 2 Teile trennen
                         self.gui_frame.canvas.create_line(
                             x1_offset, y1_offset, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
-                            width=4, tags="edge", fill=forward_colour
+                            width=4, tags="edge", fill=forward_colour, smooth=True, splinesteps=300
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_offset, y2_offset,
-                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=forward_colour
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=forward_colour, smooth=True, splinesteps=300
                         )
                         self.gui_frame.canvas.create_text(
                             middle_x, middle_y,
@@ -312,11 +312,11 @@ class PfadsuchApp(Tk):
                         # Kante in 2 Teile trennen
                         self.gui_frame.canvas.create_line(
                             x2_offset, y2_offset, middle_x + segment_dx / 2, middle_y + segment_dy / 2,
-                            width=4, tags="edge", fill=reverse_colour
+                            width=4, tags="edge", fill=reverse_colour, smooth=True, splinesteps=300
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x - segment_dx / 2, middle_y - segment_dy / 2, x1_offset, y1_offset,
-                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_colour
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_colour, smooth=True, splinesteps=300
                         )
 
                         # Gewicht in die Mitte schreiben
@@ -330,11 +330,11 @@ class PfadsuchApp(Tk):
 
                         self.gui_frame.canvas.create_line(
                             x1_no_node_clip, y1_no_node_clip, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
-                            width=4, tags="edge", fill=edge_color
+                            width=4, tags="edge", fill=edge_color, smooth=True, splinesteps=300
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_no_node_clip, y2_no_node_clip,
-                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color, smooth=True, splinesteps=300
                         )
                         self.gui_frame.canvas.create_text(
                             middle_x, middle_y,
