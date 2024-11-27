@@ -11,8 +11,8 @@ Benötigte Pip Imports:
 - 
 
 
-Aktueller Stand 25.11:
-- Import export und basic Pseudocode
+Aktueller Stand 26.11:
+- Überarbeitung Grundlagenkapitel
 
 
 Nächste Schritte:

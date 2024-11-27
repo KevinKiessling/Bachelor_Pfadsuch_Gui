@@ -45,11 +45,11 @@ class PfadsuchApp(Tk):
 
         #self.update_gui()
     def start_algorithm(self):
-        start_node = tkinter.simpledialog.askinteger("Input starting node", "Input starting node")
+        start_node = tkinter.simpledialog.askstring("Input starting node", "Input starting node")
         self.selected_nodes = []
         if start_node is None:
             return
-        if str(start_node) not in self.graph:
+        if start_node not in self.graph:
             messagebox.showerror("Invalid Node", "The starting node does not exist in the graph.")
             return
         self.start_node = str(start_node)
