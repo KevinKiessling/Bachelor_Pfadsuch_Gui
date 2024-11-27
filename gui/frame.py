@@ -260,25 +260,31 @@ class My_Frame(Frame):
                 return node
         return None
 
+    # hilfsfunktion die naheste kante zu 2 koordinaten findet, wird benötigt um Kanten zu löschen
     def get_edge_at_coordinates(self, x, y):
+        nearest_edge = None
+        min = float('inf')
+
         for node_s, neighbor in self.parent.graph.items():
-            node_s_pos = self.parent.node_positions[node_s]
-
             for node_e in neighbor:
-                node_e_pos = self.parent.node_positions[node_e]
-                distance = self.distance_to_edge(x, y, *node_s_pos, *node_e_pos)
 
+                if node_s in self.parent.node_positions and node_e in self.parent.node_positions:
+                    x1, y1 = self.parent.node_positions[node_s]
+                    x2, y2= self.parent.node_positions[node_e]
+                    dis = self.distance_to_edge(x, y, x1, y1, x2, y2)
 
-                if distance <= 10:
-                    return(node_s,node_e)
+                    if dis < min and dis <=10:
+                        min = dis
+                        nearest_edge = (node_s, node_e)
+        return nearest_edge
 
     # Berechnet die distanz von einem punkt zu einer Linie
     def distance_to_edge(self, x, y, x2, y2, x3 , y3):
         if (x2, y2) == (x3, y3):
             return math.hypot(x - x2, y - y2)
 
-        num = abs((y3 - y2) * x -(x3 - x2) * y + x3 * y2 - y3 * x2)
-        den = math.hypot(x3 - x2 , y3 - y2)
+        num = abs((y3 - y2) * x - (x3 - x2) * y + x3 * y2 - y3 * x2)
+        den = math.hypot(x3 - x2, y3 - y2)
         return num / den
     # export funktion, Hier wird der Graph als .json file gespeichert. Default directory ist dafür der save_files ordner
     def export_graph(self):
