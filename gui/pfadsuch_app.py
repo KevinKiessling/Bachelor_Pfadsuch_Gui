@@ -218,22 +218,19 @@ class PfadsuchApp(Tk):
 
 
                 edge_color = "black"
-                # Nicht richtig, aber temp. lösung einfach alles grün zu färben
+
                 if (node, neighbor) in visited_edges or (neighbor, node) in visited_edges:
 
                     edge_color = "lawn green"
-
-
-                # Highlight edge for the current step (if it's the active edge)
                 if node == current_node and neighbor == neighbor_list:
                     edge_color = "red"
 
                 if neighbor in self.node_positions:
-                    # Knoten Positionen
+
                     x1, y1 = self.node_positions[node]
                     x2, y2 = self.node_positions[neighbor]
 
-                    # Berechnet Offset, damit Kanten nicht in die Knoten clippen
+
                     dx = x2 - x1
                     dy = y2 - y1
                     distance = math.sqrt(dx ** 2 + dy ** 2)
@@ -256,7 +253,6 @@ class PfadsuchApp(Tk):
                     is_bidirectional = neighbor in self.graph and node in self.graph[neighbor]
 
                     if is_bidirectional:
-                        #Current edge bestimmen die rot ist, reverse edge is immer nur black
 
                         forward_colour = "black"
                         reverse_colour = "black"

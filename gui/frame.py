@@ -51,12 +51,6 @@ class My_Frame(Frame):
         self.starting_button = Button(self.button_frame_alg, text="select Starting node", command=parent.start_algorithm)
         self.starting_button.grid(row=0, column=0, padx=5, sticky="w")
 
-
-
-
-        #Bind option to canvas
-
-        #self.canvas.bind("<Button-1>", self.add_node_or_edge)
         self.canvas.bind("<Button-1>", self.add_node)
         self.canvas.bind("<Button-3>", self.add_edge)
         self.canvas.bind("<Button-2>", self.remove_clicked_element)
@@ -70,11 +64,10 @@ class My_Frame(Frame):
         self.menu_bar = Menu(parent)
         parent.config(menu=self.menu_bar)
 
-        # Optionen Menu
+        # Optionen Menü
         self.options_menu = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Options", menu=self.options_menu)
         self.debug_mode_var = BooleanVar(value=True)
-        # Add commands to the "Options" menu
         self.options_menu.add_command(label="Setting", command=self.open_settings)
         self.options_menu.add_separator()
         self.options_menu.add_command(label="Quit", command=parent.quit)
@@ -92,7 +85,7 @@ class My_Frame(Frame):
         self.graph_menu.add_command(label="Import Graph", command=self.import_graph)
         self.graph_menu.add_command(label="Export Graph", command=self.export_graph)
 
-
+        # Algorithmen menü
         self.algorithm_menu = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Algorithmen", menu=self.algorithm_menu)
         self.dijk_L = BooleanVar(value=False)
@@ -101,6 +94,7 @@ class My_Frame(Frame):
         self.algorithm_menu.add_checkbutton(label="Dijkstra als Priority Queue", variable=self.dijk_PQ, command=self.toggle_dijk_PQ)
 
 
+    #Schalted zwischen manueller kanten gewicht eingabe und Random 0-100 um
     def toggle_random_edge_weight(self):
 
         self.random_edge_mode = self.edge_mode_random_var.get()
@@ -108,11 +102,12 @@ class My_Frame(Frame):
 
 
 
-
+    #Schaltet debug mode an/aus
     def toggle_debug_mode(self):
         self.parent.debug = self.debug_mode_var.get()
         print("Debug mode is now", "on" if self.parent.debug else "off")
 
+    #Löscht Knoten oder Kante an Klick position,
     def remove_clicked_element(self, event):
         x, y = event.x, event.y
         print("removal event at:", event.x, event.y)
@@ -135,6 +130,7 @@ class My_Frame(Frame):
             else:
                 print("Error, keine Kante gefunden")
 
+    #Löscht übergebenen Knoten
     def delete_note(self, node):
         if node in self.parent.graph:
             del self.parent.graph[node]
@@ -219,22 +215,22 @@ class My_Frame(Frame):
             newid += 1
         return str(newid)
 
-    #Kante hinzufügen, MAYBE RANDOM EDGE WEIGHT MODE?
+    #Kante hinzufügen in 2 schritten, 1. Markieren und speichern des Ausgangsknoten, 2. aufruf speichert den zielknoten und zieht kante
     def add_edge(self, event):
 
         x, y = event.x, event.y
-        clicked_node = self.get_node_at_position(x, y) # Ausgeheneder Knoten
+        clicked_node = self.get_node_at_position(x, y)
 
         if clicked_node: # falls knoten existiert
             if len(self.parent.selected_nodes) == 2:
                 self.parent.selected_nodes = []
                 self.parent.reset()
 
-            self.parent.selected_nodes.append(clicked_node) #speicher ihn zwischen
+            self.parent.selected_nodes.append(clicked_node)
             print(f"Selected node: {clicked_node}")
 
-            # !!!!!!!!!checke das 2. knoten != 1. knoten. und neue kante soll alte überschreiben, keine mehrfachen kann zwischen 2 knoten
-            if len(self.parent.selected_nodes) == 2:  #wenn 2 noten im Zwischenspeicher sind ,dann füge Kante hinzu
+
+            if len(self.parent.selected_nodes) == 2:
                 node1, node2 = self.parent.selected_nodes
 
                 #dialog öffnen der nach gewicht fragt
@@ -246,8 +242,8 @@ class My_Frame(Frame):
                     weight = tkinter.simpledialog.askinteger("Input edge weight", "Input Edge Weight as a Integer")
 
                 if not node1 == node2 and weight is not None:
-                    self.parent.graph[node1][node2] = weight#Füge weight hinzu
-                    self.parent.selected_nodes.clear()#Resette den Zwischenspeicher
+                    self.parent.graph[node1][node2] = weight
+                    self.parent.selected_nodes.clear()
                     print(f"Edge added from {node1} to {node2} with weight {weight}")
 
 
