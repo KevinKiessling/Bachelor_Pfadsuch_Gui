@@ -3,10 +3,10 @@ import math
 class Pseudocode_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        #to Access parent variables
+
         self.parent = parent
 
-        #put the this frame on screen
+
         self.grid(row=0, column=1)
 
         self.pseudocode_display = Text(self, wrap=WORD, height=26, width=60, takefocus=0)

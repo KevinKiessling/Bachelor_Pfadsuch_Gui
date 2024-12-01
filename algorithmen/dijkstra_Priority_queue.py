@@ -90,7 +90,7 @@ class Dijkstra_Priority_Queue():
                     if neighbor not in node_in_queue or new_distance < node_in_queue[neighbor]:
                         heapq.heappush(priority_queue, (new_distance, neighbor))
                         node_in_queue[neighbor] = new_distance
-                       # visited_edges.add((current_node, neighbor))
+
                         self.save_state(
                             step_type="Update Distance",
                             current_node=current_node,
@@ -117,10 +117,10 @@ class Dijkstra_Priority_Queue():
             priority_queue=priority_queue
         )
         return self.steps
-
+    #Speichert Schritt des Algorithmus
     def save_state(self, step_type, current_node, current_distance, neighbor, edge_weight, distances, prev_nodes,
                    visited, visited_edges, priority_queue):
-        """Save the current step's state for replay in the GUI."""
+
         state = {
             "step_type": step_type,
             "current_node": current_node,

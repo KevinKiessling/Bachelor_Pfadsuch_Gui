@@ -1,7 +1,7 @@
 
 '''
 
-Main Entry Point, navigate to the directory and run via: " python pfadsuche.py  "
+Ausführen der Gui via : " python pfadsuche.py  "
 
 '''
 from gui.pfadsuch_app import PfadsuchApp
