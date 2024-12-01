@@ -5,7 +5,7 @@ from tkinter import *
 import math
 from tkinter import filedialog
 import json
-
+from tkinter import messagebox
 
 class My_Frame(Frame):
     def __init__(self, parent):
@@ -92,6 +92,53 @@ class My_Frame(Frame):
         self.dijk_PQ = BooleanVar(value=True)
         self.algorithm_menu.add_checkbutton(label="Dijkstra als Liste", variable=self.dijk_L , command=self.toggle_dijk_L)
         self.algorithm_menu.add_checkbutton(label="Dijkstra als Priority Queue", variable=self.dijk_PQ, command=self.toggle_dijk_PQ)
+
+        self.edit_menu = Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="Edit", menu=self.edit_menu)
+        self.edit_menu.add_command(label="Edit Kantengewicht", command=self.edit_edge_weight)
+
+    def edit_edge_weight(self):
+
+        prompt_window = Toplevel(self)
+        prompt_window.title("Kantengewicht ändern")
+
+
+        Label(prompt_window, text="Start Knoten:").grid(row=0, column=0, padx=10, pady=5)
+        start_node_entry = Entry(prompt_window)
+        start_node_entry.grid(row=0, column=1, padx=10, pady=5)
+
+        Label(prompt_window, text="End Knoten:").grid(row=1, column=0, padx=10, pady=5)
+        end_node_entry = Entry(prompt_window)
+        end_node_entry.grid(row=1, column=1, padx=10, pady=5)
+
+        Label(prompt_window, text="Neues Gewicht:").grid(row=2, column=0, padx=10, pady=5)
+        weight_entry = Entry(prompt_window)
+        weight_entry.grid(row=2, column=1, padx=10, pady=5)
+
+
+        def confirm_change():
+            start_node = start_node_entry.get()
+            end_node = end_node_entry.get()
+            try:
+                new_weight = int(weight_entry.get())
+            except ValueError:
+                messagebox.showerror("Error, Input nicht valide", "Bitte nicht negativen Integer eingeben")
+                return
+
+            if start_node in self.parent.graph and end_node in self.parent.graph[start_node]:
+
+                self.parent.graph[start_node][end_node] = new_weight
+
+                messagebox.showinfo("Erfolg", f"Kantengewicht von {start_node} → {end_node} geändert zu {new_weight}.")
+                self.parent.update_gui()
+                prompt_window.destroy()
+            else:
+                messagebox.showerror("Fehler", "Kante nicht gefunden, bitte sicherstellen das die Kante existiert")
+
+        Button(prompt_window, text="Apply", command=confirm_change).grid(row=3, column=0, columnspan=2, pady=10)
+
+
+        Button(prompt_window, text="Cancel", command=prompt_window.destroy).grid(row=4, column=0, columnspan=2, pady=10)
 
 
     #Schalted zwischen manueller kanten gewicht eingabe und Random 0-100 um
