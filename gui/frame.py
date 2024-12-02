@@ -24,8 +24,11 @@ class My_Frame(Frame):
         self.grid_columnconfigure(4, weight=1, minsize=150)
         self.grid_columnconfigure(5, weight=1, minsize=150)
         # create Canvas
-        self.canvas = Canvas(self, width=1000, height=1000, bg="white")
-        self.canvas.grid(row=0, column=0, padx=10, columnspan=6)
+        self.canvas_frame = Frame(self, bd=2,relief="solid")
+        self.canvas_frame.grid(row=0, column=0, padx=10, columnspan=6)
+
+        self.canvas = Canvas(self.canvas_frame, width=1000, height=1000, bg="white")
+        self.canvas.grid(row=0, column=0)
         #create buttons
 
         self.button_frame = Frame(self)
