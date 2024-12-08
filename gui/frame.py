@@ -62,7 +62,7 @@ class My_Frame(Frame):
         self.bind("<Left>", self.go_step_back)
         self.bind("<Up>", self.go_fast_forward)
         self.bind("<Down>", self.pause_fast_forward)
-
+        self.bind("<Return>", self.start_alg)
         # Menü Bar oben
         self.menu_bar = Menu(parent)
         parent.config(menu=self.menu_bar)
@@ -206,6 +206,10 @@ class My_Frame(Frame):
             print("Öffne Einstellungen, kommt später")
 
     # hilfsunktion um die parent funktion zu callen für die Keybinds
+    def start_alg (self, event):
+        if self.parent.debug:
+            print("Beginne Algorithmus")
+        self.parent.start_algorithm()
     def go_to_next_step(self, event):
         if self.parent.debug:
             print("1 Schritt vor")

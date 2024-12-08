@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 import math
 class Pseudocode_Frame(Frame):
     def __init__(self, parent):
@@ -22,6 +23,18 @@ class Pseudocode_Frame(Frame):
             padx=10,
             pady=10,
         )
+
+        self.distance_table_label = Label(self, text="Aktuelle Distanzen", font=("Arial", 16))
+        self.distance_table_label.pack(pady=10)
+
+        self.distance_table = ttk.Treeview(self, columns=("Node", "Distance"), show="headings", height=10)
+        self.distance_table.pack(fill=BOTH, expand=True)
+
+        # Spaltenüberschriften
+        self.distance_table.heading("Node", text="Knoten")
+        self.distance_table.heading("Distance", text="Distanz")
+        self.distance_table.column("Node", width=100, anchor=CENTER)
+        self.distance_table.column("Distance", width=150, anchor=CENTER)
         self.pcode = ""
         self.set_algorithm(self.parent.selected_algorithm)
         self.set_code_field(self.pcode)
@@ -94,3 +107,13 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
         self.set_code_field(self.pcode)
     def set_step(self, steptype):
         print("setting step to :", steptype)
+
+    # Tabelle mit aktuellen distanzen
+    def update_distances(self, distances):
+        for item in self.distance_table.get_children():
+            self.distance_table.delete(item)
+
+
+        for node, distance in distances.items():
+            display_distance = "∞" if distance == float("inf") else distance
+            self.distance_table.insert("", "end", values=(node, display_distance))

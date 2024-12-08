@@ -160,7 +160,7 @@ class PfadsuchApp(Tk):
         neighbor = step["neighbor"]
         distances = step["distances"]
         priority_queue = step["priority_queue"]
-
+        self.code_frame.update_distances(distances)
         visited = step["visited"]
         visited_edges = step["visited_edges"]
         print(step)
