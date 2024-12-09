@@ -45,12 +45,12 @@ class PfadsuchApp(Tk):
         #self.update_gui()
     def start_algorithm(self):
         if self.start_node is None or self.start_node == '':
-            start_node = tkinter.simpledialog.askstring("Input starting node", "Input starting node")
+            start_node = tkinter.simpledialog.askstring("Startknoten wählen", "Bitte Startknoten auswählen")
             self.selected_nodes = []
             if start_node is None:
                 return
             if start_node not in self.graph:
-                messagebox.showerror("Invalid Node", "The starting node does not exist in the graph.")
+                messagebox.showerror("Knotenfehler", "Startknoten existiert nicht innerhalb des Graphs.")
                 return
             self.start_node = str(start_node)
         if self.selected_algorithm == "Dijkstra_PQ":
@@ -64,7 +64,11 @@ class PfadsuchApp(Tk):
 
 
 
-
+    def set_starting_node(self, node):
+        self.start_node = node
+        if self.debug:
+            print(f" Knoten {node} als Startknoten gesetzt")
+        self.update_gui()
 
     def next_step(self):
         if self.debug:

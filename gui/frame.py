@@ -51,7 +51,7 @@ class My_Frame(Frame):
         self.button_frame_alg = Frame(self)
         self.button_frame_alg.grid(row=0, column=6, pady=10)
 
-        self.starting_button = Button(self.button_frame_alg, text="select Starting node", command=parent.start_algorithm)
+        self.starting_button = Button(self.button_frame_alg, text="Algorithmus Starten", command=parent.start_algorithm)
         self.starting_button.grid(row=0, column=0, padx=5, sticky="w")
 
         self.canvas.bind("<Button-1>", self.add_node)
@@ -265,6 +265,12 @@ class My_Frame(Frame):
 
         x, y = event.x, event.y
 
+        clicked_node = self.get_node_at_position(x, y)
+        self.parent.reset()
+        if clicked_node:
+            print("Startknoten wählen statt neuer Knoten")
+            self.parent.set_starting_node(clicked_node)
+            return
         min_dis = 125
         for node, (c_x, c_y) in self.parent.node_positions.items():
             if math.hypot(c_x - x, c_y - y) < min_dis:
