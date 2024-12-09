@@ -45,8 +45,8 @@ class My_Frame(Frame):
         self.fast_forward_button = Button(self.button_frame, text="Pause", command=parent.pause)
         self.fast_forward_button.grid(row=1, column=3, padx=5, sticky="w")
 
-        self.print_currently_loaded_graph_button = Button(self.button_frame, text="print graph to console", command=self.print_loaded_graph)
-        self.print_currently_loaded_graph_button.grid(row=1, column=4, padx=5, sticky="w")
+        #self.print_currently_loaded_graph_button = Button(self.button_frame, text="print graph to console", command=self.print_loaded_graph)
+        #self.print_currently_loaded_graph_button.grid(row=1, column=4, padx=5, sticky="w")
 
         self.button_frame_alg = Frame(self)
         self.button_frame_alg.grid(row=0, column=6, pady=10)
@@ -99,6 +99,15 @@ class My_Frame(Frame):
         self.edit_menu = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Edit", menu=self.edit_menu)
         self.edit_menu.add_command(label="Edit Kantengewicht", command=self.edit_edge_weight)
+
+        self.help = Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label="Hilfe", menu=self.help)
+        self.help.add_command(label="Tutorial", command=self.open_tutorial)
+
+
+    def open_tutorial(self):
+        if self.parent.debug:
+            print("Öffne Tutorial, todo")
 
     def edit_edge_weight(self):
 
