@@ -23,7 +23,7 @@ class PfadsuchApp(Tk):
         self.fast_forward_paused = False
         self.node_positions = {}
         self.selected_nodes = []
-        self.selected_algorithm = "Dijkstra_PQ" # True für dijkstra mit Liste, false für Priority queue
+        self.selected_algorithm = "Dijkstra_PQ"
 
 
         #titel
@@ -44,16 +44,15 @@ class PfadsuchApp(Tk):
 
         #self.update_gui()
     def start_algorithm(self):
-        start_node = tkinter.simpledialog.askstring("Input starting node", "Input starting node")
-        self.selected_nodes = []
-        if start_node is None:
-            return
-        if start_node not in self.graph:
-            messagebox.showerror("Invalid Node", "The starting node does not exist in the graph.")
-            return
-        self.start_node = str(start_node)
-
-
+        if self.start_node is None or self.start_node == '':
+            start_node = tkinter.simpledialog.askstring("Input starting node", "Input starting node")
+            self.selected_nodes = []
+            if start_node is None:
+                return
+            if start_node not in self.graph:
+                messagebox.showerror("Invalid Node", "The starting node does not exist in the graph.")
+                return
+            self.start_node = str(start_node)
         if self.selected_algorithm == "Dijkstra_PQ":
             self.dijkstra_pq = Dijkstra_Priority_Queue()
             self.update_gui()
@@ -62,6 +61,9 @@ class PfadsuchApp(Tk):
 
         if self.selected_algorithm == "Dijkstra_List":
             print("not implemented yet")
+
+
+
 
 
     def next_step(self):
@@ -120,6 +122,7 @@ class PfadsuchApp(Tk):
         self.graph = {'1': {'2': 100, '3': 100, '4': 100}, '2': {'4': 100, '5': 100}, '3': {'4': 100, '2': 100}, '4': {}, '5': {'1': 100}}
         self.node_positions = {'1': (260, 216), '2': (739, 218), '3': (290, 673), '4': (828, 698), '5': (551, 898)}
         self.selected_nodes = []
+
         self.reset()
 
     #Setzt den Algorithmus komplett zurück, aber behält den Graph geladen
