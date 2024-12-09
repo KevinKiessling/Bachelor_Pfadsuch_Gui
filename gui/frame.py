@@ -264,6 +264,13 @@ class My_Frame(Frame):
     def add_node(self, event):
 
         x, y = event.x, event.y
+
+        min_dis = 125
+        for node, (c_x, c_y) in self.parent.node_positions.items():
+            if math.hypot(c_x - x, c_y - y) < min_dis:
+                if self.parent.debug:
+                    print(f"Knoten ist zu nah an {node}, bitte etwas weiter entfernt einfügen")
+                return
         new_node = self.get_next_id()
         self.parent.graph[new_node] = {}
         self.parent.node_positions[new_node] = (x, y)
