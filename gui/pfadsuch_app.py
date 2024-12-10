@@ -137,6 +137,8 @@ class PfadsuchApp(Tk):
         self.current_step = -1
         self.start_node = ""
         self.update_gui()
+        for item in self.code_frame.distance_table.get_children():
+            self.code_frame.distance_table.delete(item)
 
 
 
