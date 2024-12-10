@@ -40,7 +40,7 @@ class My_Frame(Frame):
         self.prev_button = Button(self.button_frame, text="Previous Step", command=parent.prev_step)
         self.prev_button.grid(row=1, column=1, padx=5, sticky="w")
 
-        self.fast_forward_button = Button(self.button_frame, text="Fast Forward", command=parent.fast_forward)
+        self.fast_forward_button = Button(self.button_frame, text="Fast Forward", command=self.go_forward_button)
         self.fast_forward_button.grid(row=1, column=2, padx=5, sticky="w")
         self.fast_forward_button = Button(self.button_frame, text="Pause", command=parent.pause)
         self.fast_forward_button.grid(row=1, column=3, padx=5, sticky="w")
@@ -228,6 +228,11 @@ class My_Frame(Frame):
             print("1 Schritt zurück")
         self.parent.prev_step()
 
+    def go_forward_button(self):
+        if self.parent.debug:
+            print("Vorspulen aktiviert")
+        self.parent.fast_forward_paused = False
+        self.parent.fast_forward()
     def go_fast_forward(self, event):
         if self.parent.debug:
             print("Vorspulen aktiviert")
@@ -423,7 +428,7 @@ class My_Frame(Frame):
                 self.parent.node_positions = {node: tuple(pos) for node, pos in data["node_position"].items()}
                 if self.parent.debug:
                     print(f" Graph von {filepath} wurde erfolgreich importiert")
-                self.parent.update_gui()
+                self.parent.reset()
             else:
                 print("Fehlerhafte Input datei, Graph oder Node_Position nicht gefunden")
         except Exception as e:

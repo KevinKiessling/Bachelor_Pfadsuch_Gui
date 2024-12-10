@@ -57,6 +57,7 @@ class PfadsuchApp(Tk):
             self.dijkstra_pq = Dijkstra_Priority_Queue()
             self.update_gui()
             self.steps_finished_algorithm = self.dijkstra_pq.run_dijkstra_list(self.graph, self.start_node)
+            self.code_frame.highlight_lines_with_dimming([1, 2])
             print(self.steps_finished_algorithm)
 
         if self.selected_algorithm == "Dijkstra_List":
@@ -137,9 +138,8 @@ class PfadsuchApp(Tk):
         self.current_step = -1
         self.start_node = ""
         self.update_gui()
-        for item in self.code_frame.distance_table.get_children():
-            self.code_frame.distance_table.delete(item)
-
+        self.code_frame.clear_table()
+        self.code_frame.clear_hightlight()
 
 
 
@@ -153,6 +153,8 @@ class PfadsuchApp(Tk):
         self.node_positions = {}
         self.selected_nodes = []
         self.start_node = ""
+        self.code_frame.clear_table()
+        self.code_frame.clear_hightlight()
         self.update_gui()
 
     # Gui Update hier wird der on Screen stuff generiert Später
@@ -162,6 +164,8 @@ class PfadsuchApp(Tk):
 
         if self.current_step == -1:
             self.draw_graph(None, None, {node: 0 for node in self.graph}, set(), set())
+            if self.steps_finished_algorithm:
+                self.code_frame.highlight_lines_with_dimming([1, 2])
             return
 
         step = self.steps_finished_algorithm[self.current_step]
@@ -175,12 +179,14 @@ class PfadsuchApp(Tk):
         print(step)
         if step["step_type"] == "Algorithm Finished":
             self.draw_graph(None, None, distances, visited, visited_edges)
+            self.code_frame.highlight(step["step_type"])
             print(distances)
             return
         if step["step_type"] == "Highlight Edge":
             self.draw_graph(current_node, neighbor, distances, visited, visited_edges, highlight_only_edge=True)
         else:
             self.draw_graph(current_node, neighbor, distances, visited, visited_edges)
+        self.code_frame.highlight(step["step_type"])
 
     #zeichnet den Graph
     def draw_graph(self, current_node, neighbor_list, distances, visited, visited_edges, highlight_only_edge=False):

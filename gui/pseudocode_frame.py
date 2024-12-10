@@ -23,6 +23,8 @@ class Pseudocode_Frame(Frame):
             padx=10,
             pady=10,
         )
+        self.pseudocode_display.tag_configure("highlight", background="#ffff00")
+        self.pseudocode_display.tag_configure("dim", background="#f0f0f0")
 
         self.distance_table_label = Label(self, text="Aktuelle Distanzen", font=("Arial", 16))
         self.distance_table_label.pack(pady=10)
@@ -47,6 +49,34 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display.config(state=NORMAL)
         self.pseudocode_display.delete(1.0, END)
         self.pseudocode_display.insert(END, pcode)
+        self.pseudocode_display.config(state=DISABLED)
+
+
+
+    # hightlighted die jeweilige Linie im Code, Multilines machen das aber etwas komisch, funktioniert aber soweit
+    def highlight_lines_with_dimming(self, line_numbers):
+
+        self.pseudocode_display.config(state=NORMAL)
+
+        self.pseudocode_display.tag_remove("highlight", "1.0", END)
+        self.pseudocode_display.tag_remove("dim", "1.0", END)
+
+
+        for line_number in line_numbers:
+            if line_number <= 0:
+                continue
+            start = f"{line_number}.0"
+            end = f"{line_number}.end"
+            self.pseudocode_display.tag_add("highlight", start, end)
+
+
+        total_lines = int(self.pseudocode_display.index('end-1c').split('.')[0])
+        for i in range(1, total_lines + 1):
+            if i not in line_numbers:
+                start = f"{i}.0"
+                end = f"{i}.end"
+                self.pseudocode_display.tag_add("dim", start, end)
+
         self.pseudocode_display.config(state=DISABLED)
 
     def set_algorithm(self, algorithm):
@@ -108,12 +138,37 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
     def set_step(self, steptype):
         print("setting step to :", steptype)
 
+    # zwischen funktion die je nach step type die zugehörige Line im Pseudocode gelb markiert
+    def highlight(self, step):
+        print(step)
+        if step == "Select Node":
+            self.highlight_lines_with_dimming([10, 11, 12, 13, 14, 15, 16, 25])
+        if step == "Initialization":
+            self.highlight_lines_with_dimming([3, 4, 5, 6, 7, 8, 9])
+        if step == "Compare Distance":
+            self.highlight_lines_with_dimming([19, 22])
+        if step == "Highlight Edge":
+            self.highlight_lines_with_dimming([17, 18, 23, 24])
+        if step == "Update Distance":
+            self.highlight_lines_with_dimming([20, 21])
+        if step == "Algorithm Finished":
+            self.clear_hightlight()
+
+
+    # Löscht Tabelle
+    def clear_table(self):
+        for item in self.distance_table.get_children():
+            self.distance_table.delete(item)
+
+    # entfernt highlighting
+    def clear_hightlight(self):
+        self.pseudocode_display.tag_remove("highlight", "1.0", END)
+        self.pseudocode_display.tag_remove("dim", "1.0", END)
+
     # Tabelle mit aktuellen distanzen
     def update_distances(self, distances):
         for item in self.distance_table.get_children():
             self.distance_table.delete(item)
-
-
         for node, distance in distances.items():
             display_distance = "∞" if distance == float("inf") else distance
             self.distance_table.insert("", "end", values=(node, display_distance))
