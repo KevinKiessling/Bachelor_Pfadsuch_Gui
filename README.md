@@ -11,11 +11,11 @@ Benötigte Pip Imports:
 - 
 
 
-Aktueller Stand 1.12:
-- Kantengewicht Änderung per Button
+Aktueller Stand 10.12:
+- Diverse Fixes, Tabelle mit Distanzen, Startknoten per linksklick
 
 
 Nächste Schritte:
 - Pseudocode highlighting
-- tabelle mit aktuellen distanzen
+-
 - Berechnungen highlighten/animieren

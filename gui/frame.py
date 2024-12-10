@@ -280,7 +280,7 @@ class My_Frame(Frame):
             print("Startknoten wählen statt neuer Knoten")
             self.parent.set_starting_node(clicked_node)
             return
-        min_dis = 125
+        min_dis = 60
         for node, (c_x, c_y) in self.parent.node_positions.items():
             if math.hypot(c_x - x, c_y - y) < min_dis:
                 if self.parent.debug:
