@@ -363,19 +363,23 @@ class My_Frame(Frame):
                     x2, y2 = self.parent.node_positions[node_e]
                     dis = self.distance_to_edge(x, y, x1, y1, x2, y2)
 
-                    if dis < min and dis <=10:
+                    if dis < min and dis <=5:
                         min = dis
                         nearest_edge = (node_s, node_e)
         return nearest_edge
 
     # Berechnet die distanz von einem punkt zu einer Linie
-    def distance_to_edge(self, x, y, x2, y2, x3 , y3):
+
+    def distance_to_edge(self, x, y, x2, y2, x3, y3):
         if (x2, y2) == (x3, y3):
             return math.hypot(x - x2, y - y2)
+        dx, dy = x3 - x2, y3 - y2
+        t = ((x - x2) * dx + (y - y2) * dy) / (dx * dx + dy * dy)
+        t = max(0, min(1, t))
+        closest_x = x2 + t * dx
+        closest_y = y2 + t * dy
+        return math.hypot(x - closest_x, y - closest_y)
 
-        num = abs((y3 - y2) * x - (x3 - x2) * y + x3 * y2 - y3 * x2)
-        den = math.hypot(x3 - x2, y3 - y2)
-        return num / den
     # export funktion, Hier wird der Graph als .json file gespeichert. Default directory ist dafür der save_files ordner
     def export_graph(self):
         default_dir = os.path.join(os.getcwd(), "save_files")
