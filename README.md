@@ -11,11 +11,12 @@ Benötigte Pip Imports:
 - 
 
 
-Aktueller Stand 10.12:
-- Diverse Fixes, Tabelle mit Distanzen, Startknoten per linksklick
+Aktueller Stand 12.12:
+- Neu : Einstellungsfenster welches Einstellungen als config.Json speichert und zum start der App läd, 
+- möglichkeit aktuellen graph als Default graph in der Config datei zu speichern. 
 
 
-Nächste Schritte:
-- Pseudocode highlighting
+Nächste Schritte morgen:
+- Aktuellen Schritt besser darstellen, was genau gemacht wird.
 -
 - Berechnungen highlighten/animieren

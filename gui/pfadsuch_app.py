@@ -1,3 +1,4 @@
+import json
 from tkinter import *
 from tkinter import messagebox
 from gui.frame import *
@@ -6,25 +7,26 @@ from algorithmen.dijkstra_list import *
 from algorithmen.dijkstra_Priority_queue import *
 import math
 class PfadsuchApp(Tk):
+    CONFIG_FILE = "config.json"
     def __init__(self):
         super().__init__()
-
-        #debug mode
-        self.debug = True
+        self.random_edge_mode = False
+        self.animation_speed = 100
+        self.debug = False
         self.steps_finished_algorithm = []
-
         self.graph = {}
         self.start_node = ''
-        #self.steps = []
+        self.default_graph_pos = {}
+        self.default_graph = {}
         self.current_step = -1
 
 
-        # um den pause button zu implementieren
+
         self.fast_forward_paused = False
         self.node_positions = {}
         self.selected_nodes = []
         self.selected_algorithm = "Dijkstra_PQ"
-
+        self.load_config()
 
         #titel
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
@@ -41,7 +43,31 @@ class PfadsuchApp(Tk):
         if event.widget in self.code_frame.winfo_children():
             self.gui_frame.focus_set()
 
+    # Läd config datei beim Start
+    def load_config(self):
+        if os.path.exists(self.CONFIG_FILE):
+            with open(self.CONFIG_FILE, "r") as f:
+                config = json.load(f)
+                self.debug = config.get("debug", self.debug)
+                self.random_edge_mode = config.get("random_edge_mode", self.random_edge_mode)
+                self.animation_speed = config.get("animation_speed", self.animation_speed)
+                self.default_graph = config.get("default_graph", self.default_graph)
+                self.default_graph_pos = config.get("default_graph_pos", self.default_graph_pos)
+        else:
+            self.save_config()
 
+
+    #speichert config datei als json
+    def save_config(self):
+        config = {
+            "debug": self.debug,
+            "random_edge_mode": self.random_edge_mode,
+            "animation_speed": self.animation_speed,
+            "default_graph_pos": self.default_graph_pos,
+            "default_graph": self.default_graph
+        }
+        with open(self.CONFIG_FILE, "w") as f:
+            json.dump(config, f, indent=4)
         #self.update_gui()
     def start_algorithm(self):
         if self.start_node is None or self.start_node == '':
@@ -102,7 +128,7 @@ class PfadsuchApp(Tk):
         if self.current_step < len(self.steps_finished_algorithm) -1:
             self.current_step += 1
             self.update_gui()
-            self.after(500, self.fast_forward)
+            self.after(self.animation_speed, self.fast_forward)
         else:
             if self.debug:
                 print("finished algorithm")
@@ -122,11 +148,16 @@ class PfadsuchApp(Tk):
 
     # Läd default graph beim starten der App und auf wunsch
     def load_default_graph(self):
-        if self.debug:
-            print("Loading default graph")
-        self.graph = {'1': {'2': 100, '3': 100, '4': 100}, '2': {'4': 100, '5': 100}, '3': {'4': 100, '2': 100}, '4': {}, '5': {'1': 100}}
-        self.node_positions = {'1': (260, 216), '2': (739, 218), '3': (290, 673), '4': (828, 698), '5': (551, 898)}
-        self.selected_nodes = []
+        if self.default_graph:
+            self.graph = self.default_graph
+            self.node_positions = self.default_graph_pos
+            self.selected_nodes = []
+        else:
+            if self.debug:
+                print("Loading backup default graph")
+            self.graph = {'1': {'2': 100, '3': 100, '4': 100}, '2': {'4': 100, '5': 100}, '3': {'4': 100, '2': 100}, '4': {}, '5': {'1': 100}}
+            self.node_positions = {'1': (260, 216), '2': (739, 218), '3': (290, 673), '4': (828, 698), '5': (551, 898)}
+            self.selected_nodes = []
 
         self.reset()
 

@@ -6,48 +6,42 @@ import math
 from tkinter import filedialog
 import json
 from tkinter import messagebox
-
+from tkinter import ttk
 class My_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        #to Access parent variables
+
         self.parent = parent
 
-        #put the this frame on screen
-        self.grid(row=0, column=0)
-        self.random_edge_mode = True
 
+        self.grid(row=0, column=0)
         self.grid_columnconfigure(0, weight=1, minsize=150)
         self.grid_columnconfigure(1, weight=1, minsize=150)
         self.grid_columnconfigure(2, weight=1, minsize=150)
         self.grid_columnconfigure(3, weight=1, minsize=150)
         self.grid_columnconfigure(4, weight=1, minsize=150)
         self.grid_columnconfigure(5, weight=1, minsize=150)
-        # create Canvas
+
         self.canvas_frame = Frame(self, bd=2,relief="solid")
         self.canvas_frame.grid(row=0, column=0, padx=10, columnspan=6)
 
         self.canvas = Canvas(self.canvas_frame, width=1000, height=1000, bg="white")
         self.canvas.grid(row=0, column=0)
-        #create buttons
+
 
         self.button_frame = Frame(self)
         self.button_frame.grid(row=1, column=0, columnspan=6, pady=10)
 
-        self.next_button = Button(self.button_frame, text="Next Step", command=parent.next_step)
+        self.next_button = Button(self.button_frame, text="1 Schritt vor", command=parent.next_step)
         self.next_button.grid(row=1, column=0, padx=5, sticky="w")
 
-        self.prev_button = Button(self.button_frame, text="Previous Step", command=parent.prev_step)
+        self.prev_button = Button(self.button_frame, text="1 Schritt zurück", command=parent.prev_step)
         self.prev_button.grid(row=1, column=1, padx=5, sticky="w")
 
-        self.fast_forward_button = Button(self.button_frame, text="Fast Forward", command=self.go_forward_button)
+        self.fast_forward_button = Button(self.button_frame, text="Vorspulen", command=self.go_forward_button)
         self.fast_forward_button.grid(row=1, column=2, padx=5, sticky="w")
-        self.fast_forward_button = Button(self.button_frame, text="Pause", command=parent.pause)
+        self.fast_forward_button = Button(self.button_frame, text="Pausieren", command=parent.pause)
         self.fast_forward_button.grid(row=1, column=3, padx=5, sticky="w")
-
-        #self.print_currently_loaded_graph_button = Button(self.button_frame, text="print graph to console", command=self.print_loaded_graph)
-        #self.print_currently_loaded_graph_button.grid(row=1, column=4, padx=5, sticky="w")
-
         self.button_frame_alg = Frame(self)
         self.button_frame_alg.grid(row=0, column=6, pady=10)
 
@@ -69,24 +63,19 @@ class My_Frame(Frame):
 
         # Optionen Menü
         self.options_menu = Menu(self.menu_bar, tearoff=0)
-        self.menu_bar.add_cascade(label="Options", menu=self.options_menu)
+        self.menu_bar.add_cascade(label="Optionen", menu=self.options_menu)
         self.debug_mode_var = BooleanVar(value=True)
-        self.options_menu.add_command(label="Setting", command=self.open_settings)
+        self.options_menu.add_command(label="Einstellungen", command=self.open_settings)
         self.options_menu.add_separator()
-        self.options_menu.add_command(label="Quit", command=parent.quit)
-        self.options_menu.add_checkbutton(label="Toggle Debug", variable=self.debug_mode_var, command=self.toggle_debug_mode)
-        self.edge_mode_random_var = BooleanVar(value=True)
-
-        self.options_menu.add_checkbutton(label="Random Edge weight", variable=self.edge_mode_random_var,
-                                           command=self.toggle_random_edge_weight)
+        self.options_menu.add_command(label="Beenden", command=parent.quit)
 
         # Graph optionen Menu
         self.graph_menu = Menu(self.menu_bar, tearoff=0)
-        self.menu_bar.add_cascade(label="Graph", menu=self.graph_menu)
-        self.graph_menu.add_command(label="Load Default Graph", command=parent.load_default_graph)
-        self.graph_menu.add_command(label="Clear Graph", command=parent.clear_graph)
-        self.graph_menu.add_command(label="Import Graph", command=self.import_graph)
-        self.graph_menu.add_command(label="Export Graph", command=self.export_graph)
+        self.menu_bar.add_cascade(label="Graph Funktionen", menu=self.graph_menu)
+        self.graph_menu.add_command(label="Lade Default Graph", command=parent.load_default_graph)
+        self.graph_menu.add_command(label="Lösche Graph", command=parent.clear_graph)
+        self.graph_menu.add_command(label="Importiere Graph", command=self.import_graph)
+        self.graph_menu.add_command(label="Exportiere Graph", command=self.export_graph)
 
         # Algorithmen menü
         self.algorithm_menu = Menu(self.menu_bar, tearoff=0)
@@ -97,8 +86,8 @@ class My_Frame(Frame):
         self.algorithm_menu.add_checkbutton(label="Dijkstra als Priority Queue", variable=self.dijk_PQ, command=self.toggle_dijk_PQ)
 
         self.edit_menu = Menu(self.menu_bar, tearoff=0)
-        self.menu_bar.add_cascade(label="Edit", menu=self.edit_menu)
-        self.edit_menu.add_command(label="Edit Kantengewicht", command=self.edit_edge_weight)
+        self.menu_bar.add_cascade(label="Bearbeiten", menu=self.edit_menu)
+        self.edit_menu.add_command(label="Kantengewicht bearbeiten", command=self.edit_edge_weight)
 
         self.help = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Hilfe", menu=self.help)
@@ -108,6 +97,29 @@ class My_Frame(Frame):
     def open_tutorial(self):
         if self.parent.debug:
             print("Öffne Tutorial, todo")
+        tutorial_window = Toplevel(self)
+        tutorial_window.title("Hilfe")
+        tutorial_window.geometry("700x600")
+        tutorial_window.transient(self.parent)
+
+        tutorial_text = Label(tutorial_window, text="TUTORIAL.\n"
+                                                    "Knoten Per Linksklick erstellen.\n"
+                                                    "Kanten Per Rechtsklick erstellen.\n"
+                                                    "Elemente mit Mittlerer Maustaste Löschen.\n"
+                                                    "Linksklick auf existierenden Knoten wählt ihn als Startknoten.\n"
+                                                    "per Enter Taste oder Start algorithm Button den algorithmus starten.\n"
+                                                    "Falls kein Startknoten gewählt wurde, wird jetzt nach einem gefragt\n"
+                                                    "Mit Pfeiltaste links/rechts einen Schritt vor/zurück.\n"
+                                                    "Mit Pfeiltaste hoch automatisches durchlaufen.\n"
+                                                    "Mit Pfeiltaste unten automatisches durchlaufen pausieren.\n"
+                                                    "Einstellungsoptionen für Zufällige Kantengewichte, debug to console und Animationsgeschwindigkeit.\n"
+                                                    "und möglichkeit den aktuellen Graphen als Default Graph zu speichern", justify="left")
+        tutorial_text.pack(pady=10, padx=10)
+
+
+        cancel_button = Button(tutorial_window, text="Okay", command=tutorial_window.destroy)
+        cancel_button.pack(pady=10)
+
 
     def edit_edge_weight(self):
 
@@ -147,25 +159,11 @@ class My_Frame(Frame):
             else:
                 messagebox.showerror("Fehler", "Kante nicht gefunden, bitte sicherstellen das die Kante existiert")
 
-        Button(prompt_window, text="Apply", command=confirm_change).grid(row=3, column=0, columnspan=2, pady=10)
+        Button(prompt_window, text="Anwenden", command=confirm_change).grid(row=3, column=0, columnspan=2, pady=10)
 
 
-        Button(prompt_window, text="Cancel", command=prompt_window.destroy).grid(row=4, column=0, columnspan=2, pady=10)
+        Button(prompt_window, text="Abbrechen", command=prompt_window.destroy).grid(row=4, column=0, columnspan=2, pady=10)
 
-
-    #Schalted zwischen manueller kanten gewicht eingabe und Random 0-100 um
-    def toggle_random_edge_weight(self):
-
-        self.random_edge_mode = self.edge_mode_random_var.get()
-        if self.parent.debug:
-            print("Random edge weight mode is now", "on" if self.random_edge_mode else "off")
-
-
-
-    #Schaltet debug mode an/aus
-    def toggle_debug_mode(self):
-        self.parent.debug = self.debug_mode_var.get()
-        print("Debug mode is now", "on" if self.parent.debug else "off")
 
     #Löscht Knoten oder Kante an Klick position,
     def remove_clicked_element(self, event):
@@ -209,10 +207,78 @@ class My_Frame(Frame):
             print(f"Knoten {node} gelöscht")
         self.parent.reset()
 
-    #Hier soll ein Settingsmenu geöffnet werden was settings speichert und beim laden der app läd
+    #Öffnet Einstellungsmenu, welches den Debug mode, random mode und Animationspeed einstellen lässt und in der Config.json speichert.
     def open_settings(self):
-        if self.parent.debug:
-            print("Öffne Einstellungen, kommt später")
+
+        settings_window = Toplevel(self)
+        settings_window.title("Einstellungen")
+        settings_window.geometry("500x400")
+        settings_window.transient(self.parent)
+
+
+        debug_var = BooleanVar(value=self.parent.debug)
+        debug_checkbox = Checkbutton(
+            settings_window,
+            text="Debug Mode",
+            variable=debug_var
+        )
+        debug_checkbox.pack(anchor="w", pady=10, padx=10)
+
+
+        random_mode_var = BooleanVar(value=self.parent.random_edge_mode)
+        random_checkbox = Checkbutton(
+            settings_window,
+            text="Zufälliges Kantengewicht",
+            variable=random_mode_var
+        )
+        random_checkbox.pack(anchor="w", pady=10, padx=10)
+
+        save_cur_a_d_var = BooleanVar(value=False)
+        save_cur_a_d_cb = Checkbutton(
+            settings_window,
+            text="Aktuellen Graphen als Default Speichern",
+            variable=save_cur_a_d_var
+        )
+        save_cur_a_d_cb.pack(anchor="w", pady=10, padx=10)
+
+
+
+        Label(settings_window, text="Animationsgeschwindigkeit (ms):").pack(pady=10)
+        speed_var = IntVar(value=self.parent.animation_speed)
+        speed_slider = ttk.Scale(
+            settings_window,
+            from_=100,
+            to=1000,
+            orient=HORIZONTAL,
+            length=300,
+            variable=speed_var
+        )
+        speed_slider.pack(pady=10)
+        speed_label = Label(settings_window, text=f"Aktuelle Verzögerung bei fast forward Wiedergabe: {speed_var.get()} ms")
+        speed_label.pack()
+        def update_speed_label(*args):
+            speed_label.config(text=f"Verzögerung bei fast forward Wiedergabe: {speed_var.get()} ms")
+
+        speed_var.trace_add("write", update_speed_label)
+        def apply_settings():
+            self.parent.debug = debug_var.get()
+            self.parent.random_edge_mode = random_mode_var.get()
+            self.parent.animation_speed = speed_var.get()
+            if save_cur_a_d_var.get():
+                self.parent.default_graph_pos = self.parent.node_positions
+                self.parent.default_graph = self.parent.graph
+            self.parent.save_config()
+            settings_window.destroy()
+
+        button_frame = Frame(settings_window)
+        button_frame.pack(pady=20)
+
+        apply_button = Button(button_frame, text="Anwenden", command=apply_settings)
+        apply_button.grid(row=0, column=0, padx=10)
+
+
+        cancel_button = Button(button_frame, text="Abbrechen", command=settings_window.destroy)
+        cancel_button.grid(row=0, column=1, padx=10)
 
     # hilfsunktion um die parent funktion zu callen für die Keybinds
     def start_alg (self, event):
@@ -326,7 +392,7 @@ class My_Frame(Frame):
                 node1, node2 = self.parent.selected_nodes
 
                 #dialog öffnen der nach gewicht fragt
-                if self.random_edge_mode:
+                if self.parent.random_edge_mode:
                     if self.parent.debug:
                         print("random mode")
                     weight = random.randint(0, 100)
@@ -334,7 +400,8 @@ class My_Frame(Frame):
                     if self.parent.debug:
                         print("input mode")
                     weight = tkinter.simpledialog.askinteger("Kantengewicht Eingeben", "Kantengewicht Eingeben")
-
+                if weight is None:
+                    self.parent.selected_nodes.clear()
                 if not node1 == node2 and weight is not None:
                     self.parent.graph[node1][node2] = weight
                     self.parent.selected_nodes.clear()
