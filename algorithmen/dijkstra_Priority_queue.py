@@ -7,8 +7,9 @@ class Dijkstra_Priority_Queue():
         self.steps = []
 
 
+
     #dijkstra algorithmus mit priority Queue
-    def run_dijkstra_list(self, graph, startnode):
+    def run_dijkstra_priority_queue(self, graph, startnode):
 
 
         distances = {node: float('inf') for node in graph}
@@ -29,7 +30,8 @@ class Dijkstra_Priority_Queue():
             prev_nodes=prev_nodes,
             visited=visited,
             visited_edges=visited_edges,
-            priority_queue=priority_queue
+            priority_queue=priority_queue,
+            selected_algorithm="Dijkstra_PQ"
         )
 
         while priority_queue:
@@ -50,7 +52,8 @@ class Dijkstra_Priority_Queue():
                 prev_nodes=prev_nodes,
                 visited=visited,
                 visited_edges=visited_edges,
-                priority_queue=priority_queue
+                priority_queue=priority_queue,
+                selected_algorithm="Dijkstra_PQ"
             )
 
             for neighbor, edge_weight in graph[current_node].items():
@@ -67,7 +70,8 @@ class Dijkstra_Priority_Queue():
                     prev_nodes=prev_nodes,
                     visited=visited,
                     visited_edges=visited_edges,
-                    priority_queue=priority_queue
+                    priority_queue=priority_queue,
+                    selected_algorithm="Dijkstra_PQ"
                 )
                 new_distance = current_distance + edge_weight
 
@@ -81,7 +85,8 @@ class Dijkstra_Priority_Queue():
                     prev_nodes=prev_nodes,
                     visited=visited,
                     visited_edges=visited_edges,
-                    priority_queue=priority_queue
+                    priority_queue=priority_queue,
+                    selected_algorithm="Dijkstra_PQ"
                 )
 
                 if new_distance < distances[neighbor]:
@@ -101,7 +106,8 @@ class Dijkstra_Priority_Queue():
                             prev_nodes=prev_nodes,
                             visited=visited,
                             visited_edges=visited_edges,
-                            priority_queue=priority_queue
+                            priority_queue=priority_queue,
+                            selected_algorithm="Dijkstra_PQ"
                         )
 
         self.save_state(
@@ -114,14 +120,16 @@ class Dijkstra_Priority_Queue():
             prev_nodes=prev_nodes,
             visited=visited,
             visited_edges=visited_edges,
-            priority_queue=priority_queue
+            priority_queue=priority_queue,
+            selected_algorithm="Dijkstra_PQ"
         )
         return self.steps
     #Speichert Schritt des Algorithmus
     def save_state(self, step_type, current_node, current_distance, neighbor, edge_weight, distances, prev_nodes,
-                   visited, visited_edges, priority_queue):
+                   visited, visited_edges, priority_queue, selected_algorithm):
 
         state = {
+            "selected_algorithm": selected_algorithm,
             "step_type": step_type,
             "current_node": current_node,
             "current_distance": current_distance,
