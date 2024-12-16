@@ -302,7 +302,8 @@ class My_Frame(Frame):
         clicked_node = self.get_node_at_position(x, y)
         self.parent.reset()
         if clicked_node:
-            print("Startknoten wählen statt neuer Knoten")
+            if self.parent.debug:
+                print("Startknoten wählen statt neuer Knoten")
             self.parent.set_starting_node(clicked_node)
             return
         min_dis = 60
@@ -368,6 +369,8 @@ class My_Frame(Frame):
         clicked_edge = self.get_edge_at_coordinates(x, y)
         if clicked_edge:
             start, end = clicked_edge
+            if self.parent.debug:
+                print("clicked edge")
             current_weight = self.parent.graph[start][end]
             new_weight = tkinter.simpledialog.askinteger(
                 "Kantengewicht ändern",
@@ -375,6 +378,8 @@ class My_Frame(Frame):
                 initialvalue=current_weight
             )
             if new_weight is not None:
+                if self.parent.debug:
+                    print(f"updating edge weight from {start} -> {end} to {new_weight} ")
                 self.parent.graph[start][end] = new_weight
                 self.parent.update_gui()
                 self.parent.reset()

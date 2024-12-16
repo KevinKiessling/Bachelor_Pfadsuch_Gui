@@ -35,21 +35,34 @@ class Pseudocode_Frame(Frame):
         self.distance_table_label = Label(self, text="Aktuelle Distanzen", font=("Arial", 16))
         self.distance_table_label.pack(pady=10)
 
-        self.distance_table = ttk.Treeview(self, columns=("Node", "Distance"), show="headings", height=10)
+        self.distance_table = ttk.Treeview(self, columns=("Node", "Distance"), show="headings", height=5)
         self.distance_table.pack(fill=BOTH, expand=True)
 
         # Spaltenüberschriften
         self.distance_table.heading("Node", text="Knoten")
         self.distance_table.heading("Distance", text="Distanz")
-        self.distance_table.column("Node", width=100, anchor=CENTER)
-        self.distance_table.column("Distance", width=150, anchor=CENTER)
+        self.distance_table.column("Node", width=50, anchor=CENTER)
+        self.distance_table.column("Distance", width=100, anchor=CENTER)
+        self.priority_queue_label = Label(self, text="Priority Queue", font=("Arial", 16))
+        self.priority_queue_label.pack(pady=10)
+
+        self.priority_queue_table = ttk.Treeview(self, columns=("Node", "Priority"), show="headings", height=5)
+        self.priority_queue_table.pack(fill=BOTH, expand=True)
+        self.priority_queue_table.heading("Node", text="Knoten")
+        self.priority_queue_table.heading("Priority", text="Priorität")
+        self.priority_queue_table.column("Node", width=50, anchor=CENTER)
+        self.priority_queue_table.column("Priority", width=100, anchor=CENTER)
         self.pcode = ""
         self.set_algorithm(self.parent.selected_algorithm)
         self.set_code_field(self.pcode)
 
-
-
-
+    def update_priority_queue(self, pq):
+        """ Aktualisiert die Priority Queue Anzeige """
+        for item in self.priority_queue_table.get_children():
+            self.priority_queue_table.delete(item)
+        for priority, node in pq:
+            display_priority = "∞" if priority == float("inf") else priority
+            self.priority_queue_table.insert("", "end", values=(node, display_priority))
     def set_code_field(self, pcode):
         print("Setting Pcode")
         self.pseudocode_display.config(state=NORMAL)

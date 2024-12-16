@@ -14,7 +14,7 @@ class Dijkstra_Priority_Queue():
 
         distances = {node: float('inf') for node in graph}
         distances[startnode] = 0
-        node_in_queue = {startnode: 0}
+        #node_in_queue = {startnode: 0}
 
         priority_queue = [(0, startnode)]
         prev_nodes = {}
@@ -36,11 +36,12 @@ class Dijkstra_Priority_Queue():
 
         while priority_queue:
             current_distance, current_node = heapq.heappop(priority_queue)
+
             if current_node in visited:
                 continue
 
             visited.add(current_node)
-            node_in_queue.pop(current_node, None)
+           #node_in_queue.pop(current_node, None)
 
             self.save_state(
                 step_type="Select Node",
@@ -92,23 +93,23 @@ class Dijkstra_Priority_Queue():
                 if new_distance < distances[neighbor]:
                     distances[neighbor] = new_distance
 
-                    if neighbor not in node_in_queue or new_distance < node_in_queue[neighbor]:
-                        heapq.heappush(priority_queue, (new_distance, neighbor))
-                        node_in_queue[neighbor] = new_distance
+                    #if neighbor not in node_in_queue or new_distance < node_in_queue[neighbor]:
+                    heapq.heappush(priority_queue, (new_distance, neighbor))
+                        #node_in_queue[neighbor] = new_distance
 
-                        self.save_state(
-                            step_type="Update Distance",
-                            current_node=current_node,
-                            current_distance=current_distance,
-                            neighbor=neighbor,
-                            edge_weight=edge_weight,
-                            distances=distances,
-                            prev_nodes=prev_nodes,
-                            visited=visited,
-                            visited_edges=visited_edges,
-                            priority_queue=priority_queue,
-                            selected_algorithm="Dijkstra_PQ"
-                        )
+                    self.save_state(
+                        step_type="Update Distance",
+                        current_node=current_node,
+                        current_distance=current_distance,
+                        neighbor=neighbor,
+                        edge_weight=edge_weight,
+                        distances=distances,
+                        prev_nodes=prev_nodes,
+                        visited=visited,
+                        visited_edges=visited_edges,
+                        priority_queue=priority_queue,
+                        selected_algorithm="Dijkstra_PQ"
+                    )
 
         self.save_state(
             step_type="Algorithm Finished",

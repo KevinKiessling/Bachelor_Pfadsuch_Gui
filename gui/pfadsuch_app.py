@@ -219,6 +219,7 @@ class PfadsuchApp(Tk):
         if step["step_type"] == "Algorithm Finished":
             self.draw_graph(None, None, distances, visited, visited_edges)
             self.code_frame.highlight(step["step_type"])
+            self.code_frame.update_priority_queue(priority_queue)
             print(distances)
             return
         if step["step_type"] == "Highlight Edge":
@@ -228,6 +229,7 @@ class PfadsuchApp(Tk):
 
 
         self.code_frame.highlight(step["step_type"])
+        self.code_frame.update_priority_queue(priority_queue)
 
     #zeichnet den Graph
     def draw_graph(self, current_node, neighbor_list, distances, visited, visited_edges, highlight_only_edge=False):
