@@ -70,6 +70,12 @@ class PfadsuchApp(Tk):
             json.dump(config, f, indent=4)
         #self.update_gui()
     def start_algorithm(self):
+        if self.current_step:
+            self.steps_finished_algorithm = []
+            self.current_step = -1
+            self.code_frame.clear_table()
+            self.code_frame.clear_hightlight()
+
         if self.start_node is None or self.start_node == '':
             start_node = tkinter.simpledialog.askstring("Startknoten wählen", "Bitte Startknoten auswählen")
             self.selected_nodes = []
@@ -84,7 +90,7 @@ class PfadsuchApp(Tk):
             self.update_gui()
             self.steps_finished_algorithm = self.dijkstra_pq.run_dijkstra_priority_queue(self.graph, self.start_node)
             self.code_frame.highlight_lines_with_dimming([2])
-            #print(self.steps_finished_algorithm)
+            self.code_frame.set_step(f"Starte Dijkstra mit Priority Queue")
 
         if self.selected_algorithm == "Dijkstra_List":
             print("not implemented yet")
@@ -197,6 +203,7 @@ class PfadsuchApp(Tk):
             self.draw_graph(None, None, {node: 0 for node in self.graph}, set(), set())
             if self.steps_finished_algorithm:
                 self.code_frame.highlight_lines_with_dimming([2])
+                self.code_frame.set_step(f"Starte Dijkstra mit Priority Queue")
             return
 
         step = self.steps_finished_algorithm[self.current_step]
@@ -217,6 +224,8 @@ class PfadsuchApp(Tk):
             self.draw_graph(current_node, neighbor, distances, visited, visited_edges, highlight_only_edge=True)
         else:
             self.draw_graph(current_node, neighbor, distances, visited, visited_edges)
+
+
         self.code_frame.highlight(step["step_type"])
 
     #zeichnet den Graph

@@ -9,7 +9,13 @@ class Pseudocode_Frame(Frame):
 
 
         self.grid(row=0, column=1)
+        self.info_frame = Frame(self)
+        self.info_frame.pack(pady=10, fill=X)
+        self.step_label = Label(self, text="Schritt: ", font=("Arial", 14))
+        self.step_label.pack(pady=10)
 
+        #self.calculation_label = Label(self.info_frame, text="Berechnung: ", font=("Arial", 14))
+        #self.calculation_label.pack(side=LEFT, padx=5)
         self.pseudocode_display = Text(self, wrap=WORD, height=26, width=60, takefocus=0)
         self.pseudocode_display.pack(pady=20, fill=BOTH, expand=True)
         self.pseudocode_display.config(state=DISABLED)
@@ -135,24 +141,34 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
 24: end while
 """
         self.set_code_field(self.pcode)
-    def set_step(self, steptype):
-        print("setting step to :", steptype)
+    def set_step(self, steptype, calculation=None):
+        self.step_label.config(text=f"Step: {steptype}")
+        #if calculation:
+            #self.calculation_label.config(text=f"Berechnung: {calculation}")
 
     # zwischen funktion die je nach step type die zugehörige Line im Pseudocode gelb markiert
     def highlight(self, step):
         print(step)
-        if step == "Select Node":
-            self.highlight_lines_with_dimming([10, 11, 12, 13, 14, 15, 16, 25])
-        if step == "Initialization":
-            self.highlight_lines_with_dimming([3, 4, 5, 6, 7, 8, 9])
-        if step == "Compare Distance":
-            self.highlight_lines_with_dimming([19, 22])
-        if step == "Highlight Edge":
-            self.highlight_lines_with_dimming([17, 18, 23, 24])
-        if step == "Update Distance":
-            self.highlight_lines_with_dimming([20, 21])
-        if step == "Algorithm Finished":
-            self.clear_hightlight()
+
+        if self.parent.selected_algorithm == "Dijkstra_PQ":
+            if step == "Select Node":
+                self.highlight_lines_with_dimming([10, 11, 12, 13, 14, 15, 16, 25])
+                self.set_step("Wähle Knoten")
+            if step == "Initialization":
+                self.highlight_lines_with_dimming([3, 4, 5, 6, 7, 8, 9])
+                self.set_step("Initialisierung")
+            if step == "Compare Distance":
+                self.highlight_lines_with_dimming([19, 22])
+                self.set_step("Vergleiche Distanzen")
+            if step == "Highlight Edge":
+                self.highlight_lines_with_dimming([17, 18, 23, 24])
+                self.set_step("Wähle neue Kante")
+            if step == "Update Distance":
+                self.highlight_lines_with_dimming([20, 21])
+                self.set_step("Update Distanzen")
+            if step == "Algorithm Finished":
+                self.clear_hightlight()
+                self.set_step("Algorithmus abgeschlossen")
 
 
     # Löscht Tabelle
