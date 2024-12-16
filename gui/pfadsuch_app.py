@@ -83,7 +83,7 @@ class PfadsuchApp(Tk):
             self.dijkstra_pq = Dijkstra_Priority_Queue()
             self.update_gui()
             self.steps_finished_algorithm = self.dijkstra_pq.run_dijkstra_list(self.graph, self.start_node)
-            self.code_frame.highlight_lines_with_dimming([1, 2])
+            self.code_frame.highlight_lines_with_dimming([2])
             print(self.steps_finished_algorithm)
 
         if self.selected_algorithm == "Dijkstra_List":
@@ -196,7 +196,7 @@ class PfadsuchApp(Tk):
         if self.current_step == -1:
             self.draw_graph(None, None, {node: 0 for node in self.graph}, set(), set())
             if self.steps_finished_algorithm:
-                self.code_frame.highlight_lines_with_dimming([1, 2])
+                self.code_frame.highlight_lines_with_dimming([2])
             return
 
         step = self.steps_finished_algorithm[self.current_step]
