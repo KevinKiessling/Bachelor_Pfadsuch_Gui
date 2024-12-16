@@ -177,6 +177,7 @@ class PfadsuchApp(Tk):
         self.update_gui()
         self.code_frame.clear_table()
         self.code_frame.clear_hightlight()
+        self.code_frame.set_step("")
 
 
 

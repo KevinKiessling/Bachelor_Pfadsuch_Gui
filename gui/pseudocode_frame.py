@@ -11,7 +11,7 @@ class Pseudocode_Frame(Frame):
         self.grid(row=0, column=1)
         self.info_frame = Frame(self)
         self.info_frame.pack(pady=10, fill=X)
-        self.step_label = Label(self, text="Schritt: ", font=("Arial", 14))
+        self.step_label = Label(self, text="Aktueller Schritt: ", font=("Arial", 14))
         self.step_label.pack(pady=10)
 
         #self.calculation_label = Label(self.info_frame, text="Berechnung: ", font=("Arial", 14))
@@ -115,7 +115,7 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
 
         if algorithm == "Dijkstra_PQ":
             self.pcode = """ Pseudocode: Dijkstra mit Priority Queue(mit Lazy Deletion)
-1: Input: Gerichteter Graph G = (V, E), Gewichtsfunktion w : E → N, Startknoten s ∈ V
+1: Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten s ∈ V
 2: for each v ∈ V do
 3:      discovered[v] ← false 
 4:      d[v] ← ∞ 
@@ -132,8 +132,8 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
 15:     end if
 16:     for each (u, v) ∈ E do 
 17:         if not discovered[v] then 
-18:             if d[v] > d[u] + w(u, v) then 
-19:                 d[v] ← d[u] + w(u, v) 
+18:             if d[v] > d[u] + ω(u, v) then 
+19:                 d[v] ← d[u] + ω(u, v) 
 20:                 H.insert((v, d[v])) 
 21:             end if
 22:         end if
@@ -142,7 +142,7 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
 """
         self.set_code_field(self.pcode)
     def set_step(self, steptype, calculation=None):
-        self.step_label.config(text=f"Step: {steptype}")
+        self.step_label.config(text=f"Aktueller Schritt: {steptype}")
         #if calculation:
             #self.calculation_label.config(text=f"Berechnung: {calculation}")
 
