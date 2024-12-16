@@ -85,9 +85,6 @@ class My_Frame(Frame):
         self.algorithm_menu.add_checkbutton(label="Dijkstra als Liste", variable=self.dijk_L , command=self.toggle_dijk_L)
         self.algorithm_menu.add_checkbutton(label="Dijkstra als Priority Queue", variable=self.dijk_PQ, command=self.toggle_dijk_PQ)
 
-        self.edit_menu = Menu(self.menu_bar, tearoff=0)
-        self.menu_bar.add_cascade(label="Bearbeiten", menu=self.edit_menu)
-        self.edit_menu.add_command(label="Kantengewicht bearbeiten", command=self.edit_edge_weight)
 
         self.help = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Hilfe", menu=self.help)
@@ -120,49 +117,6 @@ class My_Frame(Frame):
         cancel_button = Button(tutorial_window, text="Okay", command=tutorial_window.destroy)
         cancel_button.pack(pady=10)
 
-
-    def edit_edge_weight(self):
-
-        prompt_window = Toplevel(self)
-        prompt_window.title("Kantengewicht ändern")
-
-
-        Label(prompt_window, text="Start Knoten:").grid(row=0, column=0, padx=10, pady=5)
-        start_node_entry = Entry(prompt_window)
-        start_node_entry.grid(row=0, column=1, padx=10, pady=5)
-
-        Label(prompt_window, text="End Knoten:").grid(row=1, column=0, padx=10, pady=5)
-        end_node_entry = Entry(prompt_window)
-        end_node_entry.grid(row=1, column=1, padx=10, pady=5)
-
-        Label(prompt_window, text="Neues Gewicht:").grid(row=2, column=0, padx=10, pady=5)
-        weight_entry = Entry(prompt_window)
-        weight_entry.grid(row=2, column=1, padx=10, pady=5)
-
-
-        def confirm_change():
-            start_node = start_node_entry.get()
-            end_node = end_node_entry.get()
-            try:
-                new_weight = int(weight_entry.get())
-            except ValueError:
-                messagebox.showerror("Error, Input nicht valide", "Bitte nicht negativen Integer eingeben")
-                return
-
-            if start_node in self.parent.graph and end_node in self.parent.graph[start_node]:
-
-                self.parent.graph[start_node][end_node] = new_weight
-
-                messagebox.showinfo("Erfolg", f"Kantengewicht von {start_node} → {end_node} geändert zu {new_weight}.")
-                self.parent.update_gui()
-                prompt_window.destroy()
-            else:
-                messagebox.showerror("Fehler", "Kante nicht gefunden, bitte sicherstellen das die Kante existiert")
-
-        Button(prompt_window, text="Anwenden", command=confirm_change).grid(row=3, column=0, columnspan=2, pady=10)
-
-
-        Button(prompt_window, text="Abbrechen", command=prompt_window.destroy).grid(row=4, column=0, columnspan=2, pady=10)
 
 
     #Löscht Knoten oder Kante an Klick position,
@@ -378,7 +332,7 @@ class My_Frame(Frame):
         x, y = event.x, event.y
         clicked_node = self.get_node_at_position(x, y)
 
-        if clicked_node: # falls knoten existiert
+        if clicked_node:# falls knoten existiert
             if len(self.parent.selected_nodes) == 2:
                 self.parent.selected_nodes = []
                 self.parent.reset()
@@ -408,10 +362,23 @@ class My_Frame(Frame):
                     if self.parent.debug:
                         print(f"Kante von {node1} zu {node2} mit Gewicht {weight} hinzugefügt")
 
-
             self.parent.update_gui() # Aktualisiere Gui
-
-        self.parent.reset()
+            self.parent.reset()
+            return
+        clicked_edge = self.get_edge_at_coordinates(x, y)
+        if clicked_edge:
+            start, end = clicked_edge
+            current_weight = self.parent.graph[start][end]
+            new_weight = tkinter.simpledialog.askinteger(
+                "Kantengewicht ändern",
+                f"Aktuelles Gewicht: {current_weight}\nNeues Gewicht eingeben:",
+                initialvalue=current_weight
+            )
+            if new_weight is not None:
+                self.parent.graph[start][end] = new_weight
+                self.parent.update_gui()
+                self.parent.reset()
+            return
 
 
     # Hilfsfunktion die einen Knoten returned der in einem Radius von 30px zu click coordinaten ist. Wird benötigt für die Erstellung von Kanten
