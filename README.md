@@ -8,15 +8,15 @@ Ausführen aus dem Directory von pfadsuche.py per "python pfadsuche.py"
 Python Version 3.13
 
 Benötigte Pip Imports:
-- 
+- Keine
 
 
-Aktueller Stand 12.12:
-- Neu : Einstellungsfenster welches Einstellungen als config.Json speichert und zum start der App läd, 
-- möglichkeit aktuellen graph als Default graph in der Config datei zu speichern. 
+Aktueller Stand 3.1:
+- Knoten Benennung von numerisch zu alphabetisch geändert
+- Strg + z Funktion um erstellte Knoten/Kanten rückgängig zu machen.
 
 
 Nächste Schritte morgen:
-- Aktuellen Schritt besser darstellen, was genau gemacht wird.
--
-- Berechnungen highlighten/animieren
+- Dijsktra ohne Lazy Deletion und als liste
+- Draggable Knoten
+- 

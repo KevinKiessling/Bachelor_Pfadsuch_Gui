@@ -64,7 +64,8 @@ class Pseudocode_Frame(Frame):
             display_priority = "∞" if priority == float("inf") else priority
             self.priority_queue_table.insert("", "end", values=(node, display_priority))
     def set_code_field(self, pcode):
-        print("Setting Pcode")
+        if self.parent.debug:
+            print("Setting Pcode")
         self.pseudocode_display.config(state=NORMAL)
         self.pseudocode_display.delete(1.0, END)
         self.pseudocode_display.insert(END, pcode)
