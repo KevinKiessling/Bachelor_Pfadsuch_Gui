@@ -1,5 +1,6 @@
 import os.path
 import random
+import string
 import tkinter.simpledialog
 from tkinter import *
 import math
@@ -13,7 +14,7 @@ class My_Frame(Frame):
 
         self.parent = parent
         self.operation_history = []
-
+        self.available_ids = self.generate_node_ids()
         self.grid(row=0, column=0)
         self.grid_columnconfigure(0, weight=1, minsize=150)
         self.grid_columnconfigure(1, weight=1, minsize=150)
@@ -170,6 +171,7 @@ class My_Frame(Frame):
     def delete_note(self, node):
         if node in self.parent.graph:
             del self.parent.graph[node]
+            self.available_ids.insert(0, node)
 
         for nb in self.parent.graph.values():
             if node in nb:
@@ -343,11 +345,9 @@ class My_Frame(Frame):
 
     # hilfs funktion damit löschen von knoten nicht der erstellen verhindert, da sonst duplikate erstellt werden, was alles breaked
     def get_next_id(self):
-        ex_id = {int (node) for node in self.parent.graph.keys()}
-        newid  = 1
-        while newid in ex_id:
-            newid += 1
-        return str(newid)
+        if not self.available_ids:
+            raise ValueError("Keine verfügbaren Knoten-IDs mehr.")
+        return self.available_ids.pop(0)
 
     #Kante hinzufügen in 2 schritten, 1. Markieren und speichern des Ausgangsknoten, 2. aufruf speichert den zielknoten und zieht kante
     def add_edge(self, event):
@@ -496,3 +496,15 @@ class My_Frame(Frame):
                 print("Fehlerhafte Input datei, Graph oder Node_Position nicht gefunden")
         except Exception as e:
             print(f"Importing error : {e}")
+
+    def generate_node_ids(self):
+        id = list(string.ascii_uppercase)
+        pref = ""
+        while len(id) < 100:
+            for char in string.ascii_uppercase:
+                id.append(pref + char)
+            pref = id[len(id) - 26]
+        return id
+
+    def reset_node_ids(self):
+        self.available_ids = self.generate_node_ids()
