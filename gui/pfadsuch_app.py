@@ -164,7 +164,7 @@ class PfadsuchApp(Tk):
             self.graph = {'1': {'2': 100, '3': 100, '4': 100}, '2': {'4': 100, '5': 100}, '3': {'4': 100, '2': 100}, '4': {}, '5': {'1': 100}}
             self.node_positions = {'1': (260, 216), '2': (739, 218), '3': (290, 673), '4': (828, 698), '5': (551, 898)}
             self.selected_nodes = []
-
+        self.gui_frame.operation_history = []
         self.reset()
 
     #Setzt den Algorithmus komplett zurück, aber behält den Graph geladen
@@ -193,9 +193,10 @@ class PfadsuchApp(Tk):
         self.start_node = ""
         self.code_frame.clear_table()
         self.code_frame.clear_hightlight()
+        self.gui_frame.operation_history = []
         self.update_gui()
 
-    # Gui Update hier wird der on Screen stuff generiert Später
+    # Updated die Gui
     def update_gui(self):
 
         self.gui_frame.canvas.delete("all")

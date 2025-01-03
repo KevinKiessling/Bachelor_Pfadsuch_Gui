@@ -12,7 +12,7 @@ class My_Frame(Frame):
         super().__init__(parent)
 
         self.parent = parent
-
+        self.operation_history = []
 
         self.grid(row=0, column=0)
         self.grid_columnconfigure(0, weight=1, minsize=150)
@@ -57,6 +57,8 @@ class My_Frame(Frame):
         self.bind("<Up>", self.go_fast_forward)
         self.bind("<Down>", self.pause_fast_forward)
         self.bind("<Return>", self.start_alg)
+        self.bind("<Control-z>", self.undo_last_operation)
+
         # Menü Bar oben
         self.menu_bar = Menu(parent)
         parent.config(menu=self.menu_bar)
@@ -118,6 +120,24 @@ class My_Frame(Frame):
         cancel_button.pack(pady=10)
 
 
+    def undo_last_operation(self, event=None):
+        print(self.operation_history)
+        if not self.operation_history:
+            if self.parent.debug:
+                print("Keine Operation im speicher")
+            return
+
+        last_operation = self.operation_history.pop()
+        op_type, op_data = last_operation
+        if op_type == "add_node":
+            self.delete_note(op_data)
+        elif op_type == "add_edge":
+            node1, node2, _ = op_data
+            if node2 in self.parent.graph[node1]:
+                del self.parent.graph[node1][node2]
+                if self.parent.debug:
+                    print(f"Strg+z Kante von {node1} nach {node2} rückgängig gemacht")
+        self.parent.reset()
 
     #Löscht Knoten oder Kante an Klick position,
     def remove_clicked_element(self, event):
@@ -315,6 +335,8 @@ class My_Frame(Frame):
         new_node = self.get_next_id()
         self.parent.graph[new_node] = {}
         self.parent.node_positions[new_node] = (x, y)
+
+        self.operation_history.append(("add_node", new_node))
         if self.parent.debug:
             print(f"Knoten {new_node} hinzugefügt an Position ({x}, {y})")
         self.parent.reset()
@@ -359,6 +381,7 @@ class My_Frame(Frame):
                     self.parent.selected_nodes.clear()
                 if not node1 == node2 and weight is not None:
                     self.parent.graph[node1][node2] = weight
+                    self.operation_history.append(("add_edge", (node1, node2, weight)))
                     self.parent.selected_nodes.clear()
                     if self.parent.debug:
                         print(f"Kante von {node1} zu {node2} mit Gewicht {weight} hinzugefügt")
@@ -467,6 +490,7 @@ class My_Frame(Frame):
                 self.parent.node_positions = {node: tuple(pos) for node, pos in data["node_position"].items()}
                 if self.parent.debug:
                     print(f" Graph von {filepath} wurde erfolgreich importiert")
+                self.operation_history = []
                 self.parent.reset()
             else:
                 print("Fehlerhafte Input datei, Graph oder Node_Position nicht gefunden")
