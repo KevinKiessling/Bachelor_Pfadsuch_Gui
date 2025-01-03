@@ -158,12 +158,14 @@ class PfadsuchApp(Tk):
             self.graph = self.default_graph
             self.node_positions = self.default_graph_pos
             self.selected_nodes = []
+
         else:
             if self.debug:
                 print("Loading backup default graph")
             self.graph = {'A': {"C": 8, "E": 4, "D": 3, "B": 2}, 'B': {"D": 9, "C": 6}, 'C': {"D": 7}, 'D': {"E": 1}, 'E': {}}
             self.node_positions = {'A': (136, 542), 'B': (729, 206), 'C': (130, 208), 'D': (774, 552), 'E': (476, 862)}
             self.selected_nodes = []
+        self.gui_frame.update_avai_ids()
         self.gui_frame.operation_history = []
         self.reset()
 

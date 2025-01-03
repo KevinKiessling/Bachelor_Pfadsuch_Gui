@@ -490,6 +490,7 @@ class My_Frame(Frame):
                 self.parent.node_positions = {node: tuple(pos) for node, pos in data["node_position"].items()}
                 if self.parent.debug:
                     print(f" Graph von {filepath} wurde erfolgreich importiert")
+                self.update_avai_ids()
                 self.operation_history = []
                 self.parent.reset()
             else:
@@ -508,3 +509,6 @@ class My_Frame(Frame):
 
     def reset_node_ids(self):
         self.available_ids = self.generate_node_ids()
+    def update_avai_ids(self):
+        imported_nodes = self.parent.node_positions.keys()
+        self.available_ids = [node_id for node_id in self.available_ids if node_id not in imported_nodes]
