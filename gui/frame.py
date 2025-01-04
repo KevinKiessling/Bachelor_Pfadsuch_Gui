@@ -124,6 +124,7 @@ class My_Frame(Frame):
 
 
     def undo_last_operation(self, event=None):
+        #if self.parent.debug:
         print(self.operation_history)
         if not self.operation_history:
             if self.parent.debug:
@@ -141,6 +142,8 @@ class My_Frame(Frame):
                 if self.parent.debug:
                     print(f"Strg+z Kante von {node1} nach {node2} rückgängig gemacht")
         self.parent.reset()
+        #if self.parent.debug:
+        print(self.operation_history)
 
     #Löscht Knoten oder Kante an Klick position,
     def remove_clicked_element(self, event):
@@ -152,6 +155,7 @@ class My_Frame(Frame):
         if node:
             if self.parent.debug:
                 print("Knoten gelöscht")
+            self._remove_from_history("add_node", node)
             self.delete_note(node)
             return
 
@@ -163,12 +167,26 @@ class My_Frame(Frame):
                 del self.parent.graph[s][e]
                 if self.parent.debug:
                     print(f" Kante {s}, {e} gelöscht")
+                self._remove_from_history("add_edge", (s, e))
                 self.parent.reset()
                 return
             else:
                 if self.parent.debug:
                     print("Error, keine Kante gefunden")
 
+    def _remove_from_history(self, op_type, item):
+        print(op_type)
+        print(item)
+        for i in range(len(self.operation_history)):
+            operation = self.operation_history[i]
+            if operation[0] == op_type:
+                if op_type == "add_node" and operation[1] == item:
+                    del self.operation_history[i]
+                    break
+                elif op_type == "add_edge" and (operation[1][0] == item[0] and operation[1][1] == item[1]):
+                    print("yo")
+                    del self.operation_history[i]
+                    break
     #Löscht übergebenen Knoten
     def delete_note(self, node):
         if node in self.parent.graph:
