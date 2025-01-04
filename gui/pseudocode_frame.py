@@ -127,7 +127,7 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
 """
 
 
-        if algorithm == "Dijkstra_PQ":
+        if algorithm == "Dijkstra_PQ_lazy":
             self.pcode = """ Pseudocode: Dijkstra mit Priority Queue(mit Lazy Deletion)
 1: Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten s ∈ V
 2: for each v ∈ V do
@@ -164,7 +164,7 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
     def highlight(self, step):
         print(step)
 
-        if self.parent.selected_algorithm == "Dijkstra_PQ":
+        if self.parent.selected_algorithm == "Dijkstra_PQ_lazy":
             if step == "Select Node":
                 self.highlight_lines_with_dimming([10, 11, 12, 13, 14, 15, 16, 25])
                 self.set_step("Wähle Knoten")

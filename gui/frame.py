@@ -84,10 +84,12 @@ class My_Frame(Frame):
         self.algorithm_menu = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Algorithmen", menu=self.algorithm_menu)
         self.dijk_L = BooleanVar(value=False)
-        self.dijk_PQ = BooleanVar(value=True)
+        self.dijk_PQ_lazy = BooleanVar(value=True)
+        self.dijk_PQ = BooleanVar(value=False)
         self.algorithm_menu.add_checkbutton(label="Dijkstra als Liste", variable=self.dijk_L , command=self.toggle_dijk_L)
-        self.algorithm_menu.add_checkbutton(label="Dijkstra als Priority Queue", variable=self.dijk_PQ, command=self.toggle_dijk_PQ)
-
+        self.algorithm_menu.add_checkbutton(label="Dijkstra als Priority Queue(Lazy Deletion)", variable=self.dijk_PQ_lazy, command=self.toggle_dijk_PQ_lazy)
+        self.algorithm_menu.add_checkbutton(label="Dijkstra als Priority Queue", variable=self.dijk_PQ,
+                                            command=self.toggle_dijk_PQ)
 
         self.help = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Hilfe", menu=self.help)
@@ -302,17 +304,28 @@ class My_Frame(Frame):
         self.parent.code_frame.set_algorithm("Dijkstra_List")
         self.parent.reset()
         self.dijk_L.set(True)
+        self.dijk_PQ_lazy.set(False)
         self.dijk_PQ.set(False)
 
     #select dijkstra mit Pq as algorithm
+    def toggle_dijk_PQ_lazy(self):
+        if self.parent.debug:
+            print("Wechsel zu Dijkstra mit Priority Queue (Lazy Deletion)")
+        self.parent.selected_algorithm = "Dijkstra_PQ_lazy"
+        self.parent.code_frame.set_algorithm("Dijkstra_PQ_lazy")
+        self.parent.reset()
+        self.dijk_L.set(False)
+        self.dijk_PQ.set(False)
+        self.dijk_PQ_lazy.set(True)
     def toggle_dijk_PQ(self):
         if self.parent.debug:
-            print("Wechsel zu Dijkstram mit Priority Queue")
+            print("Wechsel zu Dijkstra mit Priority Queue")
         self.parent.selected_algorithm = "Dijkstra_PQ"
         self.parent.code_frame.set_algorithm("Dijkstra_PQ")
         self.parent.reset()
         self.dijk_L.set(False)
         self.dijk_PQ.set(True)
+        self.dijk_PQ_lazy.set(False)
 
 
 

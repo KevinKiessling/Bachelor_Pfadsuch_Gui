@@ -25,7 +25,7 @@ class PfadsuchApp(Tk):
         self.fast_forward_paused = False
         self.node_positions = {}
         self.selected_nodes = []
-        self.selected_algorithm = "Dijkstra_PQ"
+        self.selected_algorithm = "Dijkstra_PQ_lazy"
         self.load_config()
 
         #titel
@@ -85,12 +85,18 @@ class PfadsuchApp(Tk):
                 messagebox.showerror("Knotenfehler", "Startknoten existiert nicht innerhalb des Graphs.")
                 return
             self.start_node = str(start_node)
-        if self.selected_algorithm == "Dijkstra_PQ":
-            self.dijkstra_pq = Dijkstra_Priority_Queue_Lazy()
+        if self.selected_algorithm == "Dijkstra_PQ_lazy":
+            self.dijkstra_pq_lazy = Dijkstra_Priority_Queue_Lazy()
             self.update_gui()
-            self.steps_finished_algorithm = self.dijkstra_pq.run_dijkstra_priority_queue_lazy(self.graph, self.start_node)
+            self.steps_finished_algorithm = self.dijkstra_pq_lazy.run_dijkstra_priority_queue_lazy(self.graph, self.start_node)
             self.code_frame.highlight_lines_with_dimming([2])
-            self.code_frame.set_step(f"Starte Dijkstra mit Priority Queue")
+            self.code_frame.set_step(f"Starte Dijkstra mit Priority Queue(mit Lazy Deletion)")
+        if self.selected_algorithm == "Dijkstra_PQ":
+            self.dijkstra_pq = Dijkstra_Priority_Queue()
+            self.update_gui()
+            self.steps_finished_algorithm = self.dijkstra_pq.run_dijkstra_priority_queue(self.graph, self.start_node)
+            self.code_frame.highlight_lines_with_dimming([2])
+            self.code_frame.set_step(f"Starte Dijkstra mit Priority Queue(ohne Lazy Deletion)")
 
         if self.selected_algorithm == "Dijkstra_List":
             print("not implemented yet")
@@ -208,7 +214,12 @@ class PfadsuchApp(Tk):
             self.draw_graph(None, None, {node: 0 for node in self.graph}, set(), set())
             if self.steps_finished_algorithm:
                 self.code_frame.highlight_lines_with_dimming([2])
-                self.code_frame.set_step(f"Starte Dijkstra mit Priority Queue")
+                if self.selected_algorithm == "Dijkstra_PQ_lazy":
+                    self.code_frame.set_step("Starte Dijkstra mit Priority Queue (mit Lazy Deletion)")
+                if self.selected_algorithm == "Dijkstra_PQ":
+                    self.code_frame.set_step("Starte Dijkstra mit Priority Queue (ohne Lazy Deletion)")
+                if self.selected_algorithm == "Dijkstra_List":
+                    self.code_frame.set_step("Starte Dijkstra mit Liste")
             return
 
         step = self.steps_finished_algorithm[self.current_step]
