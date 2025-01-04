@@ -5,6 +5,7 @@ from gui.frame import *
 from gui.pseudocode_frame import *
 from algorithmen.dijkstra_list import *
 from algorithmen.dijkstra_Priority_queue_lazy import *
+from algorithmen.dijkstra_Priority_queue import *
 import math
 class PfadsuchApp(Tk):
     CONFIG_FILE = "config.json"
