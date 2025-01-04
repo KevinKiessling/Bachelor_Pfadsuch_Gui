@@ -13,7 +13,7 @@ class Dijkstra_Priority_Queue:
         visited = set()
         visited_edges = set()
 
-        # Push the start node into the priority queue
+
         heapq.heappush(priority_queue, (0, startnode))
 
         self.save_state(
@@ -88,11 +88,11 @@ class Dijkstra_Priority_Queue:
                 )
 
                 if new_distance < distances[neighbor]:
-                    # Update distance and predecessor
+
                     distances[neighbor] = new_distance
                     prev_nodes[neighbor] = current_node
 
-                    # Remove the old entry for the neighbor (if it exists) before pushing the new one
+
                     self.delete_from_heap(priority_queue, neighbor)
                     heapq.heappush(priority_queue, (new_distance, neighbor))
 
@@ -126,10 +126,10 @@ class Dijkstra_Priority_Queue:
         return self.steps
 
     def delete_from_heap(self, heap, node):
-        """Remove an entry for a specific node from the heap."""
+
         for i, (_, heap_node) in enumerate(heap):
             if heap_node == node:
-                # Replace the entry with the last one and re-heapify
+
                 heap[i] = heap[-1]
                 heap.pop()
                 heapq.heapify(heap)

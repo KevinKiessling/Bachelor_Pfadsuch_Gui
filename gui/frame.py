@@ -175,8 +175,9 @@ class My_Frame(Frame):
                     print("Error, keine Kante gefunden")
 
     def _remove_from_history(self, op_type, item):
-        print(op_type)
-        print(item)
+        if self.parent.debug:
+            print(op_type)
+            print(item)
         for i in range(len(self.operation_history)):
             operation = self.operation_history[i]
             if operation[0] == op_type:
