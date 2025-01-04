@@ -1,7 +1,7 @@
 import heapq
 
 
-class Dijkstra_Priority_Queue():
+class Dijkstra_Priority_Queue_Lazy():
     def __init__(self):
         super().__init__()
         self.steps = []
@@ -9,7 +9,7 @@ class Dijkstra_Priority_Queue():
 
 
     #dijkstra algorithmus mit priority Queue
-    def run_dijkstra_priority_queue(self, graph, startnode):
+    def run_dijkstra_priority_queue_lazy(self, graph, startnode):
 
 
         distances = {node: float('inf') for node in graph}

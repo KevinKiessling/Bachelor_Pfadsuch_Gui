@@ -4,7 +4,7 @@ from tkinter import messagebox
 from gui.frame import *
 from gui.pseudocode_frame import *
 from algorithmen.dijkstra_list import *
-from algorithmen.dijkstra_Priority_queue import *
+from algorithmen.dijkstra_Priority_queue_lazy import *
 import math
 class PfadsuchApp(Tk):
     CONFIG_FILE = "config.json"
@@ -86,9 +86,9 @@ class PfadsuchApp(Tk):
                 return
             self.start_node = str(start_node)
         if self.selected_algorithm == "Dijkstra_PQ":
-            self.dijkstra_pq = Dijkstra_Priority_Queue()
+            self.dijkstra_pq = Dijkstra_Priority_Queue_Lazy()
             self.update_gui()
-            self.steps_finished_algorithm = self.dijkstra_pq.run_dijkstra_priority_queue(self.graph, self.start_node)
+            self.steps_finished_algorithm = self.dijkstra_pq.run_dijkstra_priority_queue_lazy(self.graph, self.start_node)
             self.code_frame.highlight_lines_with_dimming([2])
             self.code_frame.set_step(f"Starte Dijkstra mit Priority Queue")
 
