@@ -1,25 +1,21 @@
 import heapq
 
-
-class Dijkstra_Priority_Queue():
+class Dijkstra_Priority_Queue:
     def __init__(self):
         super().__init__()
         self.steps = []
 
-
-
-    #dijkstra algorithmus mit priority Queue
     def run_dijkstra_priority_queue(self, graph, startnode):
-
-
-        distances = {node: float('inf') for node in graph}
+        distances = {node: float("inf") for node in graph}
         distances[startnode] = 0
-        #node_in_queue = {startnode: 0}
-
-        priority_queue = [(0, startnode)]
+        priority_queue = []
         prev_nodes = {}
         visited = set()
         visited_edges = set()
+
+        # Push the start node into the priority queue
+        heapq.heappush(priority_queue, (0, startnode))
+
         self.save_state(
             step_type="Initialization",
             current_node=None,
@@ -31,7 +27,7 @@ class Dijkstra_Priority_Queue():
             visited=visited,
             visited_edges=visited_edges,
             priority_queue=priority_queue,
-            selected_algorithm="Dijkstra_PQ"
+            selected_algorithm="Dijkstra_PQ",
         )
 
         while priority_queue:
@@ -41,7 +37,6 @@ class Dijkstra_Priority_Queue():
                 continue
 
             visited.add(current_node)
-           #node_in_queue.pop(current_node, None)
 
             self.save_state(
                 step_type="Select Node",
@@ -54,12 +49,13 @@ class Dijkstra_Priority_Queue():
                 visited=visited,
                 visited_edges=visited_edges,
                 priority_queue=priority_queue,
-                selected_algorithm="Dijkstra_PQ"
+                selected_algorithm="Dijkstra_PQ",
             )
 
             for neighbor, edge_weight in graph[current_node].items():
                 if neighbor in visited:
                     continue
+
                 visited_edges.add((current_node, neighbor))
                 self.save_state(
                     step_type="Highlight Edge",
@@ -72,8 +68,9 @@ class Dijkstra_Priority_Queue():
                     visited=visited,
                     visited_edges=visited_edges,
                     priority_queue=priority_queue,
-                    selected_algorithm="Dijkstra_PQ"
+                    selected_algorithm="Dijkstra_PQ",
                 )
+
                 new_distance = current_distance + edge_weight
 
                 self.save_state(
@@ -87,15 +84,17 @@ class Dijkstra_Priority_Queue():
                     visited=visited,
                     visited_edges=visited_edges,
                     priority_queue=priority_queue,
-                    selected_algorithm="Dijkstra_PQ"
+                    selected_algorithm="Dijkstra_PQ",
                 )
 
                 if new_distance < distances[neighbor]:
+                    # Update distance and predecessor
                     distances[neighbor] = new_distance
+                    prev_nodes[neighbor] = current_node
 
-                    #if neighbor not in node_in_queue or new_distance < node_in_queue[neighbor]:
+                    # Remove the old entry for the neighbor (if it exists) before pushing the new one
+                    self.delete_from_heap(priority_queue, neighbor)
                     heapq.heappush(priority_queue, (new_distance, neighbor))
-                        #node_in_queue[neighbor] = new_distance
 
                     self.save_state(
                         step_type="Update Distance",
@@ -108,7 +107,7 @@ class Dijkstra_Priority_Queue():
                         visited=visited,
                         visited_edges=visited_edges,
                         priority_queue=priority_queue,
-                        selected_algorithm="Dijkstra_PQ"
+                        selected_algorithm="Dijkstra_PQ",
                     )
 
         self.save_state(
@@ -122,13 +121,34 @@ class Dijkstra_Priority_Queue():
             visited=visited,
             visited_edges=visited_edges,
             priority_queue=priority_queue,
-            selected_algorithm="Dijkstra_PQ"
+            selected_algorithm="Dijkstra_PQ",
         )
         return self.steps
-    #Speichert Schritt des Algorithmus
-    def save_state(self, step_type, current_node, current_distance, neighbor, edge_weight, distances, prev_nodes,
-                   visited, visited_edges, priority_queue, selected_algorithm):
 
+    def delete_from_heap(self, heap, node):
+        """Remove an entry for a specific node from the heap."""
+        for i, (_, heap_node) in enumerate(heap):
+            if heap_node == node:
+                # Replace the entry with the last one and re-heapify
+                heap[i] = heap[-1]
+                heap.pop()
+                heapq.heapify(heap)
+                break
+
+    def save_state(
+        self,
+        step_type,
+        current_node,
+        current_distance,
+        neighbor,
+        edge_weight,
+        distances,
+        prev_nodes,
+        visited,
+        visited_edges,
+        priority_queue,
+        selected_algorithm,
+    ):
         state = {
             "selected_algorithm": selected_algorithm,
             "step_type": step_type,
@@ -144,8 +164,5 @@ class Dijkstra_Priority_Queue():
         }
         self.steps.append(state)
 
-
-    #print steps, debug
     def print_step(self):
         print(self.steps)
-

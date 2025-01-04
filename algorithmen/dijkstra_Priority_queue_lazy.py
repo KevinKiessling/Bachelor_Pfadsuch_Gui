@@ -31,7 +31,7 @@ class Dijkstra_Priority_Queue_Lazy():
             visited=visited,
             visited_edges=visited_edges,
             priority_queue=priority_queue,
-            selected_algorithm="Dijkstra_PQ"
+            selected_algorithm="Dijkstra_PQ_lazy"
         )
 
         while priority_queue:
@@ -54,7 +54,7 @@ class Dijkstra_Priority_Queue_Lazy():
                 visited=visited,
                 visited_edges=visited_edges,
                 priority_queue=priority_queue,
-                selected_algorithm="Dijkstra_PQ"
+                selected_algorithm="Dijkstra_PQ_lazy"
             )
 
             for neighbor, edge_weight in graph[current_node].items():
@@ -72,7 +72,7 @@ class Dijkstra_Priority_Queue_Lazy():
                     visited=visited,
                     visited_edges=visited_edges,
                     priority_queue=priority_queue,
-                    selected_algorithm="Dijkstra_PQ"
+                    selected_algorithm="Dijkstra_PQ_lazy"
                 )
                 new_distance = current_distance + edge_weight
 
@@ -87,7 +87,7 @@ class Dijkstra_Priority_Queue_Lazy():
                     visited=visited,
                     visited_edges=visited_edges,
                     priority_queue=priority_queue,
-                    selected_algorithm="Dijkstra_PQ"
+                    selected_algorithm="Dijkstra_PQ_lazy"
                 )
 
                 if new_distance < distances[neighbor]:
@@ -108,7 +108,7 @@ class Dijkstra_Priority_Queue_Lazy():
                         visited=visited,
                         visited_edges=visited_edges,
                         priority_queue=priority_queue,
-                        selected_algorithm="Dijkstra_PQ"
+                        selected_algorithm="Dijkstra_PQ_lazy"
                     )
 
         self.save_state(
@@ -122,7 +122,7 @@ class Dijkstra_Priority_Queue_Lazy():
             visited=visited,
             visited_edges=visited_edges,
             priority_queue=priority_queue,
-            selected_algorithm="Dijkstra_PQ"
+            selected_algorithm="Dijkstra_PQ_lazy"
         )
         return self.steps
     #Speichert Schritt des Algorithmus

@@ -16,7 +16,7 @@ class Pseudocode_Frame(Frame):
 
         #self.calculation_label = Label(self.info_frame, text="Berechnung: ", font=("Arial", 14))
         #self.calculation_label.pack(side=LEFT, padx=5)
-        self.pseudocode_display = Text(self, wrap=WORD, height=26, width=60, takefocus=0)
+        self.pseudocode_display = Text(self, wrap=WORD, height=28, width=60, takefocus=0)
         self.pseudocode_display.pack(pady=20, fill=BOTH, expand=True)
         self.pseudocode_display.config(state=DISABLED)
         self.pseudocode_display.config(
@@ -154,6 +154,36 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
 23:     end for
 24: end while
 """
+        if algorithm == "Dijkstra_PQ":
+            self.pcode = """ Pseudocode: Dijkstra mit Priority Queue
+1: Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten s ∈ V
+2: for each v ∈ V do
+3:      discovered[v] ← false 
+4:      d[v] ← ∞ 
+5: end for
+6: d[s] ← 0
+7: Erstelle einen leeren Heap H 
+8: H.insert((s, d[s])) 
+9: while H.length() > 0 do 
+10:     u ← H.extractMin() 
+11:     if discovered[u] then 
+12:         continue
+13:     else
+14:         discovered[u] ← true 
+15:     end if
+16:     for each (u, v) ∈ E do 
+17:         if not discovered[v] then 
+18:             if d[v] > d[u] + ω(u, v) then 
+19:                 Bestimme Position i von v in H
+20:                 H.delete(i)
+21:                 d[v] ← d[u] + ω(u, v) 
+22:                 H.insert((v, d[v])) 
+23:             end if
+24:         end if
+25:     end for
+26: end while
+"""
+
         self.set_code_field(self.pcode)
     def set_step(self, steptype, calculation=None):
         self.step_label.config(text=f"Aktueller Schritt: {steptype}")
