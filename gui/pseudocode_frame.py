@@ -192,9 +192,29 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
 
     # zwischen funktion die je nach step type die zugehörige Line im Pseudocode gelb markiert
     def highlight(self, step):
-        print(step)
+        if self.parent.debug:
+            print(step)
 
         if self.parent.selected_algorithm == "Dijkstra_PQ_lazy":
+            if step == "Select Node":
+                self.highlight_lines_with_dimming([10, 11, 12, 13, 14, 15, 16, 25])
+                self.set_step("Wähle Knoten")
+            if step == "Initialization":
+                self.highlight_lines_with_dimming([3, 4, 5, 6, 7, 8, 9])
+                self.set_step("Initialisierung")
+            if step == "Compare Distance":
+                self.highlight_lines_with_dimming([19, 22])
+                self.set_step("Vergleiche Distanzen")
+            if step == "Highlight Edge":
+                self.highlight_lines_with_dimming([17, 18, 23, 24])
+                self.set_step("Wähle neue Kante")
+            if step == "Update Distance":
+                self.highlight_lines_with_dimming([20, 21])
+                self.set_step("Update Distanzen")
+            if step == "Algorithm Finished":
+                self.clear_hightlight()
+                self.set_step("Algorithmus abgeschlossen")
+        if self.parent.selected_algorithm == "Dijkstra_PQ":
             if step == "Select Node":
                 self.highlight_lines_with_dimming([10, 11, 12, 13, 14, 15, 16, 25])
                 self.set_step("Wähle Knoten")

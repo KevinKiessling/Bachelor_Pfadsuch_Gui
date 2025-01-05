@@ -34,6 +34,7 @@ class Dijkstra_Priority_Queue:
             current_distance, current_node = heapq.heappop(priority_queue)
 
             if current_node in visited:
+                print("solte nicht passieren")
                 continue
 
             visited.add(current_node)
@@ -126,9 +127,11 @@ class Dijkstra_Priority_Queue:
         return self.steps
 
     def delete_from_heap(self, heap, node):
+        print(f"Heap vor Löschung: {heap}")
+        print(f"Knoten zu löschen: {node}")
         if not heap:
             print("Heap ist leer")
-            return
+            #return
         found = False
         for i, (_, heap_node) in enumerate(heap):
             if heap_node == node:
