@@ -363,7 +363,7 @@ class My_Frame(Frame):
         current_node_button = create_color_button(current_node_button_frame, "Current Node", 'current_node')
         current_node_button_frame.pack(pady=5)
 
-        reset_button = Button(settings_window, text="Reset Colors", command=reset_colors)
+        reset_button = Button(color_tab, text="Reset Colors", command=reset_colors)
         reset_button.pack(pady=20)
 
         button_frame = Frame(settings_window)
