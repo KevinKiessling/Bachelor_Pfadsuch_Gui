@@ -20,7 +20,7 @@ class PfadsuchApp(Tk):
         self.default_graph_pos = {}
         self.default_graph = {}
         self.current_step = -1
-
+        self.max_edge_weight = 100
 
 
         self.fast_forward_paused = False
@@ -57,6 +57,7 @@ class PfadsuchApp(Tk):
                 self.animation_speed = config.get("animation_speed", self.animation_speed)
                 self.default_graph = config.get("default_graph", self.default_graph)
                 self.default_graph_pos = config.get("default_graph_pos", self.default_graph_pos)
+                self.max_edge_weight = config.get("max_edge_weight", self.max_edge_weight)
         else:
             self.save_config()
 
@@ -68,7 +69,8 @@ class PfadsuchApp(Tk):
             "random_edge_mode": self.random_edge_mode,
             "animation_speed": self.animation_speed,
             "default_graph_pos": self.default_graph_pos,
-            "default_graph": self.default_graph
+            "default_graph": self.default_graph,
+            "max_edge_weight": self.max_edge_weight
         }
         with open(self.CONFIG_FILE, "w") as f:
             json.dump(config, f, indent=4)

@@ -212,12 +212,10 @@ class My_Frame(Frame):
 
     #Öffnet Einstellungsmenu, welches den Debug mode, random mode und Animationspeed einstellen lässt und in der Config.json speichert.
     def open_settings(self):
-
         settings_window = Toplevel(self)
         settings_window.title("Einstellungen")
         settings_window.geometry("500x400")
         settings_window.transient(self.parent)
-
 
         debug_var = BooleanVar(value=self.parent.debug)
         debug_checkbox = Checkbutton(
@@ -227,14 +225,31 @@ class My_Frame(Frame):
         )
         debug_checkbox.pack(anchor="w", pady=10, padx=10)
 
-
         random_mode_var = BooleanVar(value=self.parent.random_edge_mode)
+        random_random_checkbox_frame = Frame(settings_window)
+        random_random_checkbox_frame.pack(anchor="w", pady=10, padx=10)
         random_checkbox = Checkbutton(
-            settings_window,
+            random_random_checkbox_frame,
             text="Zufälliges Kantengewicht",
             variable=random_mode_var
         )
-        random_checkbox.pack(anchor="w", pady=10, padx=10)
+        random_checkbox.grid(row=0,column=0)
+
+        max_weight_var = IntVar(value=self.parent.max_edge_weight)
+        def validate_input(new_val):
+            if new_val == "" or new_val.isdigit():
+                return True
+            else:
+                return False
+
+        validate_command = settings_window.register(validate_input)
+
+        max_weight_entry_field = Entry(random_random_checkbox_frame, textvariable=max_weight_var, width=10, validate="key", validatecommand=(validate_command, "%P"))
+        max_weight_entry_field.grid(row=0, column=1)
+        max_weight_label = Label(random_random_checkbox_frame, text="Maximales Gewicht")
+        max_weight_label.grid(row=0, column=2)
+
+
 
         save_cur_a_d_var = BooleanVar(value=False)
         save_cur_a_d_cb = Checkbutton(
@@ -243,7 +258,6 @@ class My_Frame(Frame):
             variable=save_cur_a_d_var
         )
         save_cur_a_d_cb.pack(anchor="w", pady=10, padx=10)
-
 
 
         Label(settings_window, text="Animationsgeschwindigkeit (ms):").pack(pady=10)
@@ -257,16 +271,23 @@ class My_Frame(Frame):
             variable=speed_var
         )
         speed_slider.pack(pady=10)
-        speed_label = Label(settings_window, text=f"Aktuelle Verzögerung bei fast forward Wiedergabe: {speed_var.get()} ms")
+        speed_label = Label(settings_window,
+                            text=f"Aktuelle Verzögerung bei fast forward Wiedergabe: {speed_var.get()} ms")
         speed_label.pack()
+
         def update_speed_label(*args):
             speed_label.config(text=f"Verzögerung bei fast forward Wiedergabe: {speed_var.get()} ms")
 
         speed_var.trace_add("write", update_speed_label)
+
+
         def apply_settings():
             self.parent.debug = debug_var.get()
             self.parent.random_edge_mode = random_mode_var.get()
             self.parent.animation_speed = speed_var.get()
+
+            self.parent.max_edge_weight = max_weight_var.get()
+
             if save_cur_a_d_var.get():
                 self.parent.default_graph_pos = self.parent.node_positions
                 self.parent.default_graph = self.parent.graph
@@ -278,7 +299,6 @@ class My_Frame(Frame):
 
         apply_button = Button(button_frame, text="Anwenden", command=apply_settings)
         apply_button.grid(row=0, column=0, padx=10)
-
 
         cancel_button = Button(button_frame, text="Abbrechen", command=settings_window.destroy)
         cancel_button.grid(row=0, column=1, padx=10)
@@ -379,6 +399,8 @@ class My_Frame(Frame):
         self.operation_history.append(("add_node", new_node))
         if self.parent.debug:
             print(f"Knoten {new_node} hinzugefügt an Position ({x}, {y})")
+
+        self.parent.selected_nodes = []
         self.parent.reset()
 
     # hilfs funktion damit löschen von knoten nicht der erstellen verhindert, da sonst duplikate erstellt werden, was alles breaked
@@ -410,7 +432,7 @@ class My_Frame(Frame):
                 if self.parent.random_edge_mode:
                     if self.parent.debug:
                         print("random mode")
-                    weight = random.randint(0, 100)
+                    weight = random.randint(0, self.parent.max_edge_weight)
                 else:
                     if self.parent.debug:
                         print("input mode")
