@@ -127,11 +127,10 @@ class Dijkstra_Priority_Queue:
         return self.steps
 
     def delete_from_heap(self, heap, node):
-        print(f"Heap vor Löschung: {heap}")
-        print(f"Knoten zu löschen: {node}")
+
         if not heap:
-            print("Heap ist leer")
-            #return
+            #print("Heap ist leer")
+            return
         found = False
         for i, (_, heap_node) in enumerate(heap):
             if heap_node == node:
@@ -140,8 +139,8 @@ class Dijkstra_Priority_Queue:
                 heapq.heapify(heap)
                 found = True
                 break
-        if not found:
-            print(f"Knoten {node} nicht im Heap gefunden.")
+        #if not found:
+           # print(f"Knoten {node} nicht im Heap gefunden.")
 
     def save_state(
         self,

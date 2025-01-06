@@ -27,7 +27,7 @@ class PfadsuchApp(Tk):
         self.node_positions = {}
         self.selected_nodes = []
         self.selected_algorithm = "Dijkstra_PQ_lazy"
-        self.load_config()
+
 
         #titel
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
@@ -42,6 +42,15 @@ class PfadsuchApp(Tk):
         self.bind_all("<FocusIn>", self.global_focus_control)
         self.load_default_graph()
         #
+
+        #color controls
+        self.visited_edge_color = "#000000"
+        self.highlighted_edge_color = "#FF0000"
+        self.visited_node_color = "#00FF00"
+        self.current_node_color = "#0000FF"
+
+
+        self.load_config()
 
     def global_focus_control(self, event):
         if event.widget in self.code_frame.winfo_children():
@@ -58,6 +67,11 @@ class PfadsuchApp(Tk):
                 self.default_graph = config.get("default_graph", self.default_graph)
                 self.default_graph_pos = config.get("default_graph_pos", self.default_graph_pos)
                 self.max_edge_weight = config.get("max_edge_weight", self.max_edge_weight)
+
+                self.visited_edge_color = config.get("visited_edge_color", self.visited_edge_color)
+                self.highlighted_edge_color = config.get("highlighted_edge_color", self.highlighted_edge_color)
+                self.visited_node_color = config.get("visited_node_color", self.visited_node_color)
+                self.current_node_color = config.get("current_node_color", self.current_node_color)
         else:
             self.save_config()
 
@@ -70,7 +84,11 @@ class PfadsuchApp(Tk):
             "animation_speed": self.animation_speed,
             "default_graph_pos": self.default_graph_pos,
             "default_graph": self.default_graph,
-            "max_edge_weight": self.max_edge_weight
+            "max_edge_weight": self.max_edge_weight,
+            "visited_edge_color": self.visited_edge_color,
+            "highlighted_edge_color": self.highlighted_edge_color,
+            "visited_node_color": self.visited_node_color,
+            "current_node_color": self.current_node_color
         }
         with open(self.CONFIG_FILE, "w") as f:
             json.dump(config, f, indent=4)

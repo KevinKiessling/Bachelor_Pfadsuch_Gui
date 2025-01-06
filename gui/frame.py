@@ -8,6 +8,7 @@ from tkinter import filedialog
 import json
 from tkinter import messagebox
 from tkinter import ttk
+from tkinter import colorchooser
 class My_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -217,16 +218,22 @@ class My_Frame(Frame):
         settings_window.geometry("500x400")
         settings_window.transient(self.parent)
 
+        notebook = ttk.Notebook(settings_window)
+        notebook.pack(fill=BOTH, expand=True)
+
+        general_tab = Frame(notebook)
+        notebook.add(general_tab, text="Allgemeine Einstellungen")
+
         debug_var = BooleanVar(value=self.parent.debug)
         debug_checkbox = Checkbutton(
-            settings_window,
+            general_tab,
             text="Debug Mode",
             variable=debug_var
         )
         debug_checkbox.pack(anchor="w", pady=10, padx=10)
 
         random_mode_var = BooleanVar(value=self.parent.random_edge_mode)
-        random_random_checkbox_frame = Frame(settings_window)
+        random_random_checkbox_frame = Frame(general_tab)
         random_random_checkbox_frame.pack(anchor="w", pady=10, padx=10)
         random_checkbox = Checkbutton(
             random_random_checkbox_frame,
@@ -253,17 +260,17 @@ class My_Frame(Frame):
 
         save_cur_a_d_var = BooleanVar(value=False)
         save_cur_a_d_cb = Checkbutton(
-            settings_window,
+            general_tab,
             text="Aktuellen Graphen als Default Speichern",
             variable=save_cur_a_d_var
         )
         save_cur_a_d_cb.pack(anchor="w", pady=10, padx=10)
 
 
-        Label(settings_window, text="Animationsgeschwindigkeit (ms):").pack(pady=10)
+        Label(general_tab, text="Animationsgeschwindigkeit (ms):").pack(pady=10)
         speed_var = IntVar(value=self.parent.animation_speed)
         speed_slider = ttk.Scale(
-            settings_window,
+            general_tab,
             from_=100,
             to=1000,
             orient=HORIZONTAL,
@@ -271,7 +278,7 @@ class My_Frame(Frame):
             variable=speed_var
         )
         speed_slider.pack(pady=10)
-        speed_label = Label(settings_window,
+        speed_label = Label(general_tab,
                             text=f"Aktuelle Verzögerung bei fast forward Wiedergabe: {speed_var.get()} ms")
         speed_label.pack()
 
@@ -293,6 +300,71 @@ class My_Frame(Frame):
                 self.parent.default_graph = self.parent.graph
             self.parent.save_config()
             settings_window.destroy()
+
+
+        # COLOR TAB
+        default_colors = {
+            "visited_edge": "#000000",
+            "highlighted_edge": "#FF0000",
+            "visited_node": "#00FF00",
+            "current_node": "#0000FF"
+        }
+        color_tab = Frame(notebook)
+        notebook.add(color_tab, text="Farb Einstellungen")
+        def choose_color(element):
+            color = colorchooser.askcolor()[1]
+            if color:
+                if element == 'visited_edge':
+                    self.parent.visited_edge_color = color
+                    visited_edge_button.config(bg=color)
+                elif element == 'highlighted_edge':
+                    self.parent.highlighted_edge_color = color
+                    highlighted_edge_button.config(bg=color)
+                elif element == 'visited_node':
+                    self.parent.visited_node_color = color
+                    visited_node_button.config(bg=color)
+                elif element == 'current_node':
+                    self.parent.current_node_color = color
+                    current_node_button.config(bg=color)
+
+        def reset_colors():
+            # Reset colors to default values
+            self.parent.visited_edge_color = default_colors["visited_edge"]
+            self.parent.highlighted_edge_color = default_colors["highlighted_edge"]
+            self.parent.visited_node_color = default_colors["visited_node"]
+            self.parent.current_node_color = default_colors["current_node"]
+
+            # Update button backgrounds to match defaults
+            visited_edge_button.config(bg=self.parent.visited_edge_color)
+            highlighted_edge_button.config(bg=self.parent.highlighted_edge_color)
+            visited_node_button.config(bg=self.parent.visited_node_color)
+            current_node_button.config(bg=self.parent.current_node_color)
+        def create_color_button(frame, text, element):
+            button = Button(frame, text="    ", width=5, command=lambda: choose_color(element))
+            button.grid(row=0, column=0, padx=10)
+            label = Label(frame, text=text)
+            label.grid(row=0, column=1, padx=10)
+            return button
+
+        visited_edge_button_frame = Frame(color_tab)
+        visited_edge_button = create_color_button(visited_edge_button_frame, "Visited Edge", 'visited_edge')
+        visited_edge_button_frame.pack(pady=5)
+
+        highlighted_edge_button_frame = Frame(color_tab)
+        highlighted_edge_button = create_color_button(highlighted_edge_button_frame, "Highlighted Edge",
+                                                      'highlighted_edge')
+        highlighted_edge_button_frame.pack(pady=5)
+
+        visited_node_button_frame = Frame(color_tab)
+        visited_node_button = create_color_button(visited_node_button_frame, "Visited Node", 'visited_node')
+        visited_node_button_frame.pack(pady=5)
+
+        current_node_button_frame = Frame(color_tab)
+        current_node_button = create_color_button(current_node_button_frame, "Current Node", 'current_node')
+        current_node_button_frame.pack(pady=5)
+
+        reset_button = Button(settings_window, text="Reset Colors", command=reset_colors)
+        reset_button.pack(pady=20)
 
         button_frame = Frame(settings_window)
         button_frame.pack(pady=20)
