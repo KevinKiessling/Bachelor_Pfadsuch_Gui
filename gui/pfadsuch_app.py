@@ -32,7 +32,10 @@ class PfadsuchApp(Tk):
         #titel
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
         self.geometry('1850x1100')
-
+        self.grid_rowconfigure(0, weight=45)  # Code frame
+        self.grid_rowconfigure(1, weight=55)  # Graph frame
+        self.grid_columnconfigure(0, weight=1)  # Allow the canvas area to resize
+        self.grid_columnconfigure(1, weight=1)  # Allow the code area to resize
         # Auslagern der Gui erstellung in andere Klasse
         self.code_frame = Pseudocode_Frame(self)
         self.gui_frame = My_Frame(self)
@@ -231,12 +234,14 @@ class PfadsuchApp(Tk):
         self.code_frame.update_distances(distances)
         visited = step["visited"]
         visited_edges = step["visited_edges"]
-        print(step)
+        if self.debug:
+            print(step)
         if step["step_type"] == "Algorithm Finished":
             self.draw_graph(None, None, distances, visited, visited_edges)
             self.code_frame.highlight(step["step_type"])
             self.code_frame.update_priority_queue(priority_queue)
-            print(distances)
+            if self.debug:
+                print(distances)
             return
         if step["step_type"] == "Highlight Edge":
             self.draw_graph(current_node, neighbor, distances, visited, visited_edges, highlight_only_edge=True)

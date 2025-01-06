@@ -15,23 +15,29 @@ class My_Frame(Frame):
         self.parent = parent
         self.operation_history = []
         self.available_ids = self.generate_node_ids()
-        self.grid(row=0, column=0)
-        self.grid_columnconfigure(0, weight=1, minsize=150)
-        self.grid_columnconfigure(1, weight=1, minsize=150)
-        self.grid_columnconfigure(2, weight=1, minsize=150)
-        self.grid_columnconfigure(3, weight=1, minsize=150)
-        self.grid_columnconfigure(4, weight=1, minsize=150)
-        self.grid_columnconfigure(5, weight=1, minsize=150)
+        self.grid(row=0, column=0, sticky="nsew")
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+        self.grid_columnconfigure(3, weight=1)
+        self.grid_columnconfigure(4, weight=1)
+        self.grid_columnconfigure(5, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=0)
 
-        self.canvas_frame = Frame(self, bd=2,relief="solid")
-        self.canvas_frame.grid(row=0, column=0, padx=10, columnspan=6)
 
-        self.canvas = Canvas(self.canvas_frame, width=1000, height=1000, bg="white")
-        self.canvas.grid(row=0, column=0)
+        self.canvas_frame = Frame(self, bd=2, relief="solid")
+        self.canvas_frame.grid(row=0, column=0, padx=10, columnspan=6, sticky="nsew")
 
+        self.canvas = Canvas(self.canvas_frame, bg="white", width=1000, height=1000)
+        self.canvas.grid(row=0, column=0, sticky="nsew")
+        self.canvas_frame.grid_rowconfigure(0, weight=1)
+        self.canvas_frame.grid_columnconfigure(0, weight=1)
 
         self.button_frame = Frame(self)
         self.button_frame.grid(row=1, column=0, columnspan=6, pady=10)
+
+
 
         self.next_button = Button(self.button_frame, text="1 Schritt vor", command=parent.next_step)
         self.next_button.grid(row=1, column=0, padx=5, sticky="w")
@@ -124,8 +130,8 @@ class My_Frame(Frame):
 
 
     def undo_last_operation(self, event=None):
-        #if self.parent.debug:
-        print(self.operation_history)
+        if self.parent.debug:
+            print(self.operation_history)
         if not self.operation_history:
             if self.parent.debug:
                 print("Keine Operation im speicher")
@@ -142,8 +148,8 @@ class My_Frame(Frame):
                 if self.parent.debug:
                     print(f"Strg+z Kante von {node1} nach {node2} rückgängig gemacht")
         self.parent.reset()
-        #if self.parent.debug:
-        #print(self.operation_history)
+        if self.parent.debug:
+            print(self.operation_history)
 
     #Löscht Knoten oder Kante an Klick position,
     def remove_clicked_element(self, event):

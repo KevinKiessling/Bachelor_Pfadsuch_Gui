@@ -4,23 +4,20 @@ import math
 class Pseudocode_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
-
         self.parent = parent
 
+        self.grid(row=0, column=1, sticky="nsew")
 
-        self.grid(row=0, column=1)
-        self.info_frame = Frame(self)
-        self.info_frame.pack(pady=10, fill=X)
-        self.step_label = Label(self, text="Aktueller Schritt: ", font=("Arial", 14))
-        self.step_label.pack(pady=10)
 
-        #self.calculation_label = Label(self.info_frame, text="Berechnung: ", font=("Arial", 14))
-        #self.calculation_label.pack(side=LEFT, padx=5)
+        self.step_label = Label(self, text="Aktueller Schritt: ", font=("Arial", 12))  # Smaller font size
+        self.step_label.grid(row=0, column=0, pady=5, sticky="ew", padx=10)
+
+
         self.pseudocode_display = Text(self, wrap=WORD, height=28, width=60, takefocus=0)
-        self.pseudocode_display.pack(pady=20, fill=BOTH, expand=True)
+        self.pseudocode_display.grid(row=1, column=0, pady=0, sticky="ew", padx=10)  # No vertical padding
         self.pseudocode_display.config(state=DISABLED)
         self.pseudocode_display.config(
-            font=("Courier New", 14),
+            font=("Courier New", 12),
             bg="#f4f4f4",
             fg="#333333",
             insertbackground="pink",
@@ -32,32 +29,82 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display.tag_configure("highlight", background="#ffff00")
         self.pseudocode_display.tag_configure("dim", background="#f0f0f0")
 
-        self.distance_table_label = Label(self, text="Aktuelle Distanzen", font=("Arial", 16))
-        self.distance_table_label.pack(pady=10)
 
-        self.distance_table = ttk.Treeview(self, columns=("Node", "Distance"), show="headings", height=5)
-        self.distance_table.pack(fill=BOTH, expand=True)
+        self.distance_table_label = Label(self, text="Aktuelle Distanzen", font=("Arial", 12))  # Smaller font size
+        self.distance_table_label.grid(row=2, column=0, pady=0, sticky="ew", padx=10)
 
-        # Spaltenüberschriften
+
+        self.distance_table_frame = Frame(self, height=200)
+        self.distance_table_frame.grid(row=3, column=0, sticky="nsew", padx=10)
+
+
+        self.distance_table = ttk.Treeview(self.distance_table_frame, columns=("Node", "Distance"), show="headings",
+                                           height=5)
+        self.distance_table.grid(row=0, column=0, sticky="nsew")
         self.distance_table.heading("Node", text="Knoten")
         self.distance_table.heading("Distance", text="Distanz")
-        self.distance_table.column("Node", width=50, anchor=CENTER)
-        self.distance_table.column("Distance", width=100, anchor=CENTER)
-        self.priority_queue_label = Label(self, text="Priority Queue", font=("Arial", 16))
-        self.priority_queue_label.pack(pady=10)
+        self.distance_table.column("Node", anchor=CENTER)
+        self.distance_table.column("Distance", anchor=CENTER)
 
-        self.priority_queue_table = ttk.Treeview(self, columns=("Node", "Priority"), show="headings", height=5)
-        self.priority_queue_table.pack(fill=BOTH, expand=True)
+
+        self.scrollbar_distance = Scrollbar(self.distance_table_frame, orient="vertical",
+                                            command=self.distance_table.yview)
+        self.distance_table.configure(yscrollcommand=self.scrollbar_distance.set)
+        self.scrollbar_distance.grid(row=0, column=1, sticky="ns")
+
+
+        self.distance_table_frame.grid_columnconfigure(0, weight=1)
+        self.distance_table_frame.grid_rowconfigure(0, weight=0)
+
+
+        self.priority_queue_label = Label(self, text="Priority Queue", font=("Arial", 12))  # Smaller font size
+        self.priority_queue_label.grid(row=4, column=0, pady=0, sticky="ew", padx=10)
+
+
+        self.priority_queue_frame = Frame(self, height=200)
+        self.priority_queue_frame.grid(row=5, column=0, sticky="nsew", padx=10)
+
+
+        self.priority_queue_table = ttk.Treeview(self.priority_queue_frame, columns=("Node", "Priority"),
+                                                 show="headings", height=5)
+        self.priority_queue_table.grid(row=0, column=0, sticky="nsew")
         self.priority_queue_table.heading("Node", text="Knoten")
         self.priority_queue_table.heading("Priority", text="Priorität")
-        self.priority_queue_table.column("Node", width=50, anchor=CENTER)
-        self.priority_queue_table.column("Priority", width=100, anchor=CENTER)
+        self.priority_queue_table.column("Node", anchor=CENTER)
+        self.priority_queue_table.column("Priority", anchor=CENTER)
+
+        # Scrollbar
+        self.scrollbar_priority = Scrollbar(self.priority_queue_frame, orient="vertical",
+                                            command=self.priority_queue_table.yview)
+        self.priority_queue_table.configure(yscrollcommand=self.scrollbar_priority.set)
+        self.scrollbar_priority.grid(row=0, column=1, sticky="ns")
+
+
+        self.priority_queue_frame.grid_columnconfigure(0, weight=1)
+        self.priority_queue_frame.grid_rowconfigure(0, weight=0)
+
         self.pcode = ""
         self.set_algorithm(self.parent.selected_algorithm)
         self.set_code_field(self.pcode)
 
+
+        self.grid_rowconfigure(0, weight=0)
+        self.grid_rowconfigure(1, weight=10, uniform="row")
+        self.grid_rowconfigure(2, weight=0)
+        self.grid_rowconfigure(3, weight=0, minsize=200)
+        self.grid_rowconfigure(4, weight=0)
+        self.grid_rowconfigure(5, weight=0, minsize=200)
+        self.grid_rowconfigure(6, weight=0)
+
+        self.grid_columnconfigure(0, weight=1, uniform="column")
+
+
+        self.grid_rowconfigure(6, weight=1, uniform="row")
+        self.grid_columnconfigure(1, weight=1)
+
+
     def update_priority_queue(self, pq):
-        """ Aktualisiert die Priority Queue Anzeige """
+
         for item in self.priority_queue_table.get_children():
             self.priority_queue_table.delete(item)
         for priority, node in pq:
