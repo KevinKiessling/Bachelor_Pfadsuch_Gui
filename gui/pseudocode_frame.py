@@ -222,13 +222,13 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
                 self.highlight_lines_with_dimming([3, 4, 5, 6, 7, 8, 9])
                 self.set_step("Initialisierung")
             if step == "Compare Distance":
-                self.highlight_lines_with_dimming([19, 22])
+                self.highlight_lines_with_dimming([19, 24])
                 self.set_step("Vergleiche Distanzen")
             if step == "Highlight Edge":
-                self.highlight_lines_with_dimming([17, 18, 23, 24])
+                self.highlight_lines_with_dimming([17, 18, 25, 26])
                 self.set_step("Wähle neue Kante")
             if step == "Update Distance":
-                self.highlight_lines_with_dimming([20, 21])
+                self.highlight_lines_with_dimming([20, 21, 22, 23])
                 self.set_step("Update Distanzen")
             if step == "Algorithm Finished":
                 self.clear_hightlight()

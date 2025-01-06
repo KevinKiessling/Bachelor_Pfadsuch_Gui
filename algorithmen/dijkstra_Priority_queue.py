@@ -34,7 +34,7 @@ class Dijkstra_Priority_Queue:
             current_distance, current_node = heapq.heappop(priority_queue)
 
             if current_node in visited:
-                print("solte nicht passieren")
+                print("sollte nicht passieren")
                 continue
 
             visited.add(current_node)

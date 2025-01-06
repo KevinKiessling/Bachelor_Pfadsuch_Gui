@@ -143,7 +143,7 @@ class My_Frame(Frame):
                     print(f"Strg+z Kante von {node1} nach {node2} rückgängig gemacht")
         self.parent.reset()
         #if self.parent.debug:
-        print(self.operation_history)
+        #print(self.operation_history)
 
     #Löscht Knoten oder Kante an Klick position,
     def remove_clicked_element(self, event):
