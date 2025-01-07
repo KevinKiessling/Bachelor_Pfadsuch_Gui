@@ -9,12 +9,15 @@ class Pseudocode_Frame(Frame):
         self.grid(row=0, column=1, sticky="nsew")
 
 
-        self.step_label = Label(self, text="Aktueller Schritt: ", font=("Arial", 12))  # Smaller font size
+        self.step_label = Label(self, text="Aktueller Schritt: ", font=("Arial", 12))
         self.step_label.grid(row=0, column=0, pady=5, sticky="ew", padx=10)
 
 
-        self.pseudocode_display = Text(self, wrap=WORD, height=28, width=60, takefocus=0)
-        self.pseudocode_display.grid(row=1, column=0, pady=0, sticky="ew", padx=10)  # No vertical padding
+        self.pseudocode_display_frame = Frame(self)
+        self.pseudocode_display_frame.grid(row=1, column=0, pady=0, sticky="ew", padx=10)
+
+        self.pseudocode_display = Text(self.pseudocode_display_frame, wrap=WORD, height=28, width=60, takefocus=0)
+        self.pseudocode_display.grid(row=0, column=0, sticky="nsew")
         self.pseudocode_display.config(state=DISABLED)
         self.pseudocode_display.config(
             font=("Courier New", 12),
@@ -29,8 +32,17 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display.tag_configure("highlight", background="#ffff00")
         self.pseudocode_display.tag_configure("dim", background="#f0f0f0")
 
+        # Scrollbar for Pseudocode Display
+        self.scrollbar_pseudocode = Scrollbar(self.pseudocode_display_frame, orient="vertical",
+                                              command=self.pseudocode_display.yview)
+        self.scrollbar_pseudocode.grid(row=0, column=1, sticky="ns")
+        self.pseudocode_display.configure(yscrollcommand=self.scrollbar_pseudocode.set)
 
-        self.distance_table_label = Label(self, text="Aktuelle Distanzen", font=("Arial", 12))  # Smaller font size
+        # Configure grid for pseudocode display frame
+        self.pseudocode_display_frame.grid_columnconfigure(0, weight=1)
+        self.pseudocode_display_frame.grid_rowconfigure(0, weight=1)
+
+        self.distance_table_label = Label(self, text="Aktuelle Distanzen", font=("Arial", 12))
         self.distance_table_label.grid(row=2, column=0, pady=0, sticky="ew", padx=10)
 
 
@@ -57,7 +69,7 @@ class Pseudocode_Frame(Frame):
         self.distance_table_frame.grid_rowconfigure(0, weight=0)
 
 
-        self.priority_queue_label = Label(self, text="Priority Queue", font=("Arial", 12))  # Smaller font size
+        self.priority_queue_label = Label(self, text="Priority Queue", font=("Arial", 12))
         self.priority_queue_label.grid(row=4, column=0, pady=0, sticky="ew", padx=10)
 
 
