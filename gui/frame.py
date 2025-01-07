@@ -99,30 +99,27 @@ class My_Frame(Frame):
                                             command=self.toggle_dijk_PQ)
 
         self.help = Menu(self.menu_bar, tearoff=0)
-        self.menu_bar.add_cascade(label="Hilfe", menu=self.help)
-        self.help.add_command(label="Tutorial", command=self.open_tutorial)
+        self.menu_bar.add_cascade(label="Todos", menu=self.help)
+        self.help.add_command(label="Todos", command=self.open_tutorial)
 
 
     def open_tutorial(self):
         if self.parent.debug:
             print("Öffne Tutorial, todo")
         tutorial_window = Toplevel(self)
-        tutorial_window.title("Hilfe")
+        tutorial_window.title("Todos")
         tutorial_window.geometry("700x600")
         tutorial_window.transient(self.parent)
 
-        tutorial_text = Label(tutorial_window, text="TUTORIAL.\n"
-                                                    "Knoten Per Linksklick erstellen.\n"
-                                                    "Kanten Per Rechtsklick erstellen.\n"
-                                                    "Elemente mit Mittlerer Maustaste Löschen.\n"
-                                                    "Linksklick auf existierenden Knoten wählt ihn als Startknoten.\n"
-                                                    "per Enter Taste oder Start algorithm Button den algorithmus starten.\n"
-                                                    "Falls kein Startknoten gewählt wurde, wird jetzt nach einem gefragt\n"
-                                                    "Mit Pfeiltaste links/rechts einen Schritt vor/zurück.\n"
-                                                    "Mit Pfeiltaste hoch automatisches durchlaufen.\n"
-                                                    "Mit Pfeiltaste unten automatisches durchlaufen pausieren.\n"
-                                                    "Einstellungsoptionen für Zufällige Kantengewichte, debug to console und Animationsgeschwindigkeit.\n"
-                                                    "und möglichkeit den aktuellen Graphen als Default Graph zu speichern", justify="left")
+        tutorial_text = Label(tutorial_window, text="TodoList\n"
+                                                    "Beim 1. starten der App soll ein Hilfe fenster aufgehen, was alles erklärt, -> config var ums später nichtmehr zu callen\n"
+                                                    "Farben für edge erstellung\n"
+                                                    "Evtl dragable nodes(Nicht sicher wie machbar das mit tkinter canvas ist)\n"
+                                                    "Disjktra mit Liste\n"
+                                                    "darkmode\n"
+                                                    "Farbeinstellungen mit Knoten erstellung verbinden\n"
+                                                    "Das Hilfe Fenster in die Topbar statt dem hier\n"
+                                                    "Vllt. das beim Erstellen einer Kante diese vorher simuliert wird(auch hier nicht sicher wie gut das in tkinter machbar ist)\n", justify="left")
         tutorial_text.pack(pady=10, padx=10)
 
 

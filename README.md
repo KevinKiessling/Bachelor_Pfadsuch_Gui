@@ -11,12 +11,12 @@ Benötigte Pip Imports:
 - Keine
 
 
-Aktueller Stand 3.1:
-- Knoten Benennung von numerisch zu alphabetisch geändert
-- Strg + z Funktion um erstellte Knoten/Kanten rückgängig zu machen.
+Aktueller Stand 7.1:
+- Gesamte App ist besser resizeable
+- Farbeinstellungen um alles zu customizen
+- 
 
 
-Nächste Schritte morgen:
-- Dijsktra ohne Lazy Deletion und als liste
-- Draggable Knoten
+Nächste Schritte:
+- Wichtig erstmal das Tutorial Fenster
 - 
