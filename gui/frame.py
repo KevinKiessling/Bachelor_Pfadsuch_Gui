@@ -292,7 +292,7 @@ class My_Frame(Frame):
             self.parent.debug = debug_var.get()
             self.parent.random_edge_mode = random_mode_var.get()
             self.parent.animation_speed = speed_var.get()
-
+            self.parent.darkmode = dark_mode_var.get()
             self.parent.max_edge_weight = max_weight_var.get()
 
             if save_cur_a_d_var.get():
@@ -365,6 +365,16 @@ class My_Frame(Frame):
 
         reset_button = Button(color_tab, text="Reset Colors", command=reset_colors)
         reset_button.pack(pady=20)
+
+        dark_mode_var = BooleanVar(value=self.parent.darkmode)
+        darkmode_var_frame = Frame(color_tab)
+        darkmode_var_frame.pack(anchor="w", pady=10, padx=10)
+        darkmode_checkbox = Checkbutton(
+            darkmode_var_frame,
+            text="Darkmode",
+            variable=dark_mode_var
+        )
+        darkmode_checkbox.grid(row=0, column=0)
 
         button_frame = Frame(settings_window)
         button_frame.pack(pady=20)

@@ -14,6 +14,7 @@ class PfadsuchApp(Tk):
         self.random_edge_mode = False
         self.animation_speed = 100
         self.debug = False
+        self.darkmode = False
         self.steps_finished_algorithm = []
         self.graph = {}
         self.start_node = ''
@@ -27,7 +28,7 @@ class PfadsuchApp(Tk):
         self.node_positions = {}
         self.selected_nodes = []
         self.selected_algorithm = "Dijkstra_PQ_lazy"
-
+        self.darkmode = False
 
         #titel
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
@@ -72,6 +73,7 @@ class PfadsuchApp(Tk):
                 self.highlighted_edge_color = config.get("highlighted_edge_color", self.highlighted_edge_color)
                 self.visited_node_color = config.get("visited_node_color", self.visited_node_color)
                 self.current_node_color = config.get("current_node_color", self.current_node_color)
+                self.darkmode = config.get("darkmode", self.darkmode)
         else:
             self.save_config()
 
@@ -88,7 +90,8 @@ class PfadsuchApp(Tk):
             "visited_edge_color": self.visited_edge_color,
             "highlighted_edge_color": self.highlighted_edge_color,
             "visited_node_color": self.visited_node_color,
-            "current_node_color": self.current_node_color
+            "current_node_color": self.current_node_color,
+            "darkmode": self.darkmode
         }
         with open(self.CONFIG_FILE, "w") as f:
             json.dump(config, f, indent=4)
