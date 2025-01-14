@@ -28,7 +28,7 @@ class PfadsuchApp(Tk):
         self.node_positions = {}
         self.selected_nodes = []
         self.selected_algorithm = "Dijkstra_PQ_lazy"
-        self.darkmode = False
+        #self.darkmode = False
 
         #titel
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
@@ -45,10 +45,10 @@ class PfadsuchApp(Tk):
         #
 
         #color controls
-        self.visited_edge_color = "#000000"
-        self.highlighted_edge_color = "#FF0000"
-        self.visited_node_color = "#00FF00"
-        self.current_node_color = "#0000FF"
+        self.visited_edge_color = "lawn green"
+        self.highlighted_edge_color = "red"
+        self.visited_node_color = "lawn green"
+        self.current_node_color = "yellow"
 
 
         self.load_config()
@@ -56,6 +56,8 @@ class PfadsuchApp(Tk):
     def global_focus_control(self, event):
         if event.widget in self.code_frame.winfo_children():
             self.gui_frame.focus_set()
+
+
 
     # Läd config datei beim Start
     def load_config(self):
@@ -73,7 +75,7 @@ class PfadsuchApp(Tk):
                 self.highlighted_edge_color = config.get("highlighted_edge_color", self.highlighted_edge_color)
                 self.visited_node_color = config.get("visited_node_color", self.visited_node_color)
                 self.current_node_color = config.get("current_node_color", self.current_node_color)
-                self.darkmode = config.get("darkmode", self.darkmode)
+                #self.darkmode = config.get("darkmode", self.darkmode)
         else:
             self.save_config()
 
@@ -90,8 +92,8 @@ class PfadsuchApp(Tk):
             "visited_edge_color": self.visited_edge_color,
             "highlighted_edge_color": self.highlighted_edge_color,
             "visited_node_color": self.visited_node_color,
-            "current_node_color": self.current_node_color,
-            "darkmode": self.darkmode
+            "current_node_color": self.current_node_color
+           # "darkmode": self.darkmode
         }
         with open(self.CONFIG_FILE, "w") as f:
             json.dump(config, f, indent=4)
@@ -286,23 +288,31 @@ class PfadsuchApp(Tk):
         for node, (x, y) in self.node_positions.items():
             color = "lightblue"
             if node == current_node:
-                color = "yellow"
+                color = self.current_node_color
             elif node in visited:
-                color = "lawn green"
+                color = self.visited_node_color
 
 
-            #hightlightet aktuell ausgewählten knoten für kanten erstellung
+
             distance_text = distances.get(node, float('inf'))
-            display_text = f"{node}\n{distance_text if distance_text < float('inf') else 'inf'}"
+            distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
+
+
+            node_text = f"{node:^{len(distance_text)}}"
+            display_text = f"{node_text}\n{distance_text}"
 
             if node in self.selected_nodes:
                 self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill="green")
 
-                self.gui_frame.canvas.create_text(x, y, text=display_text, fill="black", font=("Arial", font_size))
+                self.gui_frame.canvas.create_text(
+                    x, y, text=display_text, fill="black", font=("Arial", font_size), anchor="center"
+                )
                 if node == self.start_node:
                     self.gui_frame.canvas.create_text(x, y, text="Start", fill="black", font=("Arial", font_size))
                 else:
-                    self.gui_frame.canvas.create_text(x, y, text=display_text, fill="black", font=("Arial", font_size))
+                    self.gui_frame.canvas.create_text(
+                        x, y, text=display_text, fill="black", font=("Arial", font_size), anchor="center"
+                    )
             else:
                 self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius, fill=color)
 
@@ -326,9 +336,9 @@ class PfadsuchApp(Tk):
 
                 if (node, neighbor) in visited_edges or (neighbor, node) in visited_edges:
 
-                    edge_color = "lawn green"
+                    edge_color = self.visited_edge_color
                 if node == current_node and neighbor == neighbor_list:
-                    edge_color = "red"
+                    edge_color = self.highlighted_edge_color
 
                 if neighbor in self.node_positions:
 
@@ -364,13 +374,13 @@ class PfadsuchApp(Tk):
 
 
                         if (node, neighbor) in visited_edges:
-                            forward_colour = "lawn green"
+                            forward_colour = self.visited_edge_color
                         if (neighbor, node) in visited_edges:
-                            reverse_colour = "lawn green"
+                            reverse_colour = self.visited_edge_color
                         if (node == current_node and neighbor == neighbor_list):
-                            forward_colour = "red"
+                            forward_colour = self.highlighted_edge_color
                         if (neighbor == current_node and node == neighbor_list):
-                            reverse_colour = "red"
+                            reverse_colour = self.highlighted_edge_color
 
                         # Offset um die bidirektionale Kante einzufügen
                         offset = 10

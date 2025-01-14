@@ -9,6 +9,7 @@ import json
 from tkinter import messagebox
 from tkinter import ttk
 from tkinter import colorchooser
+
 class My_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -289,7 +290,7 @@ class My_Frame(Frame):
             self.parent.debug = debug_var.get()
             self.parent.random_edge_mode = random_mode_var.get()
             self.parent.animation_speed = speed_var.get()
-            self.parent.darkmode = dark_mode_var.get()
+           # self.parent.darkmode = dark_mode_var.get()
             self.parent.max_edge_weight = max_weight_var.get()
 
             if save_cur_a_d_var.get():
@@ -301,10 +302,10 @@ class My_Frame(Frame):
 
         # COLOR TAB
         default_colors = {
-            "visited_edge": "#000000",
-            "highlighted_edge": "#FF0000",
-            "visited_node": "#00FF00",
-            "current_node": "#0000FF"
+            "visited_edge": "lawn green",
+            "highlighted_edge": "red",
+            "visited_node": "lawn green",
+            "current_node": "yellow"
         }
         color_tab = Frame(notebook)
         notebook.add(color_tab, text="Farb Einstellungen")
@@ -346,23 +347,27 @@ class My_Frame(Frame):
         visited_edge_button_frame = Frame(color_tab)
         visited_edge_button = create_color_button(visited_edge_button_frame, "Visited Edge", 'visited_edge')
         visited_edge_button_frame.pack(pady=5)
+        visited_edge_button.config(bg=self.parent.visited_edge_color)
 
         highlighted_edge_button_frame = Frame(color_tab)
         highlighted_edge_button = create_color_button(highlighted_edge_button_frame, "Highlighted Edge",
                                                       'highlighted_edge')
         highlighted_edge_button_frame.pack(pady=5)
+        highlighted_edge_button.config(bg=self.parent.highlighted_edge_color)
 
         visited_node_button_frame = Frame(color_tab)
         visited_node_button = create_color_button(visited_node_button_frame, "Visited Node", 'visited_node')
         visited_node_button_frame.pack(pady=5)
+        visited_node_button.config(bg=self.parent.visited_node_color)
 
         current_node_button_frame = Frame(color_tab)
         current_node_button = create_color_button(current_node_button_frame, "Current Node", 'current_node')
         current_node_button_frame.pack(pady=5)
+        current_node_button.config(bg=self.parent.current_node_color)
 
         reset_button = Button(color_tab, text="Reset Colors", command=reset_colors)
         reset_button.pack(pady=20)
-
+        '''
         dark_mode_var = BooleanVar(value=self.parent.darkmode)
         darkmode_var_frame = Frame(color_tab)
         darkmode_var_frame.pack(anchor="w", pady=10, padx=10)
@@ -372,7 +377,7 @@ class My_Frame(Frame):
             variable=dark_mode_var
         )
         darkmode_checkbox.grid(row=0, column=0)
-
+        '''
         button_frame = Frame(settings_window)
         button_frame.pack(pady=20)
 
