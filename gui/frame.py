@@ -51,9 +51,9 @@ class My_Frame(Frame):
         self.button_frame_alg = Frame(self)
         self.button_frame_alg.grid(row=0, column=6, pady=10)
 
-        self.starting_button = Button(self.button_frame_alg, text="Algorithmus Starten", command=parent.start_algorithm)
-        self.starting_button.grid(row=0, column=0, padx=5, sticky="w")
-        self.shortest_paths_button = Button(self.button_frame_alg, text="Kürzeste Pfade", command=self.open_shortest_paths, state=DISABLED )
+        self.starting_button = Button(self.button_frame_alg, text="Algorithmus Starten", command=parent.start_algorithm, width=20)
+        self.starting_button.grid(row=0, column=0, sticky="w")
+        self.shortest_paths_button = Button(self.button_frame_alg, text="Kürzeste Pfade", command=self.open_shortest_paths, state=DISABLED, width=20 )
         self.shortest_paths_button.grid(row=1, column=0, pady=10, sticky="w")
 
         self.canvas.bind("<Button-1>", self.add_node)
