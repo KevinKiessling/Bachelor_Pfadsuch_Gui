@@ -16,6 +16,9 @@ class PfadsuchApp(Tk):
         self.debug = False
         self.darkmode = False
         self.steps_finished_algorithm = []
+        self.shortest_paths = {}
+
+
         self.graph = {}
         self.start_node = ''
         self.default_graph_pos = {}
@@ -105,6 +108,7 @@ class PfadsuchApp(Tk):
             self.code_frame.clear_table()
             self.code_frame.clear_hightlight()
 
+
         if self.start_node is None or self.start_node == '':
             start_node = tkinter.simpledialog.askstring("Startknoten wählen", "Bitte Startknoten auswählen")
             self.selected_nodes = []
@@ -117,7 +121,7 @@ class PfadsuchApp(Tk):
         if self.selected_algorithm == "Dijkstra_PQ_lazy":
             self.dijkstra_pq_lazy = Dijkstra_Priority_Queue_Lazy()
             self.update_gui()
-            self.steps_finished_algorithm = self.dijkstra_pq_lazy.run_dijkstra_priority_queue_lazy(self.graph, self.start_node)
+            self.steps_finished_algorithm, self.shortest_paths = self.dijkstra_pq_lazy.run_dijkstra_priority_queue_lazy(self.graph, self.start_node)
             self.code_frame.highlight_lines_with_dimming([2])
             self.code_frame.set_step(f"Starte Dijkstra mit Priority Queue(mit Lazy Deletion)")
         if self.selected_algorithm == "Dijkstra_PQ":
@@ -126,7 +130,8 @@ class PfadsuchApp(Tk):
             self.steps_finished_algorithm = self.dijkstra_pq.run_dijkstra_priority_queue(self.graph, self.start_node)
             self.code_frame.highlight_lines_with_dimming([2])
             self.code_frame.set_step(f"Starte Dijkstra mit Priority Queue(ohne Lazy Deletion)")
-
+        if self.shortest_paths:
+            self.gui_frame.shortest_paths_button.config(state=NORMAL)
         if self.selected_algorithm == "Dijkstra_List":
             print("not implemented yet")
 
@@ -134,6 +139,7 @@ class PfadsuchApp(Tk):
 
     def set_starting_node(self, node):
         self.start_node = node
+        self.selected_nodes = []
         if self.debug:
             print(f" Knoten {node} als Startknoten gesetzt")
         self.update_gui()
@@ -215,6 +221,9 @@ class PfadsuchApp(Tk):
         self.code_frame.clear_table()
         self.code_frame.clear_hightlight()
         self.code_frame.set_step("")
+        self.shortest_paths = {}
+        if not self.shortest_paths:
+            self.gui_frame.shortest_paths_button.config(state=DISABLED)
 
 
 
@@ -458,4 +467,11 @@ class PfadsuchApp(Tk):
 
                     # Speichere Kanten die bereits gezeichnet wurden, damit bidirektionale Kanten nicht 4x gezeichnet werden
                     already_drawn_edges.add((node, neighbor))
+
+    # zeichnet graph mit highlighted path zu übergebenem Endknoten
+    def draw_graph_path(self, path):
+        print(path)
+
+
+
 

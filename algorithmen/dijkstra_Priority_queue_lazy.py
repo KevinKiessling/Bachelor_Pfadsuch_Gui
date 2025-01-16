@@ -5,7 +5,7 @@ class Dijkstra_Priority_Queue_Lazy():
     def __init__(self):
         super().__init__()
         self.steps = []
-
+        self.shortest_path_edges = {}
 
 
     #dijkstra algorithmus mit priority Queue
@@ -18,6 +18,7 @@ class Dijkstra_Priority_Queue_Lazy():
 
         priority_queue = [(0, startnode)]
         prev_nodes = {}
+        path_edges = {startnode: []}
         visited = set()
         visited_edges = set()
         self.save_state(
@@ -93,7 +94,8 @@ class Dijkstra_Priority_Queue_Lazy():
                 if new_distance < distances[neighbor]:
                     distances[neighbor] = new_distance
 
-                    #if neighbor not in node_in_queue or new_distance < node_in_queue[neighbor]:
+                    path_edges[neighbor] = path_edges[current_node] + [(current_node, neighbor)]
+
                     heapq.heappush(priority_queue, (new_distance, neighbor))
                         #node_in_queue[neighbor] = new_distance
 
@@ -124,7 +126,9 @@ class Dijkstra_Priority_Queue_Lazy():
             priority_queue=priority_queue,
             selected_algorithm="Dijkstra_PQ_lazy"
         )
-        return self.steps
+        #print(path_edges)
+        self.shortest_path_edges = path_edges
+        return self.steps, self.shortest_path_edges
     #Speichert Schritt des Algorithmus
     def save_state(self, step_type, current_node, current_distance, neighbor, edge_weight, distances, prev_nodes,
                    visited, visited_edges, priority_queue, selected_algorithm):

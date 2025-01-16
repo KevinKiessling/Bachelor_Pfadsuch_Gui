@@ -39,23 +39,22 @@ class My_Frame(Frame):
         self.button_frame = Frame(self)
         self.button_frame.grid(row=1, column=0, columnspan=6, pady=10)
 
-
-
-        self.next_button = Button(self.button_frame, text="1 Schritt vor", command=parent.next_step)
-        self.next_button.grid(row=1, column=0, padx=5, sticky="w")
-
         self.prev_button = Button(self.button_frame, text="1 Schritt zurück", command=parent.prev_step)
-        self.prev_button.grid(row=1, column=1, padx=5, sticky="w")
+        self.prev_button.grid(row=1, column=0, padx=5, sticky="w")
+        self.next_button = Button(self.button_frame, text="1 Schritt vor", command=parent.next_step)
+        self.next_button.grid(row=1, column=1, padx=5, sticky="w")
 
         self.fast_forward_button = Button(self.button_frame, text="Vorspulen", command=self.go_forward_button)
-        self.fast_forward_button.grid(row=1, column=2, padx=5, sticky="w")
-        self.fast_forward_button = Button(self.button_frame, text="Pausieren", command=parent.pause)
         self.fast_forward_button.grid(row=1, column=3, padx=5, sticky="w")
+        self.fast_forward_button = Button(self.button_frame, text="Pausieren", command=parent.pause)
+        self.fast_forward_button.grid(row=1, column=2, padx=5, sticky="w")
         self.button_frame_alg = Frame(self)
         self.button_frame_alg.grid(row=0, column=6, pady=10)
 
         self.starting_button = Button(self.button_frame_alg, text="Algorithmus Starten", command=parent.start_algorithm)
         self.starting_button.grid(row=0, column=0, padx=5, sticky="w")
+        self.shortest_paths_button = Button(self.button_frame_alg, text="Kürzeste Pfade", command=self.open_shortest_paths, state=DISABLED )
+        self.shortest_paths_button.grid(row=1, column=0, pady=10, sticky="w")
 
         self.canvas.bind("<Button-1>", self.add_node)
         self.canvas.bind("<Button-3>", self.add_edge)
@@ -103,6 +102,40 @@ class My_Frame(Frame):
         self.menu_bar.add_cascade(label="Todos", menu=self.help)
         self.help.add_command(label="Todos", command=self.open_tutorial)
 
+    def open_shortest_paths(self):
+        print(self.parent.shortest_paths)
+        if self.parent.debug:
+            print("Öffne shortest path menu todo")
+
+
+        tutorial_window = Toplevel(self)
+        tutorial_window.title("Todos")
+        tutorial_window.geometry("200x300")
+        tutorial_window.transient(self.parent)
+
+
+        for end_node in self.parent.shortest_paths.keys():
+            if end_node == self.parent.start_node:
+                continue
+            button = Button(
+                tutorial_window,
+                text=f"Draw Path to {end_node}",
+                command=lambda node=end_node: self.on_button_click(node, tutorial_window)
+            )
+            button.pack(pady=5)
+
+        # Add a close button
+        cancel_button = Button(tutorial_window, text="Close", command=tutorial_window.destroy)
+        cancel_button.pack(pady=10)
+
+    def on_button_click(self, end_node, tutorial_window):
+
+        path = self.parent.shortest_paths.get(end_node, [])
+        if not path:
+            messagebox.showwarning("Path Not Found", f"No path to {end_node} exists.")
+        else:
+            self.parent.draw_graph_path(path)
+            messagebox.showinfo("Path Drawn", f"Path to {end_node} has been drawn!")
 
     def open_tutorial(self):
         if self.parent.debug:
@@ -190,7 +223,7 @@ class My_Frame(Frame):
                     del self.operation_history[i]
                     break
                 elif op_type == "add_edge" and (operation[1][0] == item[0] and operation[1][1] == item[1]):
-                    print("yo")
+
                     del self.operation_history[i]
                     break
     #Löscht übergebenen Knoten
@@ -277,11 +310,11 @@ class My_Frame(Frame):
         )
         speed_slider.pack(pady=10)
         speed_label = Label(general_tab,
-                            text=f"Aktuelle Verzögerung bei fast forward Wiedergabe: {speed_var.get()} ms")
+                            text=f"Aktuelle Verzögerung bei Vorspul Wiedergabe: {speed_var.get()} ms")
         speed_label.pack()
 
         def update_speed_label(*args):
-            speed_label.config(text=f"Verzögerung bei fast forward Wiedergabe: {speed_var.get()} ms")
+            speed_label.config(text=f"Verzögerung bei Vorspul Wiedergabe: {speed_var.get()} ms")
 
         speed_var.trace_add("write", update_speed_label)
 
