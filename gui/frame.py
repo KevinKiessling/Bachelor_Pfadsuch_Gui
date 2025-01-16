@@ -120,7 +120,7 @@ class My_Frame(Frame):
             button = Button(
                 tutorial_window,
                 text=f"Draw Path to {end_node}",
-                command=lambda node=end_node: self.on_button_click(node, tutorial_window)
+                command=lambda node=end_node: self.on_button_click(node, tutorial_window), width= 20
             )
             button.pack(pady=5)
 
