@@ -11,9 +11,9 @@ Benötigte Pip Imports:
 - Keine
 
 
-Aktueller Stand 7.1:
-- Gesamte App ist besser resizeable
-- Farbeinstellungen um alles zu customizen
+Aktueller Stand 16.1:
+- 
+- 
 - 
 
 

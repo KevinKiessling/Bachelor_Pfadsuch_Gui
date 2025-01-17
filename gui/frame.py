@@ -103,13 +103,13 @@ class My_Frame(Frame):
         self.help.add_command(label="Todos", command=self.open_tutorial)
 
     def open_shortest_paths(self):
-        print(self.parent.shortest_paths)
+
         if self.parent.debug:
             print("Öffne shortest path menu todo")
 
 
         tutorial_window = Toplevel(self)
-        tutorial_window.title("Todos")
+        tutorial_window.title("Visualisiere kürzeste Pfade")
         tutorial_window.geometry("200x300")
         tutorial_window.transient(self.parent)
 
@@ -119,12 +119,12 @@ class My_Frame(Frame):
                 continue
             button = Button(
                 tutorial_window,
-                text=f"Draw Path to {end_node}",
-                command=lambda node=end_node: self.on_button_click(node, tutorial_window), width= 20
+                text=f"Zeichne kürzesten Pfad zu {end_node}",
+                command=lambda node=end_node: self.on_button_click(node, tutorial_window), width= 25
             )
             button.pack(pady=5)
 
-        # Add a close button
+
         cancel_button = Button(tutorial_window, text="Close", command=tutorial_window.destroy)
         cancel_button.pack(pady=10)
 
@@ -135,7 +135,7 @@ class My_Frame(Frame):
             messagebox.showwarning("Path Not Found", f"No path to {end_node} exists.")
         else:
             self.parent.draw_graph_path(path)
-            messagebox.showinfo("Path Drawn", f"Path to {end_node} has been drawn!")
+           # messagebox.showinfo("Path Drawn", f"Path to {end_node} has been drawn!")
 
     def open_tutorial(self):
         if self.parent.debug:

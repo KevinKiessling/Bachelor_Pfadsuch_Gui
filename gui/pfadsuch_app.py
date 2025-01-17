@@ -148,7 +148,8 @@ class PfadsuchApp(Tk):
         if self.debug:
             print("next step")
         if self.steps_finished_algorithm == []:
-            print("no algorithm loaded")
+
+            self.start_algorithm()
 
         if self.current_step < len(self.steps_finished_algorithm) -1:
             self.current_step += 1
@@ -168,8 +169,7 @@ class PfadsuchApp(Tk):
         if self.debug:
             print("fast forward")
         if self.steps_finished_algorithm == []:
-            if self.debug:
-                print("no algorithm loaded")
+            self.start_algorithm()
         if self.fast_forward_paused:
             return
         if self.current_step < len(self.steps_finished_algorithm) -1:
