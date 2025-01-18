@@ -52,7 +52,7 @@ class PfadsuchApp(Tk):
         self.highlighted_edge_color = "red"
         self.visited_node_color = "lawn green"
         self.current_node_color = "yellow"
-
+        self.path_color = "light blue"
 
         self.load_config()
 
@@ -78,7 +78,8 @@ class PfadsuchApp(Tk):
                 self.highlighted_edge_color = config.get("highlighted_edge_color", self.highlighted_edge_color)
                 self.visited_node_color = config.get("visited_node_color", self.visited_node_color)
                 self.current_node_color = config.get("current_node_color", self.current_node_color)
-                #self.darkmode = config.get("darkmode", self.darkmode)
+                self.path_color = config.get("path_color", self.path_color)
+
         else:
             self.save_config()
 
@@ -95,7 +96,8 @@ class PfadsuchApp(Tk):
             "visited_edge_color": self.visited_edge_color,
             "highlighted_edge_color": self.highlighted_edge_color,
             "visited_node_color": self.visited_node_color,
-            "current_node_color": self.current_node_color
+            "current_node_color": self.current_node_color,
+            "path_color": self.path_color
            # "darkmode": self.darkmode
         }
         with open(self.CONFIG_FILE, "w") as f:
@@ -470,7 +472,185 @@ class PfadsuchApp(Tk):
 
     # zeichnet graph mit highlighted path zu übergebenem Endknoten
     def draw_graph_path(self, path):
-        print(path)
+        self.gui_frame.canvas.delete("all")
+        node_radius = 30
+        font_size = 16
+        already_drawn_edges = set()
+        distances = self.steps_finished_algorithm[-1]["distances"]
+        start_node = None
+        target_node = None
+
+        if path:
+
+            start_node = path[0][0]
+            target_node = path[-1][1]
+
+        for node, (x, y) in self.node_positions.items():
+            if node == start_node:
+                color = self.path_color
+            elif node == target_node:
+                color = self.path_color
+            else:
+                color = "light grey"
+
+
+            if self.steps_finished_algorithm:
+
+                distance_text = distances.get(node, float('inf'))
+                distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
+
+            node_text = f"{node:^{len(distance_text)}}"
+            display_text = f"{node_text}\n{distance_text}"
+
+            if node in self.selected_nodes:
+                self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
+                                                  fill="green")
+
+                self.gui_frame.canvas.create_text(
+                    x, y, text=display_text, fill="black", font=("Arial", font_size), anchor="center"
+                )
+                if node == self.start_node:
+                    self.gui_frame.canvas.create_text(x, y, text="Start", fill="black", font=("Arial", font_size))
+                else:
+                    self.gui_frame.canvas.create_text(
+                        x, y, text=display_text, fill="black", font=("Arial", font_size), anchor="center"
+                    )
+            else:
+                self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
+                                                  fill=color)
+
+                if node == self.start_node:
+                    self.gui_frame.canvas.create_text(x, y, text="Start", fill="black", font=("Arial", font_size))
+                else:
+                    self.gui_frame.canvas.create_text(x, y, text=display_text, fill="black", font=("Arial", font_size))
+
+        # Zeichne alle Kanten, dabei wird zwischen 2 Varianten unterschieden, Direkt oder Bidirekt
+        for node, edges in self.graph.items():
+            for neighbor, weight in edges.items():
+                # Falls Kante schonmal behandelt wurde, skip
+                if (node, neighbor) in already_drawn_edges or (neighbor, node) in already_drawn_edges:
+                    continue
+
+                edge_color = "light grey"
+
+                if (node, neighbor) in path:
+
+                    edge_color = self.path_color
+
+
+                if neighbor in self.node_positions:
+
+                    x1, y1 = self.node_positions[node]
+                    x2, y2 = self.node_positions[neighbor]
+
+                    dx = x2 - x1
+                    dy = y2 - y1
+                    distance = math.sqrt(dx ** 2 + dy ** 2)
+
+                    if distance > 0:
+                        x1_no_node_clip = x1 + dx / distance * node_radius
+                        y1_no_node_clip = y1 + dy / distance * node_radius
+                        x2_no_node_clip = x2 - dx / distance * node_radius
+                        y2_no_node_clip = y2 - dy / distance * node_radius
+                    else:
+                        x1_no_node_clip, y1_no_node_clip, x2_no_node_clip, y2_no_node_clip = x1, y1, x2, y2
+
+                    # Kante teilen um das Gewicht zu zeigen
+                    middle_space = 0.12
+
+                    segment_dx = dx / distance * middle_space * distance
+                    segment_dy = dy / distance * middle_space * distance
+
+                    # Erkenne ob die Kante Bidirektional ist, um sie anders zu zeichnen
+                    is_bidirectional = neighbor in self.graph and node in self.graph[neighbor]
+
+                    if is_bidirectional:
+
+                        forward_colour = "light grey"
+                        reverse_colour = "light grey"
+
+                        if (node, neighbor) in path:
+                            forward_colour = self.path_color
+                        if (neighbor, node) in path:
+                            reverse_colour = self.path_color
+
+
+                        # Offset um die bidirektionale Kante einzufügen
+                        offset = 10
+                        # Beide Kanten auseinander "ziehen"
+                        perp_dx = -dy / distance * offset
+                        perp_dy = dx / distance * offset
+
+                        # 1. Kante Koordinaten
+                        x1_offset = x1_no_node_clip + perp_dx
+                        y1_offset = y1_no_node_clip + perp_dy
+                        x2_offset = x2_no_node_clip + perp_dx
+                        y2_offset = y2_no_node_clip + perp_dy
+                        middle_x = (x1_offset + x2_offset) / 2
+                        middle_y = (y1_offset + y2_offset) / 2
+
+                        # Kante in 2 Teile trennen
+                        self.gui_frame.canvas.create_line(
+                            x1_offset, y1_offset, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
+                            width=4, tags="edge", fill=forward_colour, smooth=True, splinesteps=500
+                        )
+                        self.gui_frame.canvas.create_line(
+                            middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_offset, y2_offset,
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=forward_colour,
+                            smooth=True, splinesteps=500
+                        )
+                        self.gui_frame.canvas.create_text(
+                            middle_x, middle_y,
+                            text=str(weight), fill="black", font=("Arial", 14), tags="weight"
+                        )
+
+                        # Offset für die 2. Kante
+                        x1_offset = x1_no_node_clip - perp_dx
+                        y1_offset = y1_no_node_clip - perp_dy
+                        x2_offset = x2_no_node_clip - perp_dx
+                        y2_offset = y2_no_node_clip - perp_dy
+                        middle_x = (x1_offset + x2_offset) / 2
+                        middle_y = (y1_offset + y2_offset) / 2
+
+                        # Kante in 2 Teile trennen
+                        self.gui_frame.canvas.create_line(
+                            x2_offset, y2_offset, middle_x + segment_dx / 2, middle_y + segment_dy / 2,
+                            width=4, tags="edge", fill=reverse_colour, smooth=True, splinesteps=500
+                        )
+                        self.gui_frame.canvas.create_line(
+                            middle_x - segment_dx / 2, middle_y - segment_dy / 2, x1_offset, y1_offset,
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_colour,
+                            smooth=True, splinesteps=500
+                        )
+
+                        # Gewicht in die Mitte schreiben
+                        self.gui_frame.canvas.create_text(
+                            middle_x, middle_y, text=str(self.graph[neighbor][node]), font=("Arial", 14), tags="weight"
+                        )
+                    else:
+                        # Zeichne normale Kante
+                        middle_x = (x1_no_node_clip + x2_no_node_clip) / 2
+                        middle_y = (y1_no_node_clip + y2_no_node_clip) / 2
+
+                        self.gui_frame.canvas.create_line(
+                            x1_no_node_clip, y1_no_node_clip, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
+                            width=4, tags="edge", fill=edge_color, smooth=True, splinesteps=500
+                        )
+                        self.gui_frame.canvas.create_line(
+                            middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_no_node_clip, y2_no_node_clip,
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color, smooth=True,
+                            splinesteps=500
+                        )
+                        self.gui_frame.canvas.create_text(
+                            middle_x, middle_y,
+                            text=str(weight),
+                            fill="black",
+                            font=("Arial", 14),
+                            tags="weight"
+                        )
+
+                    # Speichere Kanten die bereits gezeichnet wurden, damit bidirektionale Kanten nicht 4x gezeichnet werden
+                    already_drawn_edges.add((node, neighbor))
 
 
 

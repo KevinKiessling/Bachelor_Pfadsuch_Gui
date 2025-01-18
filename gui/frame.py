@@ -9,11 +9,11 @@ import json
 from tkinter import messagebox
 from tkinter import ttk
 from tkinter import colorchooser
-
+from tkinter import Tk, Canvas, Frame, Scrollbar, Button
 class My_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
-
+        self.shortest_paths_window = None
         self.parent = parent
         self.operation_history = []
         self.available_ids = self.generate_node_ids()
@@ -104,29 +104,95 @@ class My_Frame(Frame):
 
     def open_shortest_paths(self):
 
-        if self.parent.debug:
-            print("Öffne shortest path menu todo")
+        if hasattr(self, "shortest_paths_window") and self.shortest_paths_window is not None:
+
+            if self.shortest_paths_window.winfo_exists():
+                self.refresh_window_content()
+                self.shortest_paths_window.lift()
+                return
+            else:
+                self.shortest_paths_window = None
 
 
-        tutorial_window = Toplevel(self)
-        tutorial_window.title("Visualisiere kürzeste Pfade")
-        tutorial_window.geometry("200x300")
-        tutorial_window.transient(self.parent)
+        self.shortest_paths_window = Tk()
+        self.shortest_paths_window.geometry("200x300")
+        self.shortest_paths_window.title("Shortest Paths")
+        self.shortest_paths_window.rowconfigure(0, weight=1)
+        self.shortest_paths_window.columnconfigure(0, weight=1)
+
+        container = Frame(self.shortest_paths_window)
+        container.grid(row=0, column=0, sticky="nsew")
+
+        canvas = Canvas(container)
+        scrollbar = Scrollbar(container, orient="vertical", command=canvas.yview)
+        scrollable_frame = Frame(canvas)
+
+        window_id = canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        def update_scrollregion(event):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+            visible_height = canvas.winfo_height()
+            content_height = canvas.bbox("all")[3]
 
 
-        for end_node in self.parent.shortest_paths.keys():
+            if content_height > visible_height:
+                scrollbar.pack(side="right", fill="y")
+            else:
+                scrollbar.pack_forget()
+
+        scrollable_frame.bind("<Configure>", update_scrollregion)
+
+        def resize_scrollable_frame(event):
+            canvas.itemconfig(window_id, width=event.width)
+
+        canvas.bind("<Configure>", resize_scrollable_frame)
+
+        scrollable_frame.grid_columnconfigure(0, weight=1)
+
+        for index, end_node in enumerate(self.parent.shortest_paths.keys()):
             if end_node == self.parent.start_node:
                 continue
             button = Button(
-                tutorial_window,
+                scrollable_frame,
                 text=f"Zeichne kürzesten Pfad zu {end_node}",
-                command=lambda node=end_node: self.on_button_click(node, tutorial_window), width= 25
+                command=lambda node=end_node: self.on_button_click(node, self.shortest_paths_window)
             )
-            button.pack(pady=5)
+            button.grid(row=index, column=0, sticky="ew", padx=5, pady=5)
 
 
-        cancel_button = Button(tutorial_window, text="Close", command=tutorial_window.destroy)
-        cancel_button.pack(pady=10)
+        close_button = Button(self.shortest_paths_window, text="Close", command=self._on_window_close)
+        close_button.grid(row=1, column=0, sticky="ew", pady=5)
+
+        self.shortest_paths_window.protocol("WM_DELETE_WINDOW", lambda: self._on_window_close())
+
+    def refresh_window_content(self):
+
+        scrollable_frame = self.shortest_paths_window.winfo_children()[0].winfo_children()[0].winfo_children()[
+            0]
+        for widget in scrollable_frame.winfo_children():
+            widget.destroy()
+
+
+        for index, end_node in enumerate(self.parent.shortest_paths.keys()):
+            if end_node == self.parent.start_node:
+                continue
+            button = Button(
+                scrollable_frame,
+                text=f"Zeichne kürzesten Pfad zu {end_node}",
+                command=lambda node=end_node: self.on_button_click(node, self.shortest_paths_window)
+            )
+            button.grid(row=index, column=0, sticky="ew", padx=5, pady=5)
+
+    def _on_window_close(self):
+        if hasattr(self, "shortest_paths_window"):
+            self.shortest_paths_window.destroy()
+            self.shortest_paths_window = None
 
     def on_button_click(self, end_node, tutorial_window):
 
@@ -338,7 +404,8 @@ class My_Frame(Frame):
             "visited_edge": "lawn green",
             "highlighted_edge": "red",
             "visited_node": "lawn green",
-            "current_node": "yellow"
+            "current_node": "yellow",
+            "path_color": "light blue"
         }
         color_tab = Frame(notebook)
         notebook.add(color_tab, text="Farb Einstellungen")
@@ -357,6 +424,9 @@ class My_Frame(Frame):
                 elif element == 'current_node':
                     self.parent.current_node_color = color
                     current_node_button.config(bg=color)
+                elif element == 'path_color':
+                    self.parent.path_color = color
+                    path_color_button.config(bg=color)
 
         def reset_colors():
             # Reset colors to default values
@@ -364,12 +434,14 @@ class My_Frame(Frame):
             self.parent.highlighted_edge_color = default_colors["highlighted_edge"]
             self.parent.visited_node_color = default_colors["visited_node"]
             self.parent.current_node_color = default_colors["current_node"]
+            self.parent.path_color = default_colors["path_color"]
 
             # Update button backgrounds to match defaults
             visited_edge_button.config(bg=self.parent.visited_edge_color)
             highlighted_edge_button.config(bg=self.parent.highlighted_edge_color)
             visited_node_button.config(bg=self.parent.visited_node_color)
             current_node_button.config(bg=self.parent.current_node_color)
+            path_color_button.config(bg=self.parent.path_color)
         def create_color_button(frame, text, element):
             button = Button(frame, text="    ", width=5, command=lambda: choose_color(element))
             button.grid(row=0, column=0, padx=10)
@@ -397,6 +469,11 @@ class My_Frame(Frame):
         current_node_button = create_color_button(current_node_button_frame, "Current Node", 'current_node')
         current_node_button_frame.pack(pady=5)
         current_node_button.config(bg=self.parent.current_node_color)
+
+        path_color_button_frame = Frame(color_tab)
+        path_color_button = create_color_button(path_color_button_frame, "Path", 'path_color')
+        path_color_button_frame.pack(pady=5)
+        path_color_button.config(bg=self.parent.path_color)
 
         reset_button = Button(color_tab, text="Reset Colors", command=reset_colors)
         reset_button.pack(pady=20)

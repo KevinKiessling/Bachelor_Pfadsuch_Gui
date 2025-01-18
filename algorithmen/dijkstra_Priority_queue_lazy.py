@@ -126,7 +126,7 @@ class Dijkstra_Priority_Queue_Lazy():
             priority_queue=priority_queue,
             selected_algorithm="Dijkstra_PQ_lazy"
         )
-        #print(path_edges)
+
         self.shortest_path_edges = path_edges
         return self.steps, self.shortest_path_edges
     #Speichert Schritt des Algorithmus
