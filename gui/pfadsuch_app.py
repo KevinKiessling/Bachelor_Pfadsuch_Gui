@@ -306,10 +306,10 @@ class PfadsuchApp(Tk):
             distance_text = distances.get(node, float('inf'))
             distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
 
-            # Calculate the length of distance_text
+
             distance_length = len(distance_text)
 
-            # Calculate the total padding needed to center the node name over the distance text
+
             node_length = len(node)
             padding = max(0, distance_length - node_length)
 
@@ -544,10 +544,10 @@ class PfadsuchApp(Tk):
                 distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
 
 
-                # Calculate the length of distance_text
+
                 distance_length = len(distance_text)
 
-                # Calculate the total padding needed to center the node name over the distance text
+
                 node_length = len(node)
                 padding = max(0, distance_length - node_length)
 
