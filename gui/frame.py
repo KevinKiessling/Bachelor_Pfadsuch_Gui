@@ -194,7 +194,7 @@ class My_Frame(Frame):
             self.shortest_paths_window.destroy()
             self.shortest_paths_window = None
 
-    def on_button_click(self, end_node, tutorial_window):
+    def on_button_click(self, end_node, path_window):
 
         path = self.parent.shortest_paths.get(end_node, [])
         if not path:
@@ -213,11 +213,9 @@ class My_Frame(Frame):
 
         tutorial_text = Label(tutorial_window, text="TodoList\n"
                                                     "Beim 1. starten der App soll ein Hilfe fenster aufgehen, was alles erklärt, -> config var ums später nichtmehr zu callen\n"
-                                                    "Farben für edge erstellung\n"
+
                                                     "Evtl dragable nodes(Nicht sicher wie machbar das mit tkinter canvas ist)\n"
                                                     "Disjktra mit Liste\n"
-                                                    "darkmode\n"
-                                                    "Farbeinstellungen mit Knoten erstellung verbinden\n"
                                                     "Das Hilfe Fenster in die Topbar statt dem hier\n"
                                                     "Vllt. das beim Erstellen einer Kante diese vorher simuliert wird(auch hier nicht sicher wie gut das in tkinter machbar ist)\n", justify="left")
         tutorial_text.pack(pady=10, padx=10)
@@ -350,7 +348,7 @@ class My_Frame(Frame):
 
         max_weight_entry_field = Entry(random_random_checkbox_frame, textvariable=max_weight_var, width=10, validate="key", validatecommand=(validate_command, "%P"))
         max_weight_entry_field.grid(row=0, column=1)
-        max_weight_label = Label(random_random_checkbox_frame, text="Maximales Gewicht")
+        max_weight_label = Label(random_random_checkbox_frame, text="Maximales Gewicht (<100000)")
         max_weight_label.grid(row=0, column=2)
 
 
@@ -390,6 +388,12 @@ class My_Frame(Frame):
             self.parent.random_edge_mode = random_mode_var.get()
             self.parent.animation_speed = speed_var.get()
            # self.parent.darkmode = dark_mode_var.get()
+            max_edge_weight = max_weight_var.get()
+            # Validate the max_edge_weight before applying the settings
+            if max_edge_weight < 0 or max_edge_weight >= 100000:
+                # Show an error message or handle the case where the weight is out of range
+                messagebox.showerror("Ungültige Eingabe", "Maximales Kantengewicht muss <100000 sein")
+                return  # Prevent saving the settings if validation fails
             self.parent.max_edge_weight = max_weight_var.get()
 
             if save_cur_a_d_var.get():
@@ -450,32 +454,32 @@ class My_Frame(Frame):
             return button
 
         visited_edge_button_frame = Frame(color_tab)
-        visited_edge_button = create_color_button(visited_edge_button_frame, "Visited Edge", 'visited_edge')
+        visited_edge_button = create_color_button(visited_edge_button_frame, "Besuchte Kante", 'visited_edge')
         visited_edge_button_frame.pack(pady=5)
         visited_edge_button.config(bg=self.parent.visited_edge_color)
 
         highlighted_edge_button_frame = Frame(color_tab)
-        highlighted_edge_button = create_color_button(highlighted_edge_button_frame, "Highlighted Edge",
+        highlighted_edge_button = create_color_button(highlighted_edge_button_frame, "Hervorgehobene Kante",
                                                       'highlighted_edge')
         highlighted_edge_button_frame.pack(pady=5)
         highlighted_edge_button.config(bg=self.parent.highlighted_edge_color)
 
         visited_node_button_frame = Frame(color_tab)
-        visited_node_button = create_color_button(visited_node_button_frame, "Visited Node", 'visited_node')
+        visited_node_button = create_color_button(visited_node_button_frame, "Besuchter Knoten", 'visited_node')
         visited_node_button_frame.pack(pady=5)
         visited_node_button.config(bg=self.parent.visited_node_color)
 
         current_node_button_frame = Frame(color_tab)
-        current_node_button = create_color_button(current_node_button_frame, "Current Node", 'current_node')
+        current_node_button = create_color_button(current_node_button_frame, "Aktueller Knoten", 'current_node')
         current_node_button_frame.pack(pady=5)
         current_node_button.config(bg=self.parent.current_node_color)
 
         path_color_button_frame = Frame(color_tab)
-        path_color_button = create_color_button(path_color_button_frame, "Path", 'path_color')
+        path_color_button = create_color_button(path_color_button_frame, "Kürzester Pfad", 'path_color')
         path_color_button_frame.pack(pady=5)
         path_color_button.config(bg=self.parent.path_color)
 
-        reset_button = Button(color_tab, text="Reset Colors", command=reset_colors)
+        reset_button = Button(color_tab, text="Zurücksetzen", command=reset_colors)
         reset_button.pack(pady=20)
         '''
         dark_mode_var = BooleanVar(value=self.parent.darkmode)
@@ -618,11 +622,10 @@ class My_Frame(Frame):
             if self.parent.debug:
                 print(f"Startknoten gewählt : {clicked_node}")
 
-
             if len(self.parent.selected_nodes) == 2:
                 node1, node2 = self.parent.selected_nodes
 
-                #dialog öffnen der nach gewicht fragt
+                # Open a dialog to ask for weight
                 if self.parent.random_edge_mode:
                     if self.parent.debug:
                         print("random mode")
@@ -630,9 +633,22 @@ class My_Frame(Frame):
                 else:
                     if self.parent.debug:
                         print("input mode")
-                    weight = tkinter.simpledialog.askinteger("Kantengewicht Eingeben", "Kantengewicht Eingeben")
-                if weight is None:
-                    self.parent.selected_nodes.clear()
+
+                    weight = None
+                    while weight is None or not (0 <= weight <= 99999):
+                        weight = tkinter.simpledialog.askinteger(
+                            "Kantengewicht Eingeben",
+                            "Kantengewicht Eingeben (Maximales Gewicht < 100000)"
+                        )
+                        if weight is None:
+                            self.parent.selected_nodes.clear()
+                            return
+                        if not (0 <= weight <= 99999):
+                            tkinter.messagebox.showerror(
+                                "Ungültiges Gewicht",
+                                "Das Kantengewicht muss zwischen 0 und 99999 liegen."
+                            )
+
                 if not node1 == node2 and weight is not None:
                     self.parent.graph[node1][node2] = weight
                     self.operation_history.append(("add_edge", (node1, node2, weight)))

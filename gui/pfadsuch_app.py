@@ -292,7 +292,7 @@ class PfadsuchApp(Tk):
     def draw_graph(self, current_node, neighbor_list, distances, visited, visited_edges, highlight_only_edge=False):
         self.gui_frame.canvas.delete("all")
         node_radius = 30
-        font_size = 16
+        font_size = 14
         already_drawn_edges = set()
 
         #basic draw node
@@ -303,13 +303,28 @@ class PfadsuchApp(Tk):
             elif node in visited:
                 color = self.visited_node_color
 
-
-
             distance_text = distances.get(node, float('inf'))
             distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
 
+            # Calculate the length of distance_text
+            distance_length = len(distance_text)
 
-            node_text = f"{node:^{len(distance_text)}}"
+            # Calculate the total padding needed to center the node name over the distance text
+            node_length = len(node)
+            padding = max(0, distance_length - node_length)
+
+
+
+            if distances.get(node, float('inf'))>=9999:
+                font_size = 12
+                left_padding = (padding + 2) // 2
+                right_padding = padding // 2
+            else:
+                font_size = 14
+                left_padding = (padding + 1) // 2  #
+                right_padding = padding // 2
+
+            node_text = f"{' ' * left_padding}{node}{' ' * right_padding}"
             display_text = f"{node_text}\n{distance_text}"
 
             if node in self.selected_nodes:
@@ -338,24 +353,20 @@ class PfadsuchApp(Tk):
         # Zeichne alle Kanten, dabei wird zwischen 2 Varianten unterschieden, Direkt oder Bidirekt
         for node, edges in self.graph.items():
             for neighbor, weight in edges.items():
-                # Falls Kante schonmal behandelt wurde, skip
+
                 if (node, neighbor) in already_drawn_edges or (neighbor, node) in already_drawn_edges:
                     continue
-
 
                 edge_color = "black"
 
                 if (node, neighbor) in visited_edges or (neighbor, node) in visited_edges:
-
                     edge_color = self.visited_edge_color
                 if node == current_node and neighbor == neighbor_list:
                     edge_color = self.highlighted_edge_color
 
                 if neighbor in self.node_positions:
-
                     x1, y1 = self.node_positions[node]
                     x2, y2 = self.node_positions[neighbor]
-
 
                     dx = x2 - x1
                     dy = y2 - y1
@@ -369,20 +380,18 @@ class PfadsuchApp(Tk):
                     else:
                         x1_no_node_clip, y1_no_node_clip, x2_no_node_clip, y2_no_node_clip = x1, y1, x2, y2
 
-                    # Kante teilen um das Gewicht zu zeigen
+
                     middle_space = 0.12
 
                     segment_dx = dx / distance * middle_space * distance
                     segment_dy = dy / distance * middle_space * distance
 
-                    # Erkenne ob die Kante Bidirektional ist, um sie anders zu zeichnen
+
                     is_bidirectional = neighbor in self.graph and node in self.graph[neighbor]
 
                     if is_bidirectional:
-
                         forward_colour = "black"
                         reverse_colour = "black"
-
 
                         if (node, neighbor) in visited_edges:
                             forward_colour = self.visited_edge_color
@@ -393,63 +402,97 @@ class PfadsuchApp(Tk):
                         if (neighbor == current_node and node == neighbor_list):
                             reverse_colour = self.highlighted_edge_color
 
-                        # Offset um die bidirektionale Kante einzufügen
-                        offset = 10
-                        # Beide Kanten auseinander "ziehen"
+
+                        offset = 13
+
                         perp_dx = -dy / distance * offset
                         perp_dy = dx / distance * offset
 
-                        # 1. Kante Koordinaten
+
+                        weight_text_forward = str(weight)
+                        weight_text_reverse = str(self.graph[neighbor][node])
+                        text_width_forward = len(weight_text_forward) * 6
+                        text_width_reverse = len(weight_text_reverse) * 6
+
+
+                        max_text_width = max(text_width_forward, text_width_reverse)
+
+
+                        middle_space_expanded = middle_space + max_text_width / distance * 1.5
+
+
+                        segment_dx_expanded = dx / distance * middle_space_expanded * distance
+                        segment_dy_expanded = dy / distance * middle_space_expanded * distance
+
+
                         x1_offset = x1_no_node_clip + perp_dx
                         y1_offset = y1_no_node_clip + perp_dy
                         x2_offset = x2_no_node_clip + perp_dx
                         y2_offset = y2_no_node_clip + perp_dy
-                        middle_x = (x1_offset + x2_offset) / 2
-                        middle_y = (y1_offset + y2_offset) / 2
+                        middle_x_forward = (x1_offset + x2_offset) / 2 + segment_dx_expanded / 2
+                        middle_y_forward = (y1_offset + y2_offset) / 2 + segment_dy_expanded / 2
 
-                        # Kante in 2 Teile trennen
+
                         self.gui_frame.canvas.create_line(
-                            x1_offset, y1_offset, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
+                            x1_offset, y1_offset, middle_x_forward - segment_dx_expanded / 2,
+                                                  middle_y_forward - segment_dy_expanded / 2,
                             width=4, tags="edge", fill=forward_colour, smooth=True, splinesteps=500
                         )
                         self.gui_frame.canvas.create_line(
-                            middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_offset, y2_offset,
-                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=forward_colour, smooth=True, splinesteps=500
-                        )
-                        self.gui_frame.canvas.create_text(
-                            middle_x, middle_y,
-                            text=str(weight), fill="black", font=("Arial", 14), tags="weight"
+                            middle_x_forward + segment_dx_expanded / 2, middle_y_forward + segment_dy_expanded / 2,
+                            x2_offset, y2_offset,
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=forward_colour,
+                            smooth=True, splinesteps=500
                         )
 
-                        # Offset für die 2. Kante
+
+                        self.gui_frame.canvas.create_text(
+                            middle_x_forward, middle_y_forward,
+                            text=weight_text_forward, fill="black", font=("Arial", 13), tags="weight"
+                        )
+
+                        # Reverse edge
                         x1_offset = x1_no_node_clip - perp_dx
                         y1_offset = y1_no_node_clip - perp_dy
                         x2_offset = x2_no_node_clip - perp_dx
                         y2_offset = y2_no_node_clip - perp_dy
-                        middle_x = (x1_offset + x2_offset) / 2
-                        middle_y = (y1_offset + y2_offset) / 2
+                        middle_x_reverse = (x1_offset + x2_offset) / 2 - segment_dx_expanded / 2
+                        middle_y_reverse = (y1_offset + y2_offset) / 2 - segment_dy_expanded / 2
 
-
-
-
-                        # Kante in 2 Teile trennen
                         self.gui_frame.canvas.create_line(
-                            x2_offset, y2_offset, middle_x + segment_dx / 2, middle_y + segment_dy / 2,
+                            x2_offset, y2_offset, middle_x_reverse + segment_dx_expanded / 2,
+                                                  middle_y_reverse + segment_dy_expanded / 2,
                             width=4, tags="edge", fill=reverse_colour, smooth=True, splinesteps=500
                         )
                         self.gui_frame.canvas.create_line(
-                            middle_x - segment_dx / 2, middle_y - segment_dy / 2, x1_offset, y1_offset,
-                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_colour, smooth=True, splinesteps=500
+                            middle_x_reverse - segment_dx_expanded / 2, middle_y_reverse - segment_dy_expanded / 2,
+                            x1_offset, y1_offset,
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_colour,
+                            smooth=True, splinesteps=500
                         )
 
-                        # Gewicht in die Mitte schreiben
+
                         self.gui_frame.canvas.create_text(
-                            middle_x, middle_y, text=str(self.graph[neighbor][node]), font=("Arial", 14), tags="weight"
+                            middle_x_reverse, middle_y_reverse,
+                            text=weight_text_reverse, font=("Arial", 13), tags="weight"
                         )
+
                     else:
-                        # Zeichne normale Kante
+                        weight_text = str(weight)
+                        text_width = len(weight_text) * 8
+
+                        middle_space += text_width / distance * 1.5
+
+                        segment_dx = dx / distance * middle_space * distance
+                        segment_dy = dy / distance * middle_space * distance
+
                         middle_x = (x1_no_node_clip + x2_no_node_clip) / 2
                         middle_y = (y1_no_node_clip + y2_no_node_clip) / 2
+
+                        available_space = distance * middle_space
+                        if text_width > available_space:
+                            extra_space = (text_width - available_space) / 2
+                            middle_x -= extra_space
 
                         self.gui_frame.canvas.create_line(
                             x1_no_node_clip, y1_no_node_clip, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
@@ -457,18 +500,19 @@ class PfadsuchApp(Tk):
                         )
                         self.gui_frame.canvas.create_line(
                             middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_no_node_clip, y2_no_node_clip,
-                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color, smooth=True, splinesteps=500
+                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color, smooth=True,
+                            splinesteps=500
                         )
+
                         self.gui_frame.canvas.create_text(
                             middle_x, middle_y,
-                            text=str(weight),
+                            text=weight_text,
                             fill="black",
                             font=("Arial", 14),
                             tags="weight"
                         )
 
-                    # Speichere Kanten die bereits gezeichnet wurden, damit bidirektionale Kanten nicht 4x gezeichnet werden
-                    already_drawn_edges.add((node, neighbor))
+                        already_drawn_edges.add((node, neighbor))
 
     # zeichnet graph mit highlighted path zu übergebenem Endknoten
     def draw_graph_path(self, path):
@@ -499,8 +543,25 @@ class PfadsuchApp(Tk):
                 distance_text = distances.get(node, float('inf'))
                 distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
 
-            node_text = f"{node:^{len(distance_text)}}"
-            display_text = f"{node_text}\n{distance_text}"
+
+                # Calculate the length of distance_text
+                distance_length = len(distance_text)
+
+                # Calculate the total padding needed to center the node name over the distance text
+                node_length = len(node)
+                padding = max(0, distance_length - node_length)
+
+                if distances.get(node, float('inf')) >= 9999:
+                    font_size = 12
+                    left_padding = (padding + 2) // 2
+                    right_padding = padding // 2
+                else:
+                    font_size = 14
+                    left_padding = (padding + 1) // 2  #
+                    right_padding = padding // 2
+
+                node_text = f"{' ' * left_padding}{node}{' ' * right_padding}"
+                display_text = f"{node_text}\n{distance_text}"
 
             if node in self.selected_nodes:
                 self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
@@ -527,16 +588,14 @@ class PfadsuchApp(Tk):
         # Zeichne alle Kanten, dabei wird zwischen 2 Varianten unterschieden, Direkt oder Bidirekt
         for node, edges in self.graph.items():
             for neighbor, weight in edges.items():
-                # Falls Kante schonmal behandelt wurde, skip
+
                 if (node, neighbor) in already_drawn_edges or (neighbor, node) in already_drawn_edges:
                     continue
 
                 edge_color = "light grey"
 
                 if (node, neighbor) in path:
-
                     edge_color = self.path_color
-
 
                 if neighbor in self.node_positions:
 
@@ -555,13 +614,13 @@ class PfadsuchApp(Tk):
                     else:
                         x1_no_node_clip, y1_no_node_clip, x2_no_node_clip, y2_no_node_clip = x1, y1, x2, y2
 
-                    # Kante teilen um das Gewicht zu zeigen
+
                     middle_space = 0.12
 
                     segment_dx = dx / distance * middle_space * distance
                     segment_dy = dy / distance * middle_space * distance
 
-                    # Erkenne ob die Kante Bidirektional ist, um sie anders zu zeichnen
+
                     is_bidirectional = neighbor in self.graph and node in self.graph[neighbor]
 
                     if is_bidirectional:
@@ -575,62 +634,96 @@ class PfadsuchApp(Tk):
                             reverse_colour = self.path_color
 
 
-                        # Offset um die bidirektionale Kante einzufügen
-                        offset = 10
-                        # Beide Kanten auseinander "ziehen"
+                        offset = 13
+
                         perp_dx = -dy / distance * offset
                         perp_dy = dx / distance * offset
 
-                        # 1. Kante Koordinaten
+
+                        weight_text_forward = str(weight)
+                        weight_text_reverse = str(self.graph[neighbor][node])
+                        text_width_forward = len(weight_text_forward) * 6
+                        text_width_reverse = len(weight_text_reverse) * 6
+
+
+                        max_text_width = max(text_width_forward, text_width_reverse)
+
+
+                        middle_space_expanded = middle_space + max_text_width / distance * 1.5
+
+
+                        segment_dx_expanded = dx / distance * middle_space_expanded * distance
+                        segment_dy_expanded = dy / distance * middle_space_expanded * distance
+
+
                         x1_offset = x1_no_node_clip + perp_dx
                         y1_offset = y1_no_node_clip + perp_dy
                         x2_offset = x2_no_node_clip + perp_dx
                         y2_offset = y2_no_node_clip + perp_dy
-                        middle_x = (x1_offset + x2_offset) / 2
-                        middle_y = (y1_offset + y2_offset) / 2
+                        middle_x_forward = (x1_offset + x2_offset) / 2 + segment_dx_expanded / 2
+                        middle_y_forward = (y1_offset + y2_offset) / 2 + segment_dy_expanded / 2
 
-                        # Kante in 2 Teile trennen
+
                         self.gui_frame.canvas.create_line(
-                            x1_offset, y1_offset, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
+                            x1_offset, y1_offset, middle_x_forward - segment_dx_expanded / 2,
+                                                  middle_y_forward - segment_dy_expanded / 2,
                             width=4, tags="edge", fill=forward_colour, smooth=True, splinesteps=500
                         )
                         self.gui_frame.canvas.create_line(
-                            middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_offset, y2_offset,
+                            middle_x_forward + segment_dx_expanded / 2, middle_y_forward + segment_dy_expanded / 2,
+                            x2_offset, y2_offset,
                             width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=forward_colour,
                             smooth=True, splinesteps=500
                         )
+
+
                         self.gui_frame.canvas.create_text(
-                            middle_x, middle_y,
-                            text=str(weight), fill="black", font=("Arial", 14), tags="weight"
+                            middle_x_forward, middle_y_forward,
+                            text=weight_text_forward, fill="black", font=("Arial", 13), tags="weight"
                         )
 
-                        # Offset für die 2. Kante
+                        # Rückwärtskante
                         x1_offset = x1_no_node_clip - perp_dx
                         y1_offset = y1_no_node_clip - perp_dy
                         x2_offset = x2_no_node_clip - perp_dx
                         y2_offset = y2_no_node_clip - perp_dy
-                        middle_x = (x1_offset + x2_offset) / 2
-                        middle_y = (y1_offset + y2_offset) / 2
+                        middle_x_reverse = (x1_offset + x2_offset) / 2 - segment_dx_expanded / 2
+                        middle_y_reverse = (y1_offset + y2_offset) / 2 - segment_dy_expanded / 2
 
-                        # Kante in 2 Teile trennen
                         self.gui_frame.canvas.create_line(
-                            x2_offset, y2_offset, middle_x + segment_dx / 2, middle_y + segment_dy / 2,
+                            x2_offset, y2_offset, middle_x_reverse + segment_dx_expanded / 2,
+                                                  middle_y_reverse + segment_dy_expanded / 2,
                             width=4, tags="edge", fill=reverse_colour, smooth=True, splinesteps=500
                         )
                         self.gui_frame.canvas.create_line(
-                            middle_x - segment_dx / 2, middle_y - segment_dy / 2, x1_offset, y1_offset,
+                            middle_x_reverse - segment_dx_expanded / 2, middle_y_reverse - segment_dy_expanded / 2,
+                            x1_offset, y1_offset,
                             width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_colour,
                             smooth=True, splinesteps=500
                         )
 
-                        # Gewicht in die Mitte schreiben
+
                         self.gui_frame.canvas.create_text(
-                            middle_x, middle_y, text=str(self.graph[neighbor][node]), font=("Arial", 14), tags="weight"
+                            middle_x_reverse, middle_y_reverse,
+                            text=weight_text_reverse, font=("Arial", 13), tags="weight"
                         )
+
                     else:
-                        # Zeichne normale Kante
+                        weight_text = str(weight)
+                        text_width = len(weight_text) * 8
+
+                        middle_space += text_width / distance * 1.5
+
+                        segment_dx = dx / distance * middle_space * distance
+                        segment_dy = dy / distance * middle_space * distance
+
                         middle_x = (x1_no_node_clip + x2_no_node_clip) / 2
                         middle_y = (y1_no_node_clip + y2_no_node_clip) / 2
+
+                        available_space = distance * middle_space
+                        if text_width > available_space:
+                            extra_space = (text_width - available_space) / 2
+                            middle_x -= extra_space
 
                         self.gui_frame.canvas.create_line(
                             x1_no_node_clip, y1_no_node_clip, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
@@ -641,9 +734,10 @@ class PfadsuchApp(Tk):
                             width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color, smooth=True,
                             splinesteps=500
                         )
+
                         self.gui_frame.canvas.create_text(
                             middle_x, middle_y,
-                            text=str(weight),
+                            text=weight_text,
                             fill="black",
                             font=("Arial", 14),
                             tags="weight"
@@ -651,6 +745,7 @@ class PfadsuchApp(Tk):
 
                     # Speichere Kanten die bereits gezeichnet wurden, damit bidirektionale Kanten nicht 4x gezeichnet werden
                     already_drawn_edges.add((node, neighbor))
+
 
 
 
