@@ -656,7 +656,7 @@ class My_Frame(Frame):
                     if self.parent.debug:
                         print(f"Kante von {node1} zu {node2} mit Gewicht {weight} hinzugefügt")
 
-            self.parent.update_gui() # Aktualisiere Gui
+            self.parent.update_gui()
             self.parent.reset()
             return
         clicked_edge = self.get_edge_at_coordinates(x, y)
@@ -665,18 +665,31 @@ class My_Frame(Frame):
             if self.parent.debug:
                 print("clicked edge")
             current_weight = self.parent.graph[start][end]
-            new_weight = tkinter.simpledialog.askinteger(
-                "Kantengewicht ändern",
-                f"Aktuelles Gewicht: {current_weight}\nNeues Gewicht eingeben:",
-                initialvalue=current_weight
-            )
-            if new_weight is not None:
-                if self.parent.debug:
-                    print(f"updating edge weight from {start} -> {end} to {new_weight} ")
-                self.parent.graph[start][end] = new_weight
-                self.parent.update_gui()
-                self.parent.reset()
-            return
+
+            new_weight = None
+            while new_weight is None or not (0 <= new_weight <= 99999):
+
+                new_weight = tkinter.simpledialog.askinteger(
+                    "Kantengewicht ändern",
+                    f"Aktuelles Gewicht: {current_weight}\nNeues Gewicht eingeben (Maximal: 99999):",
+                    initialvalue=current_weight
+                )
+
+                if new_weight is None:
+                    return
+
+                if not (0 <= new_weight <= 99999):
+                    tkinter.messagebox.showerror(
+                        "Ungültiges Gewicht",
+                        "Das Kantengewicht muss zwischen 0 und 99999 liegen. Bitte erneut eingeben."
+                    )
+
+            # Gewicht aktualisieren
+            if self.parent.debug:
+                print(f"updating edge weight from {start} -> {end} to {new_weight}")
+            self.parent.graph[start][end] = new_weight
+            self.parent.update_gui()
+            self.parent.reset()
 
 
     # Hilfsfunktion die einen Knoten returned der in einem Radius von 30px zu click coordinaten ist. Wird benötigt für die Erstellung von Kanten
