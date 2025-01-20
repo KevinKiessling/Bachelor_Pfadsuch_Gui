@@ -55,7 +55,7 @@ class Dijkstra_List():
             if distances[u] == float("inf"):
                 continue
 
-            # Step 10: Explore neighbors of u
+
             for neighbor, edge_weight in graph[u].items():
                 if neighbor in visited:
                     continue
