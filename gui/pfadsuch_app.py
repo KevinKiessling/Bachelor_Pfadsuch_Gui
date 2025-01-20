@@ -138,11 +138,15 @@ class PfadsuchApp(Tk):
             self.steps_finished_algorithm, self.shortest_paths = self.dijkstra_pq.run_dijkstra_priority_queue(self.graph, self.start_node)
             self.code_frame.highlight_lines_with_dimming([2])
             self.code_frame.set_step(f"Starte Dijkstra mit Priority Queue(ohne Lazy Deletion)")
+        if self.selected_algorithm == "Dijkstra_List":
+            self.dijkstra_list = Dijkstra_List()
+            self.update_gui()
+            self.steps_finished_algorithm, self.shortest_paths = self.dijkstra_list.run_dijkstra_list(
+                self.graph, self.start_node)
+            self.code_frame.highlight_lines_with_dimming([2])
+            self.code_frame.set_step(f"Starte Dijkstra mit Liste")
         if self.shortest_paths:
             self.gui_frame.shortest_paths_button.config(state=NORMAL)
-        if self.selected_algorithm == "Dijkstra_List":
-            print("not implemented yet")
-
 
 
     def set_starting_node(self, node):
@@ -172,6 +176,9 @@ class PfadsuchApp(Tk):
         if self.current_step > -1:
             self.current_step -= 1
             self.update_gui()
+            if self.current_step == -1:
+                self.code_frame.update_priority_queue([])
+
 
     def fast_forward(self):
         if self.debug:
@@ -307,6 +314,7 @@ class PfadsuchApp(Tk):
             if node == current_node:
                 color = self.current_node_color
             elif node in visited:
+
                 color = self.visited_node_color
 
             distance_text = distances.get(node, float('inf'))

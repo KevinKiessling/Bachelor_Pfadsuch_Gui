@@ -114,11 +114,22 @@ class Pseudocode_Frame(Frame):
         self.grid_rowconfigure(6, weight=1, uniform="row")
         self.grid_columnconfigure(1, weight=1)
 
-
     def update_priority_queue(self, pq):
+
+        if self.parent.selected_algorithm in {"Dijkstra_PQ_lazy", "Dijkstra_PQ"}:
+            self.priority_queue_label.config(text="Priority Queue")
+            self.priority_queue_table.heading("Node", text="Knoten")
+            self.priority_queue_table.heading("Priority", text="Priorität")
+        elif self.parent.selected_algorithm == "Dijkstra_List":
+            self.priority_queue_label.config(text="Liste")
+            self.priority_queue_table.heading("Node", text="Knoten")
+            self.priority_queue_table.heading("Priority", text="Distanz")
+
 
         for item in self.priority_queue_table.get_children():
             self.priority_queue_table.delete(item)
+
+
         for priority, node in pq:
             display_priority = "∞" if priority == float("inf") else priority
             self.priority_queue_table.insert("", "end", values=(node, display_priority))
@@ -288,6 +299,25 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
                 self.set_step("Wähle neue Kante")
             if step == "Update Distance":
                 self.highlight_lines_with_dimming([20, 21, 22, 23])
+                self.set_step("Update Distanzen")
+            if step == "Algorithm Finished":
+                self.clear_hightlight()
+                self.set_step("Algorithmus abgeschlossen")
+        if self.parent.selected_algorithm == "Dijkstra_List":
+            if step == "Select Node":
+                self.highlight_lines_with_dimming([14, 15, 16, 17, 23])
+                self.set_step("Wähle Knoten")
+            if step == "Initialization":
+                self.highlight_lines_with_dimming([3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+                self.set_step("Initialisierung")
+            if step == "Compare Distance":
+                self.highlight_lines_with_dimming([20])
+                self.set_step("Vergleiche Distanzen")
+            if step == "Highlight Edge":
+                self.highlight_lines_with_dimming([18, 19, 21, 22])
+                self.set_step("Wähle neue Kante")
+            if step == "Update Distance":
+                self.highlight_lines_with_dimming([20])
                 self.set_step("Update Distanzen")
             if step == "Algorithm Finished":
                 self.clear_hightlight()
