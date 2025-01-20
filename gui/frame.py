@@ -122,12 +122,9 @@ class My_Frame(Frame):
         container = Frame(self.shortest_paths_window)
         container.grid(row=0, column=0, sticky="nsew")
 
-
-
         canvas = Canvas(container)
         scrollbar = Scrollbar(container, orient="vertical", command=canvas.yview)
         canvas.configure(yscrollcommand=scrollbar.set)
-
 
         container.grid_columnconfigure(0, weight=1)
         container.grid_columnconfigure(1, weight=0)
@@ -136,25 +133,20 @@ class My_Frame(Frame):
         canvas.grid(row=0, column=0, sticky="nsew")
         scrollbar.grid(row=0, column=1, sticky="ns")
 
-
         scrollable_frame = Frame(canvas)
         window_id = canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-
 
         def update_scrollregion(event):
             canvas.configure(scrollregion=canvas.bbox("all"))
 
         scrollable_frame.bind("<Configure>", update_scrollregion)
 
-
         def resize_scrollable_frame(event):
             canvas.itemconfig(window_id, width=event.width)
 
         canvas.bind("<Configure>", resize_scrollable_frame)
 
-
         scrollable_frame.grid_columnconfigure(0, weight=1)
-
 
         for index, end_node in enumerate(self.parent.shortest_paths.keys()):
             if end_node == self.parent.start_node:
@@ -166,17 +158,14 @@ class My_Frame(Frame):
             )
             button.grid(row=index, column=0, sticky="ew", padx=5, pady=5)
 
-
         close_button = Button(self.shortest_paths_window, text="Close", command=self._on_window_close)
         close_button.grid(row=1, column=0, sticky="ew", pady=5)
-
 
         self.shortest_paths_window.protocol("WM_DELETE_WINDOW", lambda: self._on_window_close())
 
         #Besseres Scrollen auf Win/linux
         def on_mouse_wheel(event):
             canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
-
 
         self.shortest_paths_window.bind_all("<MouseWheel>", on_mouse_wheel)
 

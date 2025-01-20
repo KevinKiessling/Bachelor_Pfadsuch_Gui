@@ -11,12 +11,12 @@ Benötigte Pip Imports:
 - Keine
 
 
-Aktueller Stand 16.1:
-- 
+Aktueller Stand 20.1:
+- kürzeste Pfade können dargestellt werden
 - 
 - 
 
 
 Nächste Schritte:
-- Wichtig erstmal das Tutorial Fenster
-- 
+- Tutorial Fenster
+- List Dijkstra

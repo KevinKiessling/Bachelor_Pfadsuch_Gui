@@ -306,14 +306,10 @@ class PfadsuchApp(Tk):
             distance_text = distances.get(node, float('inf'))
             distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
 
-
             distance_length = len(distance_text)
-
 
             node_length = len(node)
             padding = max(0, distance_length - node_length)
-
-
 
             if distances.get(node, float('inf'))>=9999:
                 font_size = 12
@@ -380,12 +376,10 @@ class PfadsuchApp(Tk):
                     else:
                         x1_no_node_clip, y1_no_node_clip, x2_no_node_clip, y2_no_node_clip = x1, y1, x2, y2
 
-
                     middle_space = 0.12
 
                     segment_dx = dx / distance * middle_space * distance
                     segment_dy = dy / distance * middle_space * distance
-
 
                     is_bidirectional = neighbor in self.graph and node in self.graph[neighbor]
 
@@ -402,24 +396,19 @@ class PfadsuchApp(Tk):
                         if (neighbor == current_node and node == neighbor_list):
                             reverse_colour = self.highlighted_edge_color
 
-
                         offset = 13
 
                         perp_dx = -dy / distance * offset
                         perp_dy = dx / distance * offset
-
 
                         weight_text_forward = str(weight)
                         weight_text_reverse = str(self.graph[neighbor][node])
                         text_width_forward = len(weight_text_forward) * 6
                         text_width_reverse = len(weight_text_reverse) * 6
 
-
                         max_text_width = max(text_width_forward, text_width_reverse)
 
-
                         middle_space_expanded = middle_space + max_text_width / distance * 1.5
-
 
                         segment_dx_expanded = dx / distance * middle_space_expanded * distance
                         segment_dy_expanded = dy / distance * middle_space_expanded * distance
@@ -432,7 +421,6 @@ class PfadsuchApp(Tk):
                         middle_x_forward = (x1_offset + x2_offset) / 2 + segment_dx_expanded / 2
                         middle_y_forward = (y1_offset + y2_offset) / 2 + segment_dy_expanded / 2
 
-
                         self.gui_frame.canvas.create_line(
                             x1_offset, y1_offset, middle_x_forward - segment_dx_expanded / 2,
                                                   middle_y_forward - segment_dy_expanded / 2,
@@ -444,7 +432,6 @@ class PfadsuchApp(Tk):
                             width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=forward_colour,
                             smooth=True, splinesteps=500
                         )
-
 
                         self.gui_frame.canvas.create_text(
                             middle_x_forward, middle_y_forward,
@@ -470,7 +457,6 @@ class PfadsuchApp(Tk):
                             width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_colour,
                             smooth=True, splinesteps=500
                         )
-
 
                         self.gui_frame.canvas.create_text(
                             middle_x_reverse, middle_y_reverse,
@@ -537,16 +523,12 @@ class PfadsuchApp(Tk):
             else:
                 color = "light grey"
 
-
             if self.steps_finished_algorithm:
 
                 distance_text = distances.get(node, float('inf'))
                 distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
 
-
-
                 distance_length = len(distance_text)
-
 
                 node_length = len(node)
                 padding = max(0, distance_length - node_length)
@@ -620,11 +602,9 @@ class PfadsuchApp(Tk):
                     segment_dx = dx / distance * middle_space * distance
                     segment_dy = dy / distance * middle_space * distance
 
-
                     is_bidirectional = neighbor in self.graph and node in self.graph[neighbor]
 
                     if is_bidirectional:
-
                         forward_colour = "light grey"
                         reverse_colour = "light grey"
 
@@ -632,7 +612,6 @@ class PfadsuchApp(Tk):
                             forward_colour = self.path_color
                         if (neighbor, node) in path:
                             reverse_colour = self.path_color
-
 
                         offset = 13
 
@@ -645,16 +624,12 @@ class PfadsuchApp(Tk):
                         text_width_forward = len(weight_text_forward) * 6
                         text_width_reverse = len(weight_text_reverse) * 6
 
-
                         max_text_width = max(text_width_forward, text_width_reverse)
-
 
                         middle_space_expanded = middle_space + max_text_width / distance * 1.5
 
-
                         segment_dx_expanded = dx / distance * middle_space_expanded * distance
                         segment_dy_expanded = dy / distance * middle_space_expanded * distance
-
 
                         x1_offset = x1_no_node_clip + perp_dx
                         y1_offset = y1_no_node_clip + perp_dy
@@ -662,7 +637,6 @@ class PfadsuchApp(Tk):
                         y2_offset = y2_no_node_clip + perp_dy
                         middle_x_forward = (x1_offset + x2_offset) / 2 + segment_dx_expanded / 2
                         middle_y_forward = (y1_offset + y2_offset) / 2 + segment_dy_expanded / 2
-
 
                         self.gui_frame.canvas.create_line(
                             x1_offset, y1_offset, middle_x_forward - segment_dx_expanded / 2,
@@ -676,12 +650,10 @@ class PfadsuchApp(Tk):
                             smooth=True, splinesteps=500
                         )
 
-
                         self.gui_frame.canvas.create_text(
                             middle_x_forward, middle_y_forward,
                             text=weight_text_forward, fill="black", font=("Arial", 13), tags="weight"
                         )
-
                         # Rückwärtskante
                         x1_offset = x1_no_node_clip - perp_dx
                         y1_offset = y1_no_node_clip - perp_dy
@@ -702,7 +674,6 @@ class PfadsuchApp(Tk):
                             smooth=True, splinesteps=500
                         )
 
-
                         self.gui_frame.canvas.create_text(
                             middle_x_reverse, middle_y_reverse,
                             text=weight_text_reverse, font=("Arial", 13), tags="weight"
@@ -711,7 +682,6 @@ class PfadsuchApp(Tk):
                     else:
                         weight_text = str(weight)
                         text_width = len(weight_text) * 8
-
                         middle_space += text_width / distance * 1.5
 
                         segment_dx = dx / distance * middle_space * distance
