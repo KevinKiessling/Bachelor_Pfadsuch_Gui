@@ -114,16 +114,18 @@ class PfadsuchApp(Tk):
             self.code_frame.clear_table()
             self.code_frame.clear_hightlight()
 
-
         if self.start_node is None or self.start_node == '':
             start_node = tkinter.simpledialog.askstring("Startknoten wählen", "Bitte Startknoten auswählen")
             self.selected_nodes = []
             if start_node is None:
                 return
-            if start_node not in self.graph:
+            start_node_upper = start_node.upper()
+            if start_node_upper not in self.graph:
                 messagebox.showerror("Knotenfehler", "Startknoten existiert nicht innerhalb des Graphs.")
                 return
-            self.start_node = str(start_node)
+            self.start_node = start_node_upper
+
+
         if self.selected_algorithm == "Dijkstra_PQ_lazy":
             self.dijkstra_pq_lazy = Dijkstra_Priority_Queue_Lazy()
             self.update_gui()
