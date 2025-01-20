@@ -4,12 +4,13 @@ class Dijkstra_Priority_Queue:
     def __init__(self):
         super().__init__()
         self.steps = []
-
+        self.shortest_path_edges = {}
     def run_dijkstra_priority_queue(self, graph, startnode):
         distances = {node: float("inf") for node in graph}
         distances[startnode] = 0
         priority_queue = []
         prev_nodes = {}
+        path_edges = {startnode: []}
         visited = set()
         visited_edges = set()
 
@@ -91,6 +92,7 @@ class Dijkstra_Priority_Queue:
                 if new_distance < distances[neighbor]:
 
                     distances[neighbor] = new_distance
+                    path_edges[neighbor] = path_edges[current_node] + [(current_node, neighbor)]
                     prev_nodes[neighbor] = current_node
 
 
@@ -124,7 +126,8 @@ class Dijkstra_Priority_Queue:
             priority_queue=priority_queue,
             selected_algorithm="Dijkstra_PQ",
         )
-        return self.steps
+        self.shortest_path_edges = path_edges
+        return self.steps, self.shortest_path_edges
 
     def delete_from_heap(self, heap, node):
 

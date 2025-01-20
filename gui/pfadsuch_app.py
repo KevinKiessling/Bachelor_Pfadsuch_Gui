@@ -133,7 +133,7 @@ class PfadsuchApp(Tk):
         if self.selected_algorithm == "Dijkstra_PQ":
             self.dijkstra_pq = Dijkstra_Priority_Queue()
             self.update_gui()
-            self.steps_finished_algorithm = self.dijkstra_pq.run_dijkstra_priority_queue(self.graph, self.start_node)
+            self.steps_finished_algorithm, self.shortest_paths = self.dijkstra_pq.run_dijkstra_priority_queue(self.graph, self.start_node)
             self.code_frame.highlight_lines_with_dimming([2])
             self.code_frame.set_step(f"Starte Dijkstra mit Priority Queue(ohne Lazy Deletion)")
         if self.shortest_paths:
