@@ -310,9 +310,12 @@ class My_Frame(Frame):
         settings_window.title("Einstellungen")
         settings_window.geometry("500x400")
         settings_window.transient(self.parent)
+        settings_window.rowconfigure(0, weight=1)
+        settings_window.rowconfigure(1, weight=0)
+        settings_window.columnconfigure(0, weight=1)
 
         notebook = ttk.Notebook(settings_window)
-        notebook.pack(fill=BOTH, expand=True)
+        notebook.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
         general_tab = Frame(notebook)
         notebook.add(general_tab, text="Allgemeine Einstellungen")
@@ -491,7 +494,7 @@ class My_Frame(Frame):
         darkmode_checkbox.grid(row=0, column=0)
         '''
         button_frame = Frame(settings_window)
-        button_frame.pack(pady=20)
+        button_frame.grid(row=1, column=0, sticky="ew", pady=10)
 
         apply_button = Button(button_frame, text="Anwenden", command=apply_settings)
         apply_button.grid(row=0, column=0, padx=10)
