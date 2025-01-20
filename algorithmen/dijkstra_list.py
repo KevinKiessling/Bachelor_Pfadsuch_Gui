@@ -52,8 +52,8 @@ class Dijkstra_List():
                 priority_queue=convert_to_priority_queue(L, distances),
                 selected_algorithm="Dijkstra_List",
             )
-            if distances[u] == float("inf"):
-                continue
+            #if distances[u] == float("inf"):
+               # continue
 
 
             for neighbor, edge_weight in graph[u].items():
@@ -85,19 +85,19 @@ class Dijkstra_List():
                     path_edges[neighbor] = path_edges[u] + [(u, neighbor)]
                     prev_nodes[neighbor] = u
 
-                    self.save_state(
-                        step_type="Update Distance",
-                        current_node=u,
-                        current_distance=distances[u],
-                        neighbor=neighbor,
-                        edge_weight=edge_weight,
-                        distances=distances,
-                        prev_nodes=prev_nodes,
-                        visited=visited.copy(),
-                        visited_edges=visited_edges,
-                        priority_queue=convert_to_priority_queue(L, distances),
-                        selected_algorithm="Dijkstra_List",
-                    )
+                self.save_state(
+                    step_type="Update Distance",
+                    current_node=u,
+                    current_distance=distances[u],
+                    neighbor=neighbor,
+                    edge_weight=edge_weight,
+                    distances=distances,
+                    prev_nodes=prev_nodes,
+                    visited=visited.copy(),
+                    visited_edges=visited_edges,
+                    priority_queue=convert_to_priority_queue(L, distances),
+                    selected_algorithm="Dijkstra_List",
+                )
 
         self.save_state(
             step_type="Algorithm Finished",

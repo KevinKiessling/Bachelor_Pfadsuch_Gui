@@ -239,6 +239,14 @@ class PfadsuchApp(Tk):
         self.shortest_paths = {}
         if not self.shortest_paths:
             self.gui_frame.shortest_paths_button.config(state=DISABLED)
+        if self.selected_algorithm in {"Dijkstra_PQ_lazy", "Dijkstra_PQ"}:
+            self.code_frame.priority_queue_label.config(text="Priority Queue")
+            self.code_frame.priority_queue_table.heading("Node", text="Knoten")
+            self.code_frame.priority_queue_table.heading("Priority", text="Priorität")
+        elif self.selected_algorithm == "Dijkstra_List":
+            self.code_frame.priority_queue_label.config(text="Liste")
+            self.code_frame.priority_queue_table.heading("Node", text="Knoten")
+            self.code_frame.priority_queue_table.heading("Priority", text="Distanz")
 
 
 
@@ -300,6 +308,7 @@ class PfadsuchApp(Tk):
 
         self.code_frame.highlight(step["step_type"])
         self.code_frame.update_priority_queue(priority_queue)
+
 
     #zeichnet den Graph
     def draw_graph(self, current_node, neighbor_list, distances, visited, visited_edges, highlight_only_edge=False):
