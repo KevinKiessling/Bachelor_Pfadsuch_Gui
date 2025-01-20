@@ -55,12 +55,16 @@ class PfadsuchApp(Tk):
         self.path_color = "light blue"
 
         self.load_config()
+        self.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def global_focus_control(self, event):
         if event.widget in self.code_frame.winfo_children():
             self.gui_frame.focus_set()
 
-
+    def on_close(self):
+        if self.gui_frame.shortest_paths_window and self.gui_frame.shortest_paths_window.winfo_exists():
+            self.gui_frame.shortest_paths_window.destroy()
+        self.destroy()
 
     # Läd config datei beim Start
     def load_config(self):
