@@ -102,10 +102,10 @@ class My_Frame(Frame):
         self.menu_bar.add_cascade(label="Todos", menu=self.help)
         self.help.add_command(label="Todos", command=self.open_tutorial)
 
+
+    # öffnet ein Fenster mit Buttons um die kürzesten Pfade zu zeichnen
     def open_shortest_paths(self):
-
         if hasattr(self, "shortest_paths_window") and self.shortest_paths_window is not None:
-
             if self.shortest_paths_window.winfo_exists():
                 self.refresh_window_content()
                 self.shortest_paths_window.lift()
@@ -113,54 +113,55 @@ class My_Frame(Frame):
             else:
                 self.shortest_paths_window = None
 
-
         self.shortest_paths_window = Tk()
         self.shortest_paths_window.geometry("200x300")
-        self.shortest_paths_window.title("Shortest Paths")
+        self.shortest_paths_window.title("Kürzeste Pfade Zeichnen")
         self.shortest_paths_window.rowconfigure(0, weight=1)
         self.shortest_paths_window.columnconfigure(0, weight=1)
 
         container = Frame(self.shortest_paths_window)
         container.grid(row=0, column=0, sticky="nsew")
 
+
+
         canvas = Canvas(container)
         scrollbar = Scrollbar(container, orient="vertical", command=canvas.yview)
-        scrollable_frame = Frame(canvas)
-
-        window_id = canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-
         canvas.configure(yscrollcommand=scrollbar.set)
 
-        canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
+
+        container.grid_columnconfigure(0, weight=1)
+        container.grid_columnconfigure(1, weight=0)
+        container.grid_rowconfigure(0, weight=1)
+
+        canvas.grid(row=0, column=0, sticky="nsew")
+        scrollbar.grid(row=0, column=1, sticky="ns")
+
+
+        scrollable_frame = Frame(canvas)
+        window_id = canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+
 
         def update_scrollregion(event):
             canvas.configure(scrollregion=canvas.bbox("all"))
 
-            visible_height = canvas.winfo_height()
-            content_height = canvas.bbox("all")[3]
-
-
-            if content_height > visible_height:
-                scrollbar.pack(side="right", fill="y")
-            else:
-                scrollbar.pack_forget()
-
         scrollable_frame.bind("<Configure>", update_scrollregion)
+
 
         def resize_scrollable_frame(event):
             canvas.itemconfig(window_id, width=event.width)
 
         canvas.bind("<Configure>", resize_scrollable_frame)
 
+
         scrollable_frame.grid_columnconfigure(0, weight=1)
+
 
         for index, end_node in enumerate(self.parent.shortest_paths.keys()):
             if end_node == self.parent.start_node:
                 continue
             button = Button(
                 scrollable_frame,
-                text=f"Zeichne kürzesten Pfad zu {end_node}",
+                text=f"Kürzester Pfad zu {end_node}",
                 command=lambda node=end_node: self.on_button_click(node, self.shortest_paths_window)
             )
             button.grid(row=index, column=0, sticky="ew", padx=5, pady=5)
@@ -169,7 +170,15 @@ class My_Frame(Frame):
         close_button = Button(self.shortest_paths_window, text="Close", command=self._on_window_close)
         close_button.grid(row=1, column=0, sticky="ew", pady=5)
 
+
         self.shortest_paths_window.protocol("WM_DELETE_WINDOW", lambda: self._on_window_close())
+
+        #Besseres Scrollen auf Win/linux
+        def on_mouse_wheel(event):
+            canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+
+        self.shortest_paths_window.bind_all("<MouseWheel>", on_mouse_wheel)
 
     def refresh_window_content(self):
 
