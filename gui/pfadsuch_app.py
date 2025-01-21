@@ -41,10 +41,10 @@ class PfadsuchApp(Tk):
         #titel
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
         self.geometry('1850x1100')
-        self.grid_rowconfigure(0, weight=45)
-        self.grid_rowconfigure(1, weight=55)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(1, weight=2)
         self.load_config()
 
         self.bind_all("<FocusIn>", self.global_focus_control)

@@ -10,11 +10,12 @@ class Pseudocode_Frame(Frame):
 
 
         self.step_label = Label(self, text="Aktueller Schritt: ", font=("Arial", 12))
-        self.step_label.grid(row=0, column=0, pady=5, sticky="ew", padx=10)
+        self.step_label.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
 
 
         self.pseudocode_display_frame = Frame(self)
-        self.pseudocode_display_frame.grid(row=1, column=0, pady=0, sticky="ew", padx=10)
+        self.pseudocode_display_frame.grid(row=1, column=0, pady=5, sticky="nsew", padx=10)
+
 
         self.pseudocode_display = Text(self.pseudocode_display_frame, wrap=WORD, height=28, width=60, takefocus=0)
         self.pseudocode_display.grid(row=0, column=0, sticky="nsew")
@@ -32,21 +33,22 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display.tag_configure("highlight", background="#ffff00")
         self.pseudocode_display.tag_configure("dim", background="#f0f0f0")
 
-        # Scrollbar for Pseudocode Display
+
         self.scrollbar_pseudocode = Scrollbar(self.pseudocode_display_frame, orient="vertical",
                                               command=self.pseudocode_display.yview)
         self.scrollbar_pseudocode.grid(row=0, column=1, sticky="ns")
         self.pseudocode_display.configure(yscrollcommand=self.scrollbar_pseudocode.set)
 
-        # Configure grid for pseudocode display frame
+
         self.pseudocode_display_frame.grid_columnconfigure(0, weight=1)
         self.pseudocode_display_frame.grid_rowconfigure(0, weight=1)
 
+
         self.distance_table_label = Label(self, text="Aktuelle Distanzen", font=("Arial", 12))
-        self.distance_table_label.grid(row=2, column=0, pady=0, sticky="ew", padx=10)
+        self.distance_table_label.grid(row=2, column=0, pady=5, sticky="ew", padx=10)
 
 
-        self.distance_table_frame = Frame(self, height=200)
+        self.distance_table_frame = Frame(self, bd=1, relief=SOLID)
         self.distance_table_frame.grid(row=3, column=0, sticky="nsew", padx=10)
 
 
@@ -61,20 +63,20 @@ class Pseudocode_Frame(Frame):
 
         self.scrollbar_distance = Scrollbar(self.distance_table_frame, orient="vertical",
                                             command=self.distance_table.yview)
-        self.distance_table.configure(yscrollcommand=self.scrollbar_distance.set)
         self.scrollbar_distance.grid(row=0, column=1, sticky="ns")
+        self.distance_table.configure(yscrollcommand=self.scrollbar_distance.set)
 
 
         self.distance_table_frame.grid_columnconfigure(0, weight=1)
-        self.distance_table_frame.grid_rowconfigure(0, weight=0)
+        self.distance_table_frame.grid_rowconfigure(0, weight=1)
 
 
         self.priority_queue_label = Label(self, text="Priority Queue", font=("Arial", 12))
-        self.priority_queue_label.grid(row=4, column=0, pady=0, sticky="ew", padx=10)
+        self.priority_queue_label.grid(row=4, column=0, pady=5, sticky="ew", padx=10)
 
 
-        self.priority_queue_frame = Frame(self, height=200)
-        self.priority_queue_frame.grid(row=5, column=0, sticky="nsew", padx=10)
+        self.priority_queue_frame = Frame(self, bd=1, relief=SOLID)
+        self.priority_queue_frame.grid(row=5, column=0, sticky="nsew", padx=10, pady=(0, 5))
 
 
         self.priority_queue_table = ttk.Treeview(self.priority_queue_frame, columns=("Node", "Priority"),
@@ -85,34 +87,32 @@ class Pseudocode_Frame(Frame):
         self.priority_queue_table.column("Node", anchor=CENTER)
         self.priority_queue_table.column("Priority", anchor=CENTER)
 
-        # Scrollbar
+
         self.scrollbar_priority = Scrollbar(self.priority_queue_frame, orient="vertical",
                                             command=self.priority_queue_table.yview)
-        self.priority_queue_table.configure(yscrollcommand=self.scrollbar_priority.set)
         self.scrollbar_priority.grid(row=0, column=1, sticky="ns")
+        self.priority_queue_table.configure(yscrollcommand=self.scrollbar_priority.set)
 
 
         self.priority_queue_frame.grid_columnconfigure(0, weight=1)
-        self.priority_queue_frame.grid_rowconfigure(0, weight=0)
+        self.priority_queue_frame.grid_rowconfigure(0, weight=1)
+
 
         self.pcode = ""
         self.set_algorithm(self.parent.selected_algorithm)
         self.set_code_field(self.pcode)
 
 
-        self.grid_rowconfigure(0, weight=0)
-        self.grid_rowconfigure(1, weight=10, uniform="row")
-        self.grid_rowconfigure(2, weight=0)
-        self.grid_rowconfigure(3, weight=0, minsize=200)
-        self.grid_rowconfigure(4, weight=0)
-        self.grid_rowconfigure(5, weight=0, minsize=200)
-        self.grid_rowconfigure(6, weight=0)
-
-        self.grid_columnconfigure(0, weight=1, uniform="column")
+        self.grid_rowconfigure(0, weight=0)  # Step label row
+        self.grid_rowconfigure(1, weight=1)  # Pseudocode display
+        self.grid_rowconfigure(2, weight=0)  # Distance table label row
+        self.grid_rowconfigure(3, weight=1, minsize=100)  # Distance table
+        self.grid_rowconfigure(4, weight=0)  # Priority queue label row
+        self.grid_rowconfigure(5, weight=1, minsize=100)  # Priority queue
 
 
-        self.grid_rowconfigure(6, weight=1, uniform="row")
-        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=0)
 
     def update_font_size(self):
         self.pseudocode_display.config(font=("Courier New", self.parent.font_size))
