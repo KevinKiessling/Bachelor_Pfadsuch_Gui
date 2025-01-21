@@ -286,7 +286,7 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
                 self.set_step("Algorithmus abgeschlossen")
         if self.parent.selected_algorithm == "Dijkstra_PQ":
             if step == "Select Node":
-                self.highlight_lines_with_dimming([10, 11, 12, 13, 14, 15, 16, 25])
+                self.highlight_lines_with_dimming([10, 11, 12, 13, 14, 15, 16, 27])
                 self.set_step("Wähle Knoten")
             if step == "Initialization":
                 self.highlight_lines_with_dimming([3, 4, 5, 6, 7, 8, 9])
