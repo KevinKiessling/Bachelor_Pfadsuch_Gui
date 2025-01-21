@@ -25,13 +25,18 @@ class PfadsuchApp(Tk):
         self.default_graph = {}
         self.current_step = -1
         self.max_edge_weight = 100
-
+        self.font_size = 15
 
         self.fast_forward_paused = False
         self.node_positions = {}
         self.selected_nodes = []
         self.selected_algorithm = "Dijkstra_PQ_lazy"
         #self.darkmode = False
+        self.visited_edge_color = "lawn green"
+        self.highlighted_edge_color = "red"
+        self.visited_node_color = "lawn green"
+        self.current_node_color = "yellow"
+        self.path_color = "light blue"
 
         #titel
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
@@ -40,21 +45,16 @@ class PfadsuchApp(Tk):
         self.grid_rowconfigure(1, weight=55)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
-        # Auslagern der Gui erstellung in andere Klasse
+        self.load_config()
+
+        self.bind_all("<FocusIn>", self.global_focus_control)
+
         self.code_frame = Pseudocode_Frame(self)
         self.gui_frame = My_Frame(self)
-        self.bind_all("<FocusIn>", self.global_focus_control)
-        self.load_default_graph()
-        #
 
-        #color controls
-        self.visited_edge_color = "lawn green"
-        self.highlighted_edge_color = "red"
-        self.visited_node_color = "lawn green"
-        self.current_node_color = "yellow"
-        self.path_color = "light blue"
 
         self.load_config()
+        self.load_default_graph()
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def global_focus_control(self, event):
@@ -83,6 +83,7 @@ class PfadsuchApp(Tk):
                 self.visited_node_color = config.get("visited_node_color", self.visited_node_color)
                 self.current_node_color = config.get("current_node_color", self.current_node_color)
                 self.path_color = config.get("path_color", self.path_color)
+                self.font_size = config.get("font_size", self.font_size)
 
         else:
             self.save_config()
@@ -101,12 +102,14 @@ class PfadsuchApp(Tk):
             "highlighted_edge_color": self.highlighted_edge_color,
             "visited_node_color": self.visited_node_color,
             "current_node_color": self.current_node_color,
-            "path_color": self.path_color
+            "path_color": self.path_color,
+            "font_size": self.font_size
            # "darkmode": self.darkmode
         }
         with open(self.CONFIG_FILE, "w") as f:
             json.dump(config, f, indent=4)
         #self.update_gui()
+        self.code_frame.update_font_size()
     def start_algorithm(self):
         if self.current_step:
             self.steps_finished_algorithm = []
@@ -145,8 +148,8 @@ class PfadsuchApp(Tk):
                 self.graph, self.start_node)
             self.code_frame.highlight_lines_with_dimming([2])
             self.code_frame.set_step(f"Starte Dijkstra mit Liste")
-        if self.shortest_paths:
-            self.gui_frame.shortest_paths_button.config(state=NORMAL)
+        #if self.shortest_paths:
+         #   self.gui_frame.shortest_paths_button.config(state=NORMAL)
 
 
     def set_starting_node(self, node):
@@ -299,6 +302,8 @@ class PfadsuchApp(Tk):
             self.code_frame.update_priority_queue(priority_queue)
             if self.debug:
                 print(distances)
+            if self.shortest_paths:
+                self.gui_frame.shortest_paths_button.config(state=NORMAL)
             return
         if step["step_type"] == "Highlight Edge":
             self.draw_graph(current_node, neighbor, distances, visited, visited_edges, highlight_only_edge=True)
@@ -308,6 +313,8 @@ class PfadsuchApp(Tk):
 
         self.code_frame.highlight(step["step_type"])
         self.code_frame.update_priority_queue(priority_queue)
+        if self.shortest_paths:
+            self.gui_frame.shortest_paths_button.config(state=DISABLED)
 
 
     #zeichnet den Graph

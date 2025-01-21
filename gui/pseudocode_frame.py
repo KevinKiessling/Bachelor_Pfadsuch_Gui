@@ -20,7 +20,7 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display.grid(row=0, column=0, sticky="nsew")
         self.pseudocode_display.config(state=DISABLED)
         self.pseudocode_display.config(
-            font=("Courier New", 12),
+            font=("Courier New", self.parent.font_size),
             bg="#f4f4f4",
             fg="#333333",
             insertbackground="pink",
@@ -114,6 +114,8 @@ class Pseudocode_Frame(Frame):
         self.grid_rowconfigure(6, weight=1, uniform="row")
         self.grid_columnconfigure(1, weight=1)
 
+    def update_font_size(self):
+        self.pseudocode_display.config(font=("Courier New", self.parent.font_size))
     def update_priority_queue(self, pq):
 
         if self.parent.selected_algorithm in {"Dijkstra_PQ_lazy", "Dijkstra_PQ"}:
@@ -264,7 +266,7 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
     def highlight(self, step):
         if self.parent.debug:
             print(step)
-
+        #self.pseudocode_display.see(f"{x}.0") for putting x on view
         if self.parent.selected_algorithm == "Dijkstra_PQ_lazy":
             if step == "Select Node":
                 self.highlight_lines_with_dimming([10, 11, 12, 13, 14, 15, 16, 25])
@@ -281,6 +283,7 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
             if step == "Update Distance":
                 self.highlight_lines_with_dimming([20, 21])
                 self.set_step("Update Distanzen")
+                self.pseudocode_display.see(f"{21}.0")
             if step == "Algorithm Finished":
                 self.clear_hightlight()
                 self.set_step("Algorithmus abgeschlossen")

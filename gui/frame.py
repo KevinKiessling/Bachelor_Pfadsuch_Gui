@@ -310,71 +310,94 @@ class My_Frame(Frame):
         settings_window.title("Einstellungen")
         settings_window.geometry("500x400")
         settings_window.transient(self.parent)
-        settings_window.rowconfigure(0, weight=1)
-        settings_window.rowconfigure(1, weight=0)
-        settings_window.columnconfigure(0, weight=1)
+
 
         notebook = ttk.Notebook(settings_window)
         notebook.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
-        general_tab = Frame(notebook)
-        notebook.add(general_tab, text="Allgemeine Einstellungen")
+
+        scrollable_frame = Frame(notebook)
+        notebook.add(scrollable_frame, text="Allgemeine Einstellungen")
+
+
+        general_tab_canvas = Canvas(scrollable_frame)
+        general_tab_canvas.grid(row=0, column=0, sticky="nsew")
+
+
+        general_tab_scrollbar = ttk.Scrollbar(
+            scrollable_frame, orient="vertical", command=general_tab_canvas.yview
+        )
+        general_tab_scrollbar.grid(row=0, column=1, sticky="ns")
+
+        general_tab_canvas.configure(yscrollcommand=general_tab_scrollbar.set)
+        general_tab_canvas.bind(
+            "<Configure>", lambda e: general_tab_canvas.configure(scrollregion=general_tab_canvas.bbox("all"))
+        )
+
+
+        general_tab_frame = Frame(general_tab_canvas)
+        general_tab_canvas.create_window((0, 0), window=general_tab_frame, anchor="nw")
+
+
+        scrollable_frame.grid_rowconfigure(0, weight=1)
+        scrollable_frame.grid_columnconfigure(0, weight=1)
+
+
+        def on_mousewheel(event):
+
+            general_tab_canvas.yview_scroll(-1 * (event.delta // 120), "units")
+
+
+        general_tab_frame.bind("<Enter>", lambda e: settings_window.bind_all("<MouseWheel>", on_mousewheel))
+        general_tab_frame.bind("<Leave>", lambda e: settings_window.unbind_all("<MouseWheel>"))
+
 
         debug_var = BooleanVar(value=self.parent.debug)
         debug_checkbox = Checkbutton(
-            general_tab,
+            general_tab_frame,
             text="Debug Mode",
             variable=debug_var
         )
         debug_checkbox.pack(anchor="w", pady=10, padx=10)
 
         random_mode_var = BooleanVar(value=self.parent.random_edge_mode)
-        random_random_checkbox_frame = Frame(general_tab)
-        random_random_checkbox_frame.pack(anchor="w", pady=10, padx=10)
+        random_checkbox_frame = Frame(general_tab_frame)
+        random_checkbox_frame.pack(anchor="w", pady=10, padx=10)
         random_checkbox = Checkbutton(
-            random_random_checkbox_frame,
+            random_checkbox_frame,
             text="Zufälliges Kantengewicht",
             variable=random_mode_var
         )
-        random_checkbox.grid(row=0,column=0)
+        random_checkbox.grid(row=0, column=0)
 
         max_weight_var = IntVar(value=self.parent.max_edge_weight)
+
         def validate_input(new_val):
-            if new_val == "" or new_val.isdigit():
-                return True
-            else:
-                return False
+            return new_val == "" or new_val.isdigit()
 
         validate_command = settings_window.register(validate_input)
 
-        max_weight_entry_field = Entry(random_random_checkbox_frame, textvariable=max_weight_var, width=10, validate="key", validatecommand=(validate_command, "%P"))
+        max_weight_entry_field = Entry(random_checkbox_frame, textvariable=max_weight_var, width=10, validate="key",
+                                       validatecommand=(validate_command, "%P"))
         max_weight_entry_field.grid(row=0, column=1)
-        max_weight_label = Label(random_random_checkbox_frame, text="Maximales Gewicht (<100000)")
+        max_weight_label = Label(random_checkbox_frame, text="Maximales Gewicht (<100000)")
         max_weight_label.grid(row=0, column=2)
-
-
 
         save_cur_a_d_var = BooleanVar(value=False)
         save_cur_a_d_cb = Checkbutton(
-            general_tab,
+            general_tab_frame,
             text="Aktuellen Graphen als Default Speichern",
             variable=save_cur_a_d_var
         )
         save_cur_a_d_cb.pack(anchor="w", pady=10, padx=10)
 
-
-        Label(general_tab, text="Animationsgeschwindigkeit (ms):").pack(pady=10)
+        Label(general_tab_frame, text="Animationsgeschwindigkeit (ms):").pack(pady=10)
         speed_var = IntVar(value=self.parent.animation_speed)
         speed_slider = ttk.Scale(
-            general_tab,
-            from_=100,
-            to=1000,
-            orient=HORIZONTAL,
-            length=300,
-            variable=speed_var
+            general_tab_frame, from_=100, to=1000, orient="horizontal", length=300, variable=speed_var
         )
         speed_slider.pack(pady=10)
-        speed_label = Label(general_tab,
+        speed_label = Label(general_tab_frame,
                             text=f"Aktuelle Verzögerung bei Vorspul Wiedergabe: {speed_var.get()} ms")
         speed_label.pack()
 
@@ -383,18 +406,36 @@ class My_Frame(Frame):
 
         speed_var.trace_add("write", update_speed_label)
 
+        Label(general_tab_frame, text="Font Größe:").pack(pady=10)
+        font_var = IntVar(value=self.parent.font_size)
+        font_slider = ttk.Scale(
+            general_tab_frame, from_=8, to=25, orient="horizontal", length=300, variable=font_var
+        )
+        font_slider.pack(pady=10)
+        font_label = Label(general_tab_frame, text=f"Aktuelle Font Größe: {font_var.get()}")
+        font_label.pack()
+
+        def update_font_label(*args):
+            font_label.config(text=f"Aktuelle Font Größe: {font_var.get()}")
+
+        font_var.trace_add("write", update_font_label)
+
+
+        settings_window.grid_rowconfigure(0, weight=1)
+        settings_window.grid_columnconfigure(0, weight=1)
 
         def apply_settings():
             self.parent.debug = debug_var.get()
             self.parent.random_edge_mode = random_mode_var.get()
             self.parent.animation_speed = speed_var.get()
-           # self.parent.darkmode = dark_mode_var.get()
+            self.parent.font_size = font_var.get()
+
             max_edge_weight = max_weight_var.get()
-            # Validate the max_edge_weight before applying the settings
+
             if max_edge_weight < 0 or max_edge_weight >= 100000:
-                # Show an error message or handle the case where the weight is out of range
+
                 messagebox.showerror("Ungültige Eingabe", "Maximales Kantengewicht muss <100000 sein")
-                return  # Prevent saving the settings if validation fails
+                return
             self.parent.max_edge_weight = max_weight_var.get()
 
             if save_cur_a_d_var.get():
