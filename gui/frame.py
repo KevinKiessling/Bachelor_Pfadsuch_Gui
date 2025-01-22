@@ -32,25 +32,30 @@ class My_Frame(Frame):
 
         self.button_frame = Frame(self)
         self.button_frame.grid(row=0, column=0, columnspan=6, pady=5, sticky="ew")
+        self.button_frame.grid_columnconfigure(0, weight=1)  #
+        self.button_frame.grid_columnconfigure(7, weight=1)
 
         self.prev_button = Button(self.button_frame, text="1 Schritt zurück", command=parent.prev_step)
-        self.prev_button.grid(row=0, column=0, padx=5, sticky="w")
+        self.prev_button.grid(row=0, column=1, padx=5)
+
         self.next_button = Button(self.button_frame, text="1 Schritt vor", command=parent.next_step)
-        self.next_button.grid(row=0, column=1, padx=5, sticky="w")
+        self.next_button.grid(row=0, column=2, padx=5)
+
+        self.pause_button = Button(self.button_frame, text="Pausieren", command=parent.pause)
+        self.pause_button.grid(row=0, column=3, padx=5)
 
         self.fast_forward_button = Button(self.button_frame, text="Vorspulen", command=self.go_forward_button)
-        self.fast_forward_button.grid(row=0, column=3, padx=5, sticky="w")
-        self.pause_button = Button(self.button_frame, text="Pausieren", command=parent.pause)
-        self.pause_button.grid(row=0, column=2, padx=5, sticky="w")
+        self.fast_forward_button.grid(row=0, column=4, padx=5)
 
         self.starting_button = Button(
             self.button_frame, text="Algorithmus Starten", command=parent.start_algorithm, width=20
         )
-        self.starting_button.grid(row=0, column=4, padx=15, sticky="w")
+        self.starting_button.grid(row=0, column=5, padx=5)
+
         self.shortest_paths_button = Button(
             self.button_frame, text="Kürzeste Pfade", command=self.open_shortest_paths, state=DISABLED, width=20
         )
-        self.shortest_paths_button.grid(row=0, column=5, padx=5, sticky="w")
+        self.shortest_paths_button.grid(row=0, column=6, padx=5)
 
 
         self.canvas_frame = Frame(self, bd=2, relief="solid")
