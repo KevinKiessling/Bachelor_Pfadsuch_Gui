@@ -17,7 +17,8 @@ class My_Frame(Frame):
         self.shortest_paths_window = None
         self.parent = parent
         self.operation_history = []
-        self.available_ids = self.generate_node_ids()
+        self.node_flags = {}  # Dictionary to manage node availability
+        self.reset_node_ids()
         self.grid(row=0, column=0, sticky="nsew")
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
@@ -297,7 +298,7 @@ class My_Frame(Frame):
     def delete_note(self, node):
         if node in self.parent.graph:
             del self.parent.graph[node]
-            self.available_ids.insert(0, node)
+
 
         for nb in self.parent.graph.values():
             if node in nb:
@@ -308,6 +309,7 @@ class My_Frame(Frame):
         if self.parent.debug:
             print(f"Knoten {node} gelöscht")
         self.parent.reset()
+        self.update_avai_ids()
 
     #Öffnet Einstellungsmenu, welches den Debug mode, random mode und Animationspeed einstellen lässt und in der Config.json speichert.
     def open_settings(self):
@@ -674,12 +676,10 @@ class My_Frame(Frame):
 
         self.parent.selected_nodes = []
         self.parent.reset()
+        self.update_avai_ids()
 
     # hilfs funktion damit löschen von knoten nicht der erstellen verhindert, da sonst duplikate erstellt werden, was alles breaked
-    def get_next_id(self):
-        if not self.available_ids:
-            raise ValueError("Keine verfügbaren Knoten-IDs mehr.")
-        return self.available_ids.pop(0)
+
 
     #Kante hinzufügen in 2 schritten, 1. Markieren und speichern des Ausgangsknoten, 2. aufruf speichert den zielknoten und zieht kante
     def add_edge(self, event):
@@ -856,16 +856,43 @@ class My_Frame(Frame):
             print(f"Importing error : {e}")
 
     def generate_node_ids(self):
-        id = list(string.ascii_uppercase)
-        pref = ""
-        while len(id) < 100:
-            for char in string.ascii_uppercase:
-                id.append(pref + char)
-            pref = id[len(id) - 26]
-        return id
+
+        ids = []
+        length = 1
+        while len(ids) < 100:
+            for i in range(26**length):
+                name = ""
+                current = i
+                for _ in range(length):
+                    name = chr(ord('A') + (current % 26)) + name
+                    current //= 26
+                ids.append(name)
+            length += 1
+        return ids[:100]
 
     def reset_node_ids(self):
-        self.available_ids = self.generate_node_ids()
+
+        self.node_flags = {node_id: True for node_id in self.generate_node_ids()}
+
+    def get_next_id(self):
+
+        for node_id, is_available in sorted(self.node_flags.items(), key=lambda x: (len(x[0]), x[0])):
+            if is_available:
+                self.node_flags[node_id] = False
+                return node_id
+        raise ValueError("Keine verfügbaren Knoten-IDs mehr.")
+
+    def set_node_availability(self, node_id, available):
+
+        if node_id in self.node_flags:
+            self.node_flags[node_id] = available
+        else:
+            raise ValueError(f"Node ID {node_id} does not exist.")
+
     def update_avai_ids(self):
+
         imported_nodes = self.parent.node_positions.keys()
-        self.available_ids = [node_id for node_id in self.available_ids if node_id not in imported_nodes]
+        for node_id in self.node_flags:
+            self.node_flags[node_id] = node_id not in imported_nodes
+        if self.parent.debug:
+            print(self.node_flags)
