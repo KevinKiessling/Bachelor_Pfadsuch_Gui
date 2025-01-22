@@ -25,27 +25,28 @@ class PfadsuchApp(Tk):
         self.default_graph = {}
         self.current_step = -1
         self.max_edge_weight = 100
-        self.font_size = 15
+        self.font_size = 18
+        self.selected_datastructure_view = StringVar(value="Priority Queue")
 
         self.fast_forward_paused = False
         self.node_positions = {}
         self.selected_nodes = []
         self.selected_algorithm = "Dijkstra_PQ_lazy"
-        #self.darkmode = False
+
         self.visited_edge_color = "lawn green"
         self.highlighted_edge_color = "red"
         self.visited_node_color = "lawn green"
         self.current_node_color = "yellow"
         self.path_color = "light blue"
 
-        #titel
+
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
         self.geometry('1850x1100')
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=2)
-        self.load_config()
+
 
         self.bind_all("<FocusIn>", self.global_focus_control)
 
@@ -55,6 +56,7 @@ class PfadsuchApp(Tk):
 
         self.load_config()
         self.load_default_graph()
+        self.code_frame.update_font_size()
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def global_focus_control(self, event):
@@ -69,8 +71,11 @@ class PfadsuchApp(Tk):
     # Läd config datei beim Start
     def load_config(self):
         if os.path.exists(self.CONFIG_FILE):
-            with open(self.CONFIG_FILE, "r") as f:
-                config = json.load(f)
+            try:
+                with open(self.CONFIG_FILE, "r") as f:
+                    config = json.load(f)
+
+
                 self.debug = config.get("debug", self.debug)
                 self.random_edge_mode = config.get("random_edge_mode", self.random_edge_mode)
                 self.animation_speed = config.get("animation_speed", self.animation_speed)
@@ -85,7 +90,27 @@ class PfadsuchApp(Tk):
                 self.path_color = config.get("path_color", self.path_color)
                 self.font_size = config.get("font_size", self.font_size)
 
+                loaded_value = config.get("selected_datastructure_view", self.selected_datastructure_view)
+
+
+                self.selected_datastructure_view = StringVar(value=loaded_value)
+
+            except json.JSONDecodeError as e:
+                if self.debug:
+                    print(f"Error loading JSON from {self.CONFIG_FILE}: {e}")
+                    print("Using default configuration.")
+
+                self.save_config()
+
+            except Exception as e:
+                if self.debug:
+                    print(f"An unexpected error occurred while loading the config: {e}")
+                    print("Using default configuration.")
+                # Optionally reset the config file by saving defaults
+                self.save_config()
+
         else:
+            # Config file doesn't exist, save defaults
             self.save_config()
 
 
@@ -103,7 +128,9 @@ class PfadsuchApp(Tk):
             "visited_node_color": self.visited_node_color,
             "current_node_color": self.current_node_color,
             "path_color": self.path_color,
-            "font_size": self.font_size
+            "font_size": self.font_size,
+            "selected_datastructure_view": self.selected_datastructure_view.get()
+
            # "darkmode": self.darkmode
         }
         with open(self.CONFIG_FILE, "w") as f:

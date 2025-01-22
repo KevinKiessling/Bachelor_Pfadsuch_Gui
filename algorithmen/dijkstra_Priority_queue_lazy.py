@@ -11,8 +11,10 @@ class Dijkstra_Priority_Queue_Lazy():
     #dijkstra algorithmus mit priority Queue
     def run_dijkstra_priority_queue_lazy(self, graph, startnode):
 
+        distances = {}
+        for node in graph:
+            distances[node] = float('inf')
 
-        distances = {node: float('inf') for node in graph}
         distances[startnode] = 0
         #node_in_queue = {startnode: 0}
 

@@ -10,6 +10,7 @@ from tkinter import messagebox
 from tkinter import ttk
 from tkinter import colorchooser
 from tkinter import Tk, Canvas, Frame, Scrollbar, Button
+from tkinter import StringVar, OptionMenu
 class My_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -312,7 +313,7 @@ class My_Frame(Frame):
     def open_settings(self):
         settings_window = Toplevel(self)
         settings_window.title("Einstellungen")
-        settings_window.geometry("500x400")
+        settings_window.geometry("500x550")
         settings_window.transient(self.parent)
 
 
@@ -363,6 +364,33 @@ class My_Frame(Frame):
             variable=debug_var
         )
         debug_checkbox.pack(anchor="w", pady=10, padx=10)
+
+        # Create a new frame to hold the label and dropdown
+        heap_frame = Frame(general_tab_frame)
+
+        # Variable to store the selected value
+        heap_var = self.parent.selected_datastructure_view
+
+        # Create a label to indicate the purpose of the dropdown
+        heap_label = Label(
+            heap_frame,
+            text="Darstellung Datenstruktur:"
+        )
+
+        # Create the OptionMenu with a list of choices
+        heap_options = ["Heap", "Priority Queue"]
+        heap_dropdown = OptionMenu(
+            heap_frame,
+            heap_var,
+            *heap_options
+        )
+
+        # Use grid within the new frame
+        heap_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
+        heap_dropdown.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+
+        # Pack the frame into the main layout
+        heap_frame.pack(anchor="w", pady=10, padx=10)
 
         random_mode_var = BooleanVar(value=self.parent.random_edge_mode)
         random_checkbox_frame = Frame(general_tab_frame)
@@ -433,7 +461,7 @@ class My_Frame(Frame):
             self.parent.random_edge_mode = random_mode_var.get()
             self.parent.animation_speed = speed_var.get()
             self.parent.font_size = font_var.get()
-
+            self.parent.selected_datastructure_view.set(heap_var.get())
             max_edge_weight = max_weight_var.get()
 
             if max_edge_weight < 0 or max_edge_weight >= 100000:
