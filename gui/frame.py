@@ -365,19 +365,19 @@ class My_Frame(Frame):
         )
         debug_checkbox.pack(anchor="w", pady=10, padx=10)
 
-        # Create a new frame to hold the label and dropdown
+
         heap_frame = Frame(general_tab_frame)
 
-        # Variable to store the selected value
+
         heap_var = self.parent.selected_datastructure_view
 
-        # Create a label to indicate the purpose of the dropdown
+
         heap_label = Label(
             heap_frame,
             text="Darstellung Datenstruktur:"
         )
 
-        # Create the OptionMenu with a list of choices
+
         heap_options = ["Heap", "Priority Queue"]
         heap_dropdown = OptionMenu(
             heap_frame,
@@ -385,11 +385,11 @@ class My_Frame(Frame):
             *heap_options
         )
 
-        # Use grid within the new frame
+
         heap_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
         heap_dropdown.grid(row=0, column=1, padx=10, pady=10, sticky="w")
 
-        # Pack the frame into the main layout
+
         heap_frame.pack(anchor="w", pady=10, padx=10)
 
         random_mode_var = BooleanVar(value=self.parent.random_edge_mode)
