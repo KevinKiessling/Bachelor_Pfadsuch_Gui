@@ -218,33 +218,19 @@ class Graph_Visualizer_lazy:
                     if step["step_type"] == "Algorithm Finished":
                         edge_color = "black"
                     if step["step_type"] == "Pick Node":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "yellow"
+                        edge_color = "grey"
                     if step["step_type"] == "Initialize Node Distance":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "green"
+                        edge_color = "grey"
                     if step["step_type"] == "Set Start Node Distance":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "yellow"
+                        edge_color = "grey"
                     if step["step_type"] == "Push Start Node to Priority Queue":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "yellow"
+                        edge_color = "grey"
                     if step["step_type"] == "Heap Pop":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "yellow"
+                        edge_color = "grey"
                     if step["step_type"] == "Visit Node":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "yellow"
+                        edge_color = "grey"
                     if step["step_type"] == "Compare Distance":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "yellow"
+                        edge_color = "grey"
                     if step["step_type"] == "Highlight Edge":
                         color = "light grey"
                         if node == current_node:
@@ -303,18 +289,18 @@ class Graph_Visualizer_lazy:
                     is_bidirectional = neighbor in self.graph and node in self.graph[neighbor]
 
                     if is_bidirectional:
-                        self._draw_bidirectional_edge(x1_no_node_clip, y1_no_node_clip, x2_no_node_clip,
-                                                      y2_no_node_clip,
-                                                      dx, dy, distance, middle_space, node, neighbor, weight,
-                                                      visited_edges, current_node, neighbor_list, already_drawn_edges)
+                        self.draw_bidirectional_edge(x1_no_node_clip, y1_no_node_clip, x2_no_node_clip,
+                                                     y2_no_node_clip,
+                                                     dx, dy, distance, middle_space, node, neighbor, weight,
+                                                     visited_edges, current_node, neighbor_list, already_drawn_edges)
                     else:
-                        self._draw_directed_edge(x1_no_node_clip, y1_no_node_clip, x2_no_node_clip, y2_no_node_clip,
-                                                 dx, dy, distance, middle_space, edge_color, weight,
-                                                 already_drawn_edges,
-                                                 node, neighbor)
+                        self.draw_directed_edge(x1_no_node_clip, y1_no_node_clip, x2_no_node_clip, y2_no_node_clip,
+                                                dx, dy, distance, middle_space, edge_color, weight,
+                                                already_drawn_edges,
+                                                node, neighbor)
 
-    def _draw_directed_edge(self, x1, y1, x2, y2, dx, dy, distance, middle_space, edge_color, weight,
-                            already_drawn_edges, node, neighbor):
+    def draw_directed_edge(self, x1, y1, x2, y2, dx, dy, distance, middle_space, edge_color, weight,
+                           already_drawn_edges, node, neighbor):
         weight_text = str(weight)
         text_width = len(weight_text) * 8
 
@@ -340,8 +326,8 @@ class Graph_Visualizer_lazy:
                                           tags="weight")
         already_drawn_edges.add((node, neighbor))
 
-    def _draw_bidirectional_edge(self, x1, y1, x2, y2, dx, dy, distance, middle_space, node, neighbor, weight,
-                                 visited_edges, current_node, neighbor_list, already_drawn_edges):
+    def draw_bidirectional_edge(self, x1, y1, x2, y2, dx, dy, distance, middle_space, node, neighbor, weight,
+                                visited_edges, current_node, neighbor_list, already_drawn_edges):
         forward_colour = "black"
         reverse_colour = "black"
         step = {}
