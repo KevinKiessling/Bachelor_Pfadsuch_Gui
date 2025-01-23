@@ -6,6 +6,7 @@ from gui.pseudocode_frame import *
 from algorithmen.dijkstra_list import *
 from algorithmen.dijkstra_Priority_queue_lazy import *
 from algorithmen.dijkstra_Priority_queue import *
+from graph_visualizer.graph_lazy_visualizer import *
 import math
 class PfadsuchApp(Tk):
     CONFIG_FILE = "config.json"
@@ -299,12 +300,12 @@ class PfadsuchApp(Tk):
 
     # Updated die Gui
     def update_gui(self):
-
+        self.graph_draw_lazy = Graph_Visualizer_lazy(self.gui_frame, self.node_positions, self.graph, self.selected_nodes, self.start_node, self)
         self.gui_frame.canvas.delete("all")
 
         if self.current_step == -1:
             if self.selected_algorithm == "Dijkstra_PQ_lazy":
-                self.draw_graph_dijkstra_lazy(None, None, {node: 0 for node in self.graph}, set(), set())
+                self.graph_draw_lazy.draw_graph_dijkstra_lazy(None, None, {node: 0 for node in self.graph}, set(), set())
             if self.selected_algorithm == "Dijkstra_PQ":
                 self.draw_graph_dijkstra_normal(None, None, {node: 0 for node in self.graph}, set(), set())
             if self.selected_algorithm == "Dijkstra_List":
@@ -332,7 +333,7 @@ class PfadsuchApp(Tk):
 
         #call different draw gtaph depending on alg
         if self.selected_algorithm == "Dijkstra_PQ_lazy":
-            self.draw_graph_dijkstra_lazy(current_node, neighbor, distances, visited, visited_edges, highlight_only_edge=True)
+            self.graph_draw_lazy.draw_graph_dijkstra_lazy(current_node, neighbor, distances, visited, visited_edges)
 
         if self.selected_algorithm == "Dijkstra_PQ":
             if step["step_type"] == "Algorithm Finished":
@@ -345,7 +346,7 @@ class PfadsuchApp(Tk):
                     self.gui_frame.shortest_paths_button.config(state=NORMAL)
                 return
             if step["step_type"] == "Highlight Edge":
-                self.draw_graph_dijkstra_normal(current_node, neighbor, distances, visited, visited_edges, highlight_only_edge=True)
+                self.draw_graph_dijkstra_normal(current_node, neighbor, distances, visited, visited_edges)
             else:
                 self.draw_graph_dijkstra_normal(current_node, neighbor, distances, visited, visited_edges)
 
@@ -361,8 +362,7 @@ class PfadsuchApp(Tk):
                     self.gui_frame.shortest_paths_button.config(state=NORMAL)
                 return
             if step["step_type"] == "Highlight Edge":
-                self.draw_graph_dijkstra_list(current_node, neighbor, distances, visited, visited_edges,
-                                                        highlight_only_edge=True)
+                self.draw_graph_dijkstra_list(current_node, neighbor, distances, visited, visited_edges,)
             else:
                 self.draw_graph_dijkstra_list(current_node, neighbor, distances, visited, visited_edges)
 
