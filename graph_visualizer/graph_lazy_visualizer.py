@@ -215,56 +215,68 @@ class Graph_Visualizer_lazy:
                 edge_color = "black"
                 #change edge color depending on state
                 if step:
+                    #Algorithmus durch = Kanten normal Black
                     if step["step_type"] == "Algorithm Finished":
                         edge_color = "black"
+                    # Kanten ausgegraut
                     if step["step_type"] == "Pick Node":
-                        edge_color = "grey"
+                        edge_color = "light grey"
+                    # Kanten ausgegraut
                     if step["step_type"] == "Initialize Node Distance":
-                        edge_color = "grey"
+                        edge_color = "light grey"
+                    # Kanten ausgegraut
                     if step["step_type"] == "Set Start Node Distance":
-                        edge_color = "grey"
+                        edge_color = "light grey"
+                    # Kanten ausgegraut
                     if step["step_type"] == "Push Start Node to Priority Queue":
-                        edge_color = "grey"
+                        edge_color = "light grey"
+                    # Kanten ausgegraut
                     if step["step_type"] == "Heap Pop":
-                        edge_color = "grey"
+                        edge_color = "light grey"
+                    # Kanten ausgegraut
                     if step["step_type"] == "Visit Node":
-                        edge_color = "grey"
+                        edge_color = "light grey"
+                    # Aktuelle Kante ist grün, rest grau
                     if step["step_type"] == "Compare Distance":
-                        edge_color = "grey"
-                    if step["step_type"] == "Highlight Edge":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "yellow"
-                    if step["step_type"] == "Begin Outer Loop":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "yellow"
-                    if step["step_type"] == "Begin Inner Loop":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "yellow"
-                    if step["step_type"] == "Update Distance and Push to Heap":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "yellow"
-                    if step["step_type"] == "Skip Visited Node":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "yellow"
-                    if step["step_type"] == "Skip Visited Neighbor":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "yellow"
-                    if step["step_type"] == "Priority Queue Empty":
-                        color = "light grey"
-                        if node == current_node:
-                            color = "yellow"
+                        edge_color = "light grey"
+                        if node == current_node and neighbor == neighbor_list:
+                            edge_color = "light green"
 
-                '''if (node, neighbor) in visited_edges or (neighbor, node) in visited_edges:
-                    edge_color = self.parent.visited_edge_color
-                if node == current_node and neighbor == neighbor_list:
-                    edge_color = self.parent.highlighted_edge_color
-                '''
+                    # Aktuelle Kante ist grün, rest grau
+                    if step["step_type"] == "Highlight Edge":
+                        edge_color = "light grey"
+                        if node == current_node and neighbor == neighbor_list:
+                            edge_color = "light green"
+                    # Kanten ausgegraut
+                    if step["step_type"] == "Begin Outer Loop":
+                        edge_color = "light grey"
+
+                    # highlighte alle ausgehenden Kanten von current Node, rot nicht bearbeitet, grün bearbeitet
+                    if step["step_type"] == "Begin Inner Loop":
+                        if (node, neighbor) in visited_edges and node == current_node:
+                            edge_color = "light green"
+                        elif node == current_node:
+                            edge_color = "red"
+                        else:
+                            edge_color = "light grey"
+
+                    # high keine kante
+                    if step["step_type"] == "Update Distance and Push to Heap":
+                        edge_color = "light grey"
+
+                    if step["step_type"] == "Skip Visited Node":
+                        edge_color = "light grey"
+                        if node == current_node:
+                            edge_color = "light grey"
+                    if step["step_type"] == "Skip Visited Neighbor":
+                        edge_color = "light grey"
+                        if node == current_node:
+                            edge_color = "light grey"
+                    if step["step_type"] == "Priority Queue Empty":
+                        edge_color = "light grey"
+                        if node == current_node:
+                            edge_color = "light grey"
+
                 if neighbor in self.node_positions:
                     x1, y1 = self.node_positions[node]
                     x2, y2 = self.node_positions[neighbor]
@@ -376,9 +388,13 @@ class Graph_Visualizer_lazy:
                 if node == current_node:
                     color = "yellow"
             if step["step_type"] == "Begin Inner Loop":
-                color = "light grey"
-                if node == current_node:
-                    color = "yellow"
+
+                if (node, neighbor) in visited_edges and node == current_node:
+                    edge_color = "light green"
+                elif node == current_node:
+                    edge_color = "red"
+                else:
+                    edge_color = "light grey"
             if step["step_type"] == "Update Distance and Push to Heap":
                 color = "light grey"
                 if node == current_node:
@@ -395,14 +411,6 @@ class Graph_Visualizer_lazy:
                 color = "light grey"
                 if node == current_node:
                     color = "yellow"
-        if (node, neighbor) in visited_edges:
-            forward_colour = self.parent.visited_edge_color
-        if (neighbor, node) in visited_edges:
-            reverse_colour = self.parent.visited_edge_color
-        if (node == current_node and neighbor == neighbor_list):
-            forward_colour = self.parent.highlighted_edge_color
-        if (neighbor == current_node and node == neighbor_list):
-            reverse_colour = self.parent.highlighted_edge_color
 
         offset = 13
 

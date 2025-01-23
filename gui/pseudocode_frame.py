@@ -151,6 +151,7 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display.config(state=NORMAL)
 
         self.pseudocode_display.tag_remove("highlight", "1.0", END)
+        #self.pseudocode_display.tag_configure("highlight", background="light green", foreground="black")
         self.pseudocode_display.tag_remove("dim", "1.0", END)
 
 
@@ -268,15 +269,13 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
             print(step)
         #self.pseudocode_display.see(f"{x}.0") for putting x on view
         if self.parent.selected_algorithm == "Dijkstra_PQ_lazy":
-            if step == "Select Node":
-                self.highlight_lines_with_dimming([10, 11, 12, 13, 14, 15, 16, 25])
-                self.set_step("Wähle Knoten")
             if step == "Initialize Node Distance":
                 self.highlight_lines_with_dimming([4, 5])
                 self.set_step("Initialisiere Knoten Distanzen")
                 self.pseudocode_display.see(f"{3}.0")
             if step == "Pick Node":
                 self.highlight_lines_with_dimming([3, 6])
+                #self.test_highlight_characters_with_dimming(highlight_ranges)
                 self.set_step("Wähle Knoten")
             if step == "Set Start Node Distance":
                 self.highlight_lines_with_dimming([7])
@@ -377,3 +376,43 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
         for node, distance in distances.items():
             display_distance = "∞" if distance == float("inf") else distance
             self.distance_table.insert("", "end", values=(node, display_distance))
+
+    # Highlighte bestimmte characters in display.
+    def test_highlight_characters_with_dimming(self, highlight_ranges):
+
+
+        #hier können custom highlights erstellt werden
+        self.pseudocode_display.tag_configure("highlight1", background="yellow", foreground="black")
+
+        self.pseudocode_display.tag_configure("dim", background="white", foreground="gray")
+
+        self.pseudocode_display.config(state=NORMAL)
+
+        self.pseudocode_display.tag_remove("highlight1", "1.0", END)
+        self.pseudocode_display.tag_remove("highlight2", "1.0", END)
+        self.pseudocode_display.tag_remove("dim", "1.0", END)
+
+        for line_number, start_char, end_char, tag_name in highlight_ranges:
+            start = f"{line_number}.{start_char}"
+            end = f"{line_number}.{end_char}"
+            self.pseudocode_display.tag_add(tag_name, start, end)
+
+        total_lines = int(self.pseudocode_display.index('end-1c').split('.')[0])
+        for i in range(1, total_lines + 1):
+            line_text = self.pseudocode_display.get(f"{i}.0", f"{i}.end")
+            dim_ranges = [
+                (f"{i}.{j}", f"{i}.{j + 1}") for j in range(len(line_text))
+            ]
+
+            for line_number, start_char, end_char, tag_name in highlight_ranges:
+                if line_number == i:
+                    dim_ranges = [
+                        (start, end)
+                        for start, end in dim_ranges
+                        if not (start >= f"{line_number}.{start_char}" and end <= f"{line_number}.{end_char}")
+                    ]
+
+            for start, end in dim_ranges:
+                self.pseudocode_display.tag_add("dim", start, end)
+
+        self.pseudocode_display.config(state=DISABLED)
