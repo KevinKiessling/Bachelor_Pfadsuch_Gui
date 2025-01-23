@@ -1723,8 +1723,6 @@ class PfadsuchApp(Tk):
                     if any(n == node for _, n in step["priority_queue"]):
 
                         color = "lightblue"
-                    if node in visited:
-                        color = "light green"
 
                     distance_text = distances.get(node, 0)
                     distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
@@ -3382,8 +3380,8 @@ class PfadsuchApp(Tk):
                     color = "light grey"
 
                     if node in step["neighbor"]:
-                        print("terst")
-                        color = "light blue"
+
+                        color = "light green"
 
                     if node == current_node:
                         print(current_node)

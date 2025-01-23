@@ -11,8 +11,8 @@ Benötigte Pip Imports:
 - Keine
 
 
-Aktueller Stand 20.1:
-- kürzeste Pfade können dargestellt werden
+Aktueller Stand 22.1:
+- Major rework step by step lazy dijkstra, Farbgebung und highlighting braucht aber noch arbeit und clean up von dem console spam
 - 
 - 
 
