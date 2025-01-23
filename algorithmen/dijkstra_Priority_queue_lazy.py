@@ -10,23 +10,65 @@ class Dijkstra_Priority_Queue_Lazy():
 
     #dijkstra algorithmus mit priority Queue
     def run_dijkstra_priority_queue_lazy(self, graph, startnode):
-
         distances = {}
-        for node in graph:
-            distances[node] = float('inf')
-
-        distances[startnode] = 0
-        #node_in_queue = {startnode: 0}
-
-        priority_queue = [(0, startnode)]
+        priority_queue = []
         prev_nodes = {}
-        path_edges = {startnode: []}
+        path_edges = {}
         visited = set()
         visited_edges = set()
+
+        for node in graph:
+            self.save_state(
+                step_type="Pick Node",
+                current_node=node,
+                current_distance=None,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                priority_queue=priority_queue,
+                selected_algorithm="Dijkstra_PQ_lazy"
+            )
+            distances[node] = float('inf')
+            self.save_state(
+                step_type="Initialize Node Distance",
+                current_node=node,
+                current_distance=None,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                priority_queue=priority_queue,
+                selected_algorithm="Dijkstra_PQ_lazy"
+            )
+
+        distances[startnode] = 0
+        path_edges[startnode] = []
+
         self.save_state(
-            step_type="Initialization",
-            current_node=None,
-            current_distance=None,
+            step_type="Set Start Node Distance",
+            current_node=startnode,
+            current_distance=0,
+            neighbor=None,
+            edge_weight=None,
+            distances=distances,
+            prev_nodes=prev_nodes,
+            visited=visited,
+            visited_edges=visited_edges,
+            priority_queue=priority_queue,
+            selected_algorithm="Dijkstra_PQ_lazy"
+        )
+
+        heapq.heappush(priority_queue, (0, startnode))
+
+        self.save_state(
+            step_type="Push Start Node to Priority Queue",
+            current_node=startnode,
+            current_distance=0,
             neighbor=None,
             edge_weight=None,
             distances=distances,
@@ -38,16 +80,53 @@ class Dijkstra_Priority_Queue_Lazy():
         )
 
         while priority_queue:
+            self.save_state(
+                step_type="Begin Outer Loop",
+                current_node=None,
+                current_distance=None,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                priority_queue=priority_queue,
+                selected_algorithm="Dijkstra_PQ_lazy"
+            )
             current_distance, current_node = heapq.heappop(priority_queue)
+            self.save_state(
+                step_type="Heap Pop",
+                current_node=current_node,
+                current_distance=current_distance,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                priority_queue=priority_queue,
+                selected_algorithm="Dijkstra_PQ_lazy"
+            )
 
             if current_node in visited:
+                self.save_state(
+                    step_type="Skip Visited Node",
+                    current_node=current_node,
+                    current_distance=current_distance,
+                    neighbor=None,
+                    edge_weight=None,
+                    distances=distances,
+                    prev_nodes=prev_nodes,
+                    visited=visited,
+                    visited_edges=visited_edges,
+                    priority_queue=priority_queue,
+                    selected_algorithm="Dijkstra_PQ_lazy"
+                )
                 continue
 
             visited.add(current_node)
-           #node_in_queue.pop(current_node, None)
-
             self.save_state(
-                step_type="Select Node",
+                step_type="Visit Node",
                 current_node=current_node,
                 current_distance=current_distance,
                 neighbor=None,
@@ -61,7 +140,33 @@ class Dijkstra_Priority_Queue_Lazy():
             )
 
             for neighbor, edge_weight in graph[current_node].items():
+                self.save_state(
+                    step_type="Begin Inner Loop",
+                    current_node=current_node,
+                    current_distance=current_distance,
+                    neighbor=neighbor,
+                    edge_weight=edge_weight,
+                    distances=distances,
+                    prev_nodes=prev_nodes,
+                    visited=visited,
+                    visited_edges=visited_edges,
+                    priority_queue=priority_queue,
+                    selected_algorithm="Dijkstra_PQ_lazy"
+                )
                 if neighbor in visited:
+                    self.save_state(
+                        step_type="Skip Visited Neighbor",
+                        current_node=current_node,
+                        current_distance=current_distance,
+                        neighbor=neighbor,
+                        edge_weight=edge_weight,
+                        distances=distances,
+                        prev_nodes=prev_nodes,
+                        visited=visited,
+                        visited_edges=visited_edges,
+                        priority_queue=priority_queue,
+                        selected_algorithm="Dijkstra_PQ_lazy"
+                    )
                     continue
                 visited_edges.add((current_node, neighbor))
                 self.save_state(
@@ -95,14 +200,11 @@ class Dijkstra_Priority_Queue_Lazy():
 
                 if new_distance < distances[neighbor]:
                     distances[neighbor] = new_distance
-
                     path_edges[neighbor] = path_edges[current_node] + [(current_node, neighbor)]
-
                     heapq.heappush(priority_queue, (new_distance, neighbor))
-                        #node_in_queue[neighbor] = new_distance
 
                     self.save_state(
-                        step_type="Update Distance",
+                        step_type="Update Distance and Push to Heap",
                         current_node=current_node,
                         current_distance=current_distance,
                         neighbor=neighbor,
@@ -114,6 +216,20 @@ class Dijkstra_Priority_Queue_Lazy():
                         priority_queue=priority_queue,
                         selected_algorithm="Dijkstra_PQ_lazy"
                     )
+        if not priority_queue:
+            self.save_state(
+                step_type="Priority Queue Empty",
+                current_node=None,
+                current_distance=None,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                priority_queue=priority_queue,
+                selected_algorithm="Dijkstra_PQ_lazy"
+            )
 
         self.save_state(
             step_type="Algorithm Finished",
@@ -131,10 +247,10 @@ class Dijkstra_Priority_Queue_Lazy():
 
         self.shortest_path_edges = path_edges
         return self.steps, self.shortest_path_edges
+
     #Speichert Schritt des Algorithmus
     def save_state(self, step_type, current_node, current_distance, neighbor, edge_weight, distances, prev_nodes,
                    visited, visited_edges, priority_queue, selected_algorithm):
-
         state = {
             "selected_algorithm": selected_algorithm,
             "step_type": step_type,
@@ -153,5 +269,6 @@ class Dijkstra_Priority_Queue_Lazy():
 
     #print steps, debug
     def print_step(self):
-        print(self.steps)
+        for step in self.steps:
+            print(step["step_type"])
 

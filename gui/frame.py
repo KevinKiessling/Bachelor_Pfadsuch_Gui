@@ -487,7 +487,7 @@ class My_Frame(Frame):
         # COLOR TAB
         default_colors = {
             "visited_edge": "lawn green",
-            "highlighted_edge": "red",
+            "highlighted_edge": "orange",
             "visited_node": "lawn green",
             "current_node": "yellow",
             "path_color": "light blue"

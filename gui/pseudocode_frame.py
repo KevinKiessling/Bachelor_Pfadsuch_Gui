@@ -271,22 +271,53 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
             if step == "Select Node":
                 self.highlight_lines_with_dimming([10, 11, 12, 13, 14, 15, 16, 25])
                 self.set_step("Wähle Knoten")
-            if step == "Initialization":
-                self.highlight_lines_with_dimming([3, 4, 5, 6, 7, 8, 9])
-                self.set_step("Initialisierung")
-            if step == "Compare Distance":
-                self.highlight_lines_with_dimming([19, 22])
-                self.set_step("Vergleiche Distanzen")
-            if step == "Highlight Edge":
-                self.highlight_lines_with_dimming([17, 18, 23, 24])
-                self.set_step("Wähle neue Kante")
-            if step == "Update Distance":
-                self.highlight_lines_with_dimming([20, 21])
-                self.set_step("Update Distanzen")
-                self.pseudocode_display.see(f"{21}.0")
+            if step == "Initialize Node Distance":
+                self.highlight_lines_with_dimming([4, 5])
+                self.set_step("Initialisiere Knoten Distanzen")
+                self.pseudocode_display.see(f"{3}.0")
+            if step == "Pick Node":
+                self.highlight_lines_with_dimming([3, 6])
+                self.set_step("Wähle Knoten")
+            if step == "Set Start Node Distance":
+                self.highlight_lines_with_dimming([7])
+                self.set_step("Setze Distanz von Startknoten")
+            if step == "Push Start Node to Priority Queue":
+                self.highlight_lines_with_dimming([8, 9])
+                self.set_step("Füge Startknoten dem Heap hinzu")
+            if step == "Heap Pop":
+                self.highlight_lines_with_dimming([11])
+                self.set_step("Entferne das oberste Heap Element")
             if step == "Algorithm Finished":
                 self.clear_hightlight()
                 self.set_step("Algorithmus abgeschlossen")
+            if step == "Visit Node":
+                self.highlight_lines_with_dimming([14, 15, 16])
+                self.set_step("Setzte Knoten als Besucht")
+            if step == "Compare Distance":
+                self.highlight_lines_with_dimming([19, 22])
+                self.set_step("Vergleiche Distanz")
+            if step == "Highlight Edge":
+                self.highlight_lines_with_dimming([18, 23])
+                self.set_step("Wähle Kante wobei Zielknoten nicht vorher besucht")
+            if step == "Begin Outer Loop":
+                self.highlight_lines_with_dimming([10, 25])
+                self.set_step("Solange der Heap nicht leer is")
+            if step == "Begin Inner Loop":
+                self.highlight_lines_with_dimming([17, 24])
+                self.set_step("Iteriere über alle ausgehenden Kanten")
+            if step == "Update Distance and Push to Heap":
+                self.highlight_lines_with_dimming([20, 21])
+                self.set_step("Update Distanzen und Pushe neue Distanz auf Heap")
+            if step == "Skip Visited Node":
+                self.highlight_lines_with_dimming([12, 13])
+                self.set_step("Überspringe bereits bearbeitete Knoten")
+            if step == "Skip Visited Neighbor":
+                self.highlight_lines_with_dimming([18, 23])
+                self.set_step("Überspringe Kante zu bereits besuchten Knoten")
+            if step == "Priority Queue Empty":
+                self.highlight_lines_with_dimming([10, 25])
+                self.set_step("Keine Elemente In Priority Queue übrig")
+
         if self.parent.selected_algorithm == "Dijkstra_PQ":
             if step == "Select Node":
                 self.highlight_lines_with_dimming([10, 11, 12, 13, 14, 15, 16, 27])
@@ -306,6 +337,8 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
             if step == "Algorithm Finished":
                 self.clear_hightlight()
                 self.set_step("Algorithmus abgeschlossen")
+
+
         if self.parent.selected_algorithm == "Dijkstra_List":
             if step == "Select Node":
                 self.highlight_lines_with_dimming([14, 15, 16, 17, 23])
