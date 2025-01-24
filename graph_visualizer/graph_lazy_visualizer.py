@@ -260,22 +260,22 @@ class Graph_Visualizer_lazy:
                         else:
                             edge_color = "light grey"
 
-                    # high keine kante
+                    # Kanten ausgegraut
                     if step["step_type"] == "Update Distance and Push to Heap":
                         edge_color = "light grey"
 
+                    # Kanten ausgegraut
                     if step["step_type"] == "Skip Visited Node":
                         edge_color = "light grey"
-                        if node == current_node:
-                            edge_color = "light grey"
+
                     if step["step_type"] == "Skip Visited Neighbor":
                         edge_color = "light grey"
-                        if node == current_node:
-                            edge_color = "light grey"
+                        if node == current_node and neighbor == neighbor_list:
+                            edge_color = "light green"
+
+                    # Kanten ausgegraut
                     if step["step_type"] == "Priority Queue Empty":
                         edge_color = "light grey"
-                        if node == current_node:
-                            edge_color = "light grey"
 
                 if neighbor in self.node_positions:
                     x1, y1 = self.node_positions[node]
