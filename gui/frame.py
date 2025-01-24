@@ -11,6 +11,7 @@ from tkinter import ttk
 from tkinter import colorchooser
 from tkinter import Tk, Canvas, Frame, Scrollbar, Button
 from tkinter import StringVar, OptionMenu
+import copy
 class My_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -422,13 +423,22 @@ class My_Frame(Frame):
         max_weight_label = Label(random_checkbox_frame, text="Maximales Gewicht (<100000)")
         max_weight_label.grid(row=0, column=2)
 
-        save_cur_a_d_var = BooleanVar(value=False)
-        save_cur_a_d_cb = Checkbutton(
+        def save_default_graph_to_parent():
+
+            self.parent.default_graph_pos = json.loads(json.dumps(self.parent.node_positions))
+            self.parent.default_graph = json.loads(json.dumps(self.parent.graph))
+            if self.parent.debug:
+                print("Default graph updated successfully.")
+
+        save_cur_a_d_button = Button(
             general_tab_frame,
             text="Aktuellen Graphen als Default Speichern",
-            variable=save_cur_a_d_var
+            command=lambda: save_default_graph_to_parent()
         )
-        save_cur_a_d_cb.pack(anchor="w", pady=10, padx=10)
+        save_cur_a_d_button.pack(anchor="w", pady=10, padx=10)
+
+
+
 
         Label(general_tab_frame, text="Animationsgeschwindigkeit (ms):").pack(pady=10)
         speed_var = IntVar(value=self.parent.animation_speed)
@@ -477,9 +487,6 @@ class My_Frame(Frame):
                 return
             self.parent.max_edge_weight = max_weight_var.get()
 
-            if save_cur_a_d_var.get():
-                self.parent.default_graph_pos = self.parent.node_positions
-                self.parent.default_graph = self.parent.graph
             self.parent.save_config()
             settings_window.destroy()
 
@@ -562,17 +569,7 @@ class My_Frame(Frame):
 
         reset_button = Button(color_tab, text="Zurücksetzen", command=reset_colors)
         reset_button.pack(pady=20)
-        '''
-        dark_mode_var = BooleanVar(value=self.parent.darkmode)
-        darkmode_var_frame = Frame(color_tab)
-        darkmode_var_frame.pack(anchor="w", pady=10, padx=10)
-        darkmode_checkbox = Checkbutton(
-            darkmode_var_frame,
-            text="Darkmode",
-            variable=dark_mode_var
-        )
-        darkmode_checkbox.grid(row=0, column=0)
-        '''
+
         button_frame = Frame(settings_window)
         button_frame.grid(row=1, column=0, sticky="ew", pady=10)
 
@@ -728,13 +725,25 @@ class My_Frame(Frame):
                                 "Das Kantengewicht muss zwischen 0 und 99999 liegen."
                             )
 
-                if not node1 == node2 and weight is not None:
-                    self.parent.graph[node1][node2] = weight
-                    self.operation_history.append(("add_edge", (node1, node2, weight)))
+                if node1 != node2 and weight is not None:
+                    # Handle edge replacement or updating
+                    if node2 in self.parent.graph[node1]:  # Edge already exists in the same direction
+                        if self.parent.debug:
+                            print(f"Kante von {node1} zu {node2} existiert bereits. Gewicht aktualisieren.")
+                        self.parent.graph[node1][node2] = weight
+                        self.operation_history.append(("update_edge", (node1, node2, weight)))
+                    elif node1 in self.parent.graph[node2]:  # Reverse edge exists
+                        if self.parent.debug:
+                            print(f"Kante von {node2} zu {node1} existiert. Richtung ersetzen.")
+                        del self.parent.graph[node2][node1]  # Remove reverse edge
+                        self.parent.graph[node1][node2] = weight
+                        self.operation_history.append(("replace_edge", (node2, node1, node1, node2, weight)))
+                    else:  # No edge exists, add a new one
+                        self.parent.graph[node1][node2] = weight
+                        self.operation_history.append(("add_edge", (node1, node2, weight)))
+                        if self.parent.debug:
+                            print(f"Kante von {node1} zu {node2} mit Gewicht {weight} hinzugefügt.")
                     self.parent.selected_nodes.clear()
-                    if self.parent.debug:
-                        print(f"Kante von {node1} zu {node2} mit Gewicht {weight} hinzugefügt")
-
             self.parent.update_gui()
             self.parent.reset()
             return

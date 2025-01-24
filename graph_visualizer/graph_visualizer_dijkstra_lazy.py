@@ -248,77 +248,39 @@ class Graph_Visualizer_Dijkstra_lazy:
         # Draw edges
         for node, edges in self.graph.items():
             for neighbor, weight in edges.items():
-
-                if (node, neighbor) in already_drawn_edges or (neighbor, node) in already_drawn_edges:
+                if (node, neighbor) in already_drawn_edges:
                     continue
 
                 edge_color = "black"
-                #change edge color depending on state
                 if step:
-                    #Algorithmus durch = Kanten normal Black
                     if step["step_type"] == "Algorithm Finished":
                         edge_color = "black"
-                    # Kanten ausgegraut
-                    if step["step_type"] == "Pick Node":
+                    elif step["step_type"] in {
+                        "Pick Node", "Initialize Node Distance", "Initialize Visited",
+                        "Set Start Node Distance", "Push Start Node to Priority Queue",
+                        "Heap Pop", "Visit Node", "Begin Outer Loop", "Update Distance",
+                        "Push to Heap", "Skip Visited Node", "Priority Queue Empty"
+                    }:
                         edge_color = "light grey"
-                    # Kanten ausgegraut
-                    if step["step_type"] == "Initialize Node Distance":
-                        edge_color = "light grey"
-                    if step["step_type"] == "Initialize Visited":
-                        edge_color = "light grey"
-                    # Kanten ausgegraut
-                    if step["step_type"] == "Set Start Node Distance":
-                        edge_color = "light grey"
-                    # Kanten ausgegraut
-                    if step["step_type"] == "Push Start Node to Priority Queue":
-                        edge_color = "light grey"
-                    # Kanten ausgegraut
-                    if step["step_type"] == "Heap Pop":
-                        edge_color = "light grey"
-                    # Kanten ausgegraut
-                    if step["step_type"] == "Visit Node":
-                        edge_color = "light grey"
-                    # Aktuelle Kante ist grün, rest grau
-                    if step["step_type"] == "Compare Distance":
+                    elif step["step_type"] == "Compare Distance":
                         edge_color = "light grey"
                         if node == current_node and neighbor == neighbor_list:
                             edge_color = "light green"
-
-                    # Aktuelle Kante ist grün, rest grau
-                    if step["step_type"] == "Highlight Edge":
+                    elif step["step_type"] == "Highlight Edge":
                         edge_color = "light grey"
                         if node == current_node and neighbor == neighbor_list:
                             edge_color = "light green"
-                    # Kanten ausgegraut
-                    if step["step_type"] == "Begin Outer Loop":
-                        edge_color = "light grey"
-
-                    # highlighte alle ausgehenden Kanten von current Node, rot nicht bearbeitet, grün bearbeitet
-                    if step["step_type"] == "Begin Inner Loop":
+                    elif step["step_type"] == "Begin Inner Loop":
                         if (node, neighbor) in visited_edges and node == current_node:
                             edge_color = "light green"
                         elif node == current_node:
                             edge_color = "red"
                         else:
                             edge_color = "light grey"
-
-                    # Kanten ausgegraut
-                    if step["step_type"] == "Update Distance":
-                        edge_color = "light grey"
-                    if step["step_type"] == "Push to Heap":
-                        edge_color = "light grey"
-                    # Kanten ausgegraut
-                    if step["step_type"] == "Skip Visited Node":
-                        edge_color = "light grey"
-
-                    if step["step_type"] == "Skip Visited Neighbor":
+                    elif step["step_type"] == "Skip Visited Neighbor":
                         edge_color = "light grey"
                         if node == current_node and neighbor == neighbor_list:
                             edge_color = "light green"
-
-                    # Kanten ausgegraut
-                    if step["step_type"] == "Priority Queue Empty":
-                        edge_color = "light grey"
 
                 if neighbor in self.node_positions:
                     x1, y1 = self.node_positions[node]
@@ -337,22 +299,11 @@ class Graph_Visualizer_Dijkstra_lazy:
                         x1_no_node_clip, y1_no_node_clip, x2_no_node_clip, y2_no_node_clip = x1, y1, x2, y2
 
                     middle_space = 0.12
-
-                    segment_dx = dx / distance * middle_space * distance
-                    segment_dy = dy / distance * middle_space * distance
-
-                    is_bidirectional = neighbor in self.graph and node in self.graph[neighbor]
-
-                    if is_bidirectional:
-                        self.draw_bidirectional_edge(x1_no_node_clip, y1_no_node_clip, x2_no_node_clip,
-                                                     y2_no_node_clip,
-                                                     dx, dy, distance, middle_space, node, neighbor, weight,
-                                                     visited_edges, current_node, neighbor_list, already_drawn_edges)
-                    else:
-                        self.draw_directed_edge(x1_no_node_clip, y1_no_node_clip, x2_no_node_clip, y2_no_node_clip,
-                                                dx, dy, distance, middle_space, edge_color, weight,
-                                                already_drawn_edges,
-                                                node, neighbor)
+                    self.draw_directed_edge(
+                        x1_no_node_clip, y1_no_node_clip, x2_no_node_clip, y2_no_node_clip,
+                        dx, dy, distance, middle_space, edge_color, weight,
+                        already_drawn_edges, node, neighbor
+                    )
 
     def draw_directed_edge(self, x1, y1, x2, y2, dx, dy, distance, middle_space, edge_color, weight,
                            already_drawn_edges, node, neighbor):
@@ -512,5 +463,3 @@ class Graph_Visualizer_Dijkstra_lazy:
         already_drawn_edges.add((node, neighbor))
         already_drawn_edges.add((neighbor, node))
 
-    def get_distanze_text(self, step):
-        return 0

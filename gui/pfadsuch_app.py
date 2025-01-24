@@ -8,6 +8,7 @@ from algorithmen.dijkstra_Priority_queue_lazy import *
 from algorithmen.dijkstra_Priority_queue import *
 from graph_visualizer.graph_visualizer_dijkstra_lazy import *
 import math
+import copy
 class PfadsuchApp(Tk):
     CONFIG_FILE = "config.json"
     def __init__(self):
@@ -243,8 +244,8 @@ class PfadsuchApp(Tk):
     # Läd default graph beim starten der App und auf wunsch
     def load_default_graph(self):
         if self.default_graph:
-            self.graph = self.default_graph
-            self.node_positions = self.default_graph_pos
+            self.graph = copy.deepcopy(self.default_graph)
+            self.node_positions = copy.deepcopy(self.default_graph_pos)
             self.selected_nodes = []
 
         else:
@@ -300,6 +301,7 @@ class PfadsuchApp(Tk):
 
     # Updated die Gui
     def update_gui(self):
+
         self.graph_draw_lazy = Graph_Visualizer_Dijkstra_lazy(self.gui_frame, self.node_positions, self.graph, self.selected_nodes, self.start_node, self)
         self.gui_frame.canvas.delete("all")
 
