@@ -14,10 +14,11 @@ class Dijkstra_Priority_Queue_Lazy():
         priority_queue = []
         prev_nodes = {}
         path_edges = {}
-        visited = set()
+        visited = {}  # Initialize as empty; will populate in the loop
         visited_edges = set()
 
         for node in graph:
+            visited[node] = None
             self.save_state(
                 step_type="Pick Node",
                 current_node=node,
@@ -32,6 +33,20 @@ class Dijkstra_Priority_Queue_Lazy():
                 selected_algorithm="Dijkstra_PQ_lazy"
             )
             distances[node] = float('inf')
+            visited[node] = False  # Set visited status to False for each node
+            self.save_state(
+                step_type="Initialize Visited",
+                current_node=node,
+                current_distance=distances[node],
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                priority_queue=priority_queue,
+                selected_algorithm="Dijkstra_PQ_lazy"
+            )
             self.save_state(
                 step_type="Initialize Node Distance",
                 current_node=node,
@@ -108,7 +123,7 @@ class Dijkstra_Priority_Queue_Lazy():
                 selected_algorithm="Dijkstra_PQ_lazy"
             )
 
-            if current_node in visited:
+            if visited[current_node]:
                 self.save_state(
                     step_type="Skip Visited Node",
                     current_node=current_node,
@@ -124,7 +139,7 @@ class Dijkstra_Priority_Queue_Lazy():
                 )
                 continue
 
-            visited.add(current_node)
+            visited[current_node] = True  # Mark the node as visited
             self.save_state(
                 step_type="Visit Node",
                 current_node=current_node,
@@ -153,7 +168,7 @@ class Dijkstra_Priority_Queue_Lazy():
                     priority_queue=priority_queue,
                     selected_algorithm="Dijkstra_PQ_lazy"
                 )
-                if neighbor in visited:
+                if visited[neighbor]:
                     self.save_state(
                         step_type="Skip Visited Neighbor",
                         current_node=current_node,

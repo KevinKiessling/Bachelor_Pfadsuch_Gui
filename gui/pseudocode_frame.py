@@ -270,8 +270,12 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
         #self.pseudocode_display.see(f"{x}.0") for putting x on view
         if self.parent.selected_algorithm == "Dijkstra_PQ_lazy":
             if step == "Initialize Node Distance":
-                self.highlight_lines_with_dimming([4, 5])
+                self.highlight_lines_with_dimming([5])
                 self.set_step("Initialisiere Knoten Distanzen")
+                self.pseudocode_display.see(f"{3}.0")
+            if step == "Initialize Visited":
+                self.highlight_lines_with_dimming([4])
+                self.set_step("Initialisiere besuchte Knoten")
                 self.pseudocode_display.see(f"{3}.0")
             if step == "Pick Node":
                 self.highlight_lines_with_dimming([3, 6])
