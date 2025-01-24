@@ -137,7 +137,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                     if visited[node]:
                         color = discovered_node_true_color
                     if node == current_node:
-                        color = "lime green"
+                        color = discovered_node_true_color
                     if not visited[node]:
                         color = discovered_node_false_color
 
@@ -275,7 +275,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                         if (node, neighbor) in visited_edges and node == current_node:
                             edge_color = "light green"
                         elif node == current_node:
-                            edge_color = "red"
+                            edge_color = "black"
                         else:
                             edge_color = "light grey"
                     elif step["step_type"] == "Skip Visited Neighbor":
@@ -308,6 +308,83 @@ class Graph_Visualizer_Dijkstra_lazy:
 
     def draw_directed_edge(self, x1, y1, x2, y2, dx, dy, distance, middle_space, edge_color, weight,
                            already_drawn_edges, node, neighbor):
+        step = {}
+        if self.parent.current_step != -1:
+            step = self.parent.steps_finished_algorithm[self.parent.current_step]
+        weight_color = "black"  # Default weight color
+        weight_current_edge = "red"
+
+        if step:
+            if step["step_type"] == "Algorithm Finished":
+                weight_color = "black"
+            elif step["step_type"] == "Pick Node":
+                weight_color = "light grey"
+            elif step["step_type"] == "Initialize Node Distance":
+                weight_color = "light grey"
+            elif step["step_type"] == "Set Start Node Distance":
+                weight_color = "light grey"
+            elif step["step_type"] == "Initialize Visited":
+                weight_color = "light grey"
+            elif step["step_type"] == "Priority Queue Empty":
+                weight_color = "light grey"
+            elif step["step_type"] == "Push Start Node to Priority Queue":
+                weight_color = "light grey"
+            elif step["step_type"] == "Begin Outer Loop":
+                weight_color = "light grey"
+            elif step["step_type"] == "Skip Visited Node":
+                weight_color = "light grey"
+            elif step["step_type"] == "Heap Pop":
+                weight_color = "light grey"
+            #only current edges should do that
+
+            elif step["step_type"] == "Highlight Edge":
+                weight_color = "light grey"
+                current_node = step.get("current_node")
+                current_neighbor = step.get("neighbor")
+
+                if current_node and current_neighbor and node == current_node and neighbor == current_neighbor:
+                    weight_color = "light green"
+
+            elif step["step_type"] == "Visit Node":
+                weight_color = "light grey"
+
+            elif step["step_type"] == "Compare Distance":
+                weight_color = "light grey"
+                current_node = step.get("current_node")
+                current_neighbor = step.get("neighbor")
+
+                if current_node and current_neighbor:
+                    if node == current_node and neighbor == current_neighbor:
+                        weight_color = "black"
+                    else:
+                        weight_color = "light grey"
+
+            elif step["step_type"] == "Push to Heap":
+                weight_color = "light grey"
+            # only current edges should do that
+            elif step["step_type"] == "Update Distance":
+                weight_color = "light grey"
+                current_node = step.get("current_node")
+                current_neighbor = step.get("neighbor")
+
+                if current_node and current_neighbor:
+                    if node == current_node and neighbor == current_neighbor:
+                        weight_color = "black"
+                    else:
+                        weight_color = "light grey"
+
+            # alles gewichte -> grau, ausser ausgehender vom aktuellen Knoten. -> besucht grün, offen rot
+            elif step["step_type"] == "Begin Inner Loop":
+                current_node = step.get("current_node")
+                visited_nb = step.get("visited_edges")
+                if (node, neighbor) in visited_nb and node == current_node:
+                    weight_color = "light green"
+                elif node == current_node:
+                    weight_color = "Black"
+                else:
+                    weight_color = "light grey"
+
+            # Add any other step types with different weight colors as needed
         weight_text = str(weight)
         text_width = len(weight_text) * 8
 
@@ -329,7 +406,7 @@ class Graph_Visualizer_Dijkstra_lazy:
         self.gui_frame.canvas.create_line(middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2, y2,
                                           width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5),
                                           fill=edge_color, smooth=True, splinesteps=500)
-        self.gui_frame.canvas.create_text(middle_x, middle_y, text=weight_text, fill="black", font=("Arial", 14),
+        self.gui_frame.canvas.create_text(middle_x, middle_y, text=weight_text, fill=weight_color, font=("Arial", 14),
                                           tags="weight")
         already_drawn_edges.add((node, neighbor))
 
