@@ -9,7 +9,7 @@ from algorithmen.dijkstra_Priority_queue import *
 
 import math
 
-class Graph_Visualizer_lazy:
+class Graph_Visualizer_Dijkstra_lazy:
     def __init__(self, gui_frame, node_positions, graph,selected_nodes, start_node, parent):
         self.gui_frame = gui_frame
         self.node_positions = node_positions

@@ -6,7 +6,7 @@ from gui.pseudocode_frame import *
 from algorithmen.dijkstra_list import *
 from algorithmen.dijkstra_Priority_queue_lazy import *
 from algorithmen.dijkstra_Priority_queue import *
-from graph_visualizer.graph_lazy_visualizer import *
+from graph_visualizer.graph_visualizer_dijkstra_lazy import *
 import math
 class PfadsuchApp(Tk):
     CONFIG_FILE = "config.json"
@@ -300,7 +300,7 @@ class PfadsuchApp(Tk):
 
     # Updated die Gui
     def update_gui(self):
-        self.graph_draw_lazy = Graph_Visualizer_lazy(self.gui_frame, self.node_positions, self.graph, self.selected_nodes, self.start_node, self)
+        self.graph_draw_lazy = Graph_Visualizer_Dijkstra_lazy(self.gui_frame, self.node_positions, self.graph, self.selected_nodes, self.start_node, self)
         self.gui_frame.canvas.delete("all")
 
         if self.current_step == -1:
@@ -331,7 +331,7 @@ class PfadsuchApp(Tk):
         if self.debug:
             print(step)
 
-        #call different draw gtaph depending on alg
+        #call different draw graph depending on alg
         if self.selected_algorithm == "Dijkstra_PQ_lazy":
             self.graph_draw_lazy.draw_graph_dijkstra_lazy(current_node, neighbor, distances, visited, visited_edges)
 
