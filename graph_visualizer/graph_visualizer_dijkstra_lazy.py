@@ -117,11 +117,16 @@ class Graph_Visualizer_Dijkstra_lazy:
                     color = "light grey"
                     if node == current_node:
                         color = "yellow"
-                # Update Distanzen von Nachbar und pushe ihn auf Heap, aktueller Knoten gelb, Nachbar #57b3ea, rest grau
-                if step["step_type"] == "Update Distance and Push to Heap":
+                # Update Distanzen von Nachbar, yellow für knoten der updated wird, rest grau
+                if step["step_type"] == "Update Distance":
                     color = "light grey"
-                    if node == current_node:
+                   # if node == current_node:
+                      #  color = "yellow"
+                    if node in neighbor_list:
                         color = "yellow"
+                # push updated knoten to Heap, -> blau, rest grau
+                if step["step_type"] == "Push to Heap":
+                    color = "light grey"
                     if node in neighbor_list:
                         color = "#57b3ea"
 
@@ -210,7 +215,9 @@ class Graph_Visualizer_Dijkstra_lazy:
                     show_start = False
                 if step["step_type"] == "Begin Inner Loop":
                     show_start = False
-                if step["step_type"] == "Update Distance and Push to Heap":
+                if step["step_type"] == "Update Distance":
+                    show_start = False
+                if step["step_type"] == "Push to Heap":
                     show_start = False
                 if step["step_type"] == "Skip Visited Node":
                     show_start = False
@@ -295,9 +302,10 @@ class Graph_Visualizer_Dijkstra_lazy:
                             edge_color = "light grey"
 
                     # Kanten ausgegraut
-                    if step["step_type"] == "Update Distance and Push to Heap":
+                    if step["step_type"] == "Update Distance":
                         edge_color = "light grey"
-
+                    if step["step_type"] == "Push to Heap":
+                        edge_color = "light grey"
                     # Kanten ausgegraut
                     if step["step_type"] == "Skip Visited Node":
                         edge_color = "light grey"

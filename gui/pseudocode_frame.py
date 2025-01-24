@@ -308,8 +308,11 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
             if step == "Begin Inner Loop":
                 self.highlight_lines_with_dimming([17, 24])
                 self.set_step("Iteriere über alle ausgehenden Kanten")
-            if step == "Update Distance and Push to Heap":
-                self.highlight_lines_with_dimming([20, 21])
+            if step == "Update Distance":
+                self.highlight_lines_with_dimming([20])
+                self.set_step("Update Distanzen und Pushe neue Distanz auf Heap")
+            if step == "Push to Heap":
+                self.highlight_lines_with_dimming([21])
                 self.set_step("Update Distanzen und Pushe neue Distanz auf Heap")
             if step == "Skip Visited Node":
                 self.highlight_lines_with_dimming([12, 13])

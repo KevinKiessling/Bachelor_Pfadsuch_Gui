@@ -216,10 +216,22 @@ class Dijkstra_Priority_Queue_Lazy():
                 if new_distance < distances[neighbor]:
                     distances[neighbor] = new_distance
                     path_edges[neighbor] = path_edges[current_node] + [(current_node, neighbor)]
-                    heapq.heappush(priority_queue, (new_distance, neighbor))
-
                     self.save_state(
-                        step_type="Update Distance and Push to Heap",
+                        step_type="Update Distance",
+                        current_node=current_node,
+                        current_distance=current_distance,
+                        neighbor=neighbor,
+                        edge_weight=edge_weight,
+                        distances=distances,
+                        prev_nodes=prev_nodes,
+                        visited=visited,
+                        visited_edges=visited_edges,
+                        priority_queue=priority_queue,
+                        selected_algorithm="Dijkstra_PQ_lazy"
+                    )
+                    heapq.heappush(priority_queue, (new_distance, neighbor))
+                    self.save_state(
+                        step_type="Push to Heap",
                         current_node=current_node,
                         current_distance=current_distance,
                         neighbor=neighbor,
