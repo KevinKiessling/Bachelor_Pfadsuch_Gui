@@ -227,7 +227,8 @@ class Graph_Visualizer_Dijkstra_lazy:
                     display_text = f"{node_text}"
                 if step["step_type"] == "Priority Queue Empty":
                     show_start = False
-
+            if not step:
+                display_text = f"{node_text}"
 
 
             if node in self.selected_nodes:

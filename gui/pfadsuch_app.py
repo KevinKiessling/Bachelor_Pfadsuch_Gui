@@ -251,8 +251,13 @@ class PfadsuchApp(Tk):
         else:
             if self.debug:
                 print("Loading backup default graph")
-            self.graph = {'A': {"C": 8, "E": 4, "D": 3, "B": 2}, 'B': {"D": 9, "C": 6}, 'C': {"D": 7}, 'D': {"E": 1}, 'E': {}}
-            self.node_positions = {'A': (136, 542), 'B': (729, 206), 'C': (130, 208), 'D': (774, 552), 'E': (476, 862)}
+            self.graph = {"A": {"E": 1, "B": 2, "K": 5, "I": 5}, "B": {"C": 6}, "C": {"M": 2}, "D": {"C": 2},
+                          "E": {"G": 10, "D": 1}, "F": {"D": 9}, "G": {"F": 4, "H": 16}, "H": {"J": 4},
+                          "I": {"H": 12, "G": 4}, "J": {}, "K": {"L": 4, "M": 12}, "L": {"J": 42}, "M": {}}
+            self.node_positions = {"A": [412, 433], "B": [549, 278], "C": [786, 222], "D": [455, 96], "E": [291, 248],
+                                   "F": [73, 102], "G": [48, 488], "H": [112, 815], "I": [426, 678], "J": [657, 949],
+                                   "K": [756, 453], "L": [831, 723], "M": [956, 364]}
+
             self.selected_nodes = []
         self.gui_frame.update_avai_ids()
         self.gui_frame.operation_history = []
