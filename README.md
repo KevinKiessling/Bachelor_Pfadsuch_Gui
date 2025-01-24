@@ -11,12 +11,12 @@ Benötigte Pip Imports:
 - Keine
 
 
-Aktueller Stand 22.1:
-- Major rework step by step lazy dijkstra, Farbgebung und highlighting braucht aber noch arbeit und clean up von dem console spam
+Aktueller Stand 23.1:
+- Lazy Dijkstra visualisierung geändert / Dazugehörige Farben, Pseudocode Highlighting is noch nicht fertig
 - 
 - 
 
 
 Nächste Schritte:
-- Tutorial Fenster
-- List Dijkstra
+- Das gleiche für Liste/Normal Dijkstra
+- 

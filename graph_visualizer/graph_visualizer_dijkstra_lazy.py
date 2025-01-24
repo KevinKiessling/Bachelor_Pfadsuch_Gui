@@ -80,13 +80,15 @@ class Graph_Visualizer_Dijkstra_lazy:
                 #initial visit, orange for false
                 if step["step_type"] == "Initialize Visited":
                     color = "light grey"
-                    # Use .get() to check for the visited status, defaulting to False if not found
+
+
+                    # das If crashed niemals, da .get safe ist.
                     if visited.get(node) is None:
-                        color = "light grey"  # Unprocessed
+                        color = "light grey"
                     elif visited[node]:
-                        color = "#00ff40"  # Visited
+                        color = "#00ff40"
                     else:
-                        color = "orange"  # Not visited
+                        color = "orange"
 
                 # NEEDS WORK!! vergleiche Distanzen also alles bis auf Current node und aktueller nachbar gray, die beiden sind gelb
                 if step["step_type"] == "Compare Distance":
