@@ -120,6 +120,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                     color = "light grey"
                     if node == current_node:
                         color = "yellow"
+
                 # Update Distanzen von Nachbar, yellow für knoten der updated wird, rest grau
                 if step["step_type"] == "Update Distance":
                     color = "light grey"
@@ -131,7 +132,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                 if step["step_type"] == "Push to Heap":
                     color = "light grey"
                     if node in neighbor_list:
-                        color = "#57b3ea"
+                        color = "yellow"
 
                 # Überspringe besuchte Knoten
                 if step["step_type"] == "Skip Visited Node":
@@ -272,14 +273,14 @@ class Graph_Visualizer_Dijkstra_lazy:
                     elif step["step_type"] == "Highlight Edge":
                         edge_color = "light grey"
                         if node == current_node and neighbor == neighbor_list:
-                            edge_color = discovered_node_false_color
+                            edge_color = "#4ecdf8"
                     elif step["step_type"] == "Begin Inner Loop":
                         if (node, neighbor) in visited_edges and node == current_node:
                             #visited edges
                             #edge_color = "light green"
                             edge_color = "light grey"
                         elif node == current_node:
-                            edge_color = "black"
+                            edge_color = "#4ecdf8"
                         else:
                             edge_color = "light grey"
                     elif step["step_type"] == "Skip Visited Neighbor":
@@ -347,7 +348,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                 current_neighbor = step.get("neighbor")
 
                 if current_node and current_neighbor and node == current_node and neighbor == current_neighbor:
-                    weight_color = "orange"
+                    weight_color = "#4ecdf8"
 
             elif step["step_type"] == "Visit Node":
                 weight_color = "light grey"
@@ -386,7 +387,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                     #weight_color = "light green"
                     weight_color = "light grey"
                 elif node == current_node:
-                    weight_color = "Black"
+                    weight_color = "#4ecdf8"
                 else:
                     weight_color = "light grey"
 

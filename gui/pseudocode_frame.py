@@ -432,7 +432,7 @@ class Pseudocode_Frame(Frame):
         # Define colors for different step types
         colors = {
             "discovered": "#ffcc99",  # Light orange for discovered
-            "Heap": "#99ccff",  # Light blue for Heap
+            "Heap": "#d2cd6f",  # Light blue for Heap
             "d_value": "#ff9966",  # Light red for d values
             "u": "#ccffcc",  # Light green for 'u'
             "v": "#ffccff",  # Light pink for 'v'
@@ -469,7 +469,8 @@ class Pseudocode_Frame(Frame):
             self.highlight_specific_ranges([("7.8", "7.38")], colors.get("discovered_true"))
         elif step_type == "Begin Inner Loop":
             self.highlight_specific_ranges([("9.8", "9.14"),("9.26", "9.28")], colors.get("show_edge"))
-            self.highlight_specific_ranges([("9.15", "9.18")], colors.get("current_node"))
+            #self.highlight_specific_ranges([("9.15", "9.18")], colors.get("current_node"))
+            self.highlight_specific_ranges([("9.15", "9.26")], "#4ecdf8")
         elif step_type == "Highlight Edge":
             self.highlight_specific_ranges([("10.15", "10.32")], colors.get("discovered_false"))
             self.highlight_specific_ranges([("10.12", "10.14"),("10.33", "10.37")], colors.get("show_edge"))
