@@ -349,10 +349,10 @@ class Pseudocode_Frame(Frame):
                 self.set_step("Iteriere über alle ausgehenden Kanten")
             if step == "Update Distance":
                 self.highlight_step("Update Distance")
-                self.set_step("Update Distanzen und Pushe neue Distanz auf Heap")
+                self.set_step("Update Distanzen")
             if step == "Push to Heap":
                 self.highlight_step("Push to Heap")
-                self.set_step("Update Distanzen und Pushe neue Distanz auf Heap")
+                self.set_step("Pushe neue Distanz auf Heap")
             if step == "Skip Visited Node":
                 self.highlight_step("Skip Visited Node")
                 self.set_step("Überspringe bereits bearbeitete Knoten")
@@ -447,7 +447,8 @@ class Pseudocode_Frame(Frame):
 
         # Apply highlighting for the given step_type
         if step_type == "Pick Node":
-            self.highlight_specific_ranges([("3.5", "3.21")], colors.get("current_node"))
+            self.highlight_specific_ranges([("3.13", "3.18")], colors.get("current_node"))
+            self.highlight_specific_ranges([("3.5", "3.12"),("3.19", "3.21")], colors.get("show_edge"))
         elif step_type == "Initialize Visited":
             self.highlight_specific_ranges([("3.22", "3.43")], colors.get("discovered_false"))
         elif step_type == "Initialize Node Distance":
@@ -457,7 +458,8 @@ class Pseudocode_Frame(Frame):
         elif step_type == "Push Start Node to Priority Queue":
             self.highlight_specific_ranges([("4.15", "4.46")], colors.get("Heap"))
         elif step_type == "Begin Outer Loop":
-            self.highlight_specific_ranges([("5.5", "5.28")], colors.get("Heap"))
+            self.highlight_specific_ranges([("5.11", "5.25")], colors.get("Heap"))
+            self.highlight_specific_ranges([("5.5", "5.10"),("5.26", "5.28")], colors.get("show_edge"))
         elif step_type == "Heap Pop":
             self.highlight_specific_ranges([("6.8", "6.26")], colors.get("current_node"))
         elif step_type == "Visit Node":
@@ -466,12 +468,13 @@ class Pseudocode_Frame(Frame):
         elif step_type == "Skip Visited Node":
             self.highlight_specific_ranges([("7.8", "7.38")], colors.get("discovered_true"))
         elif step_type == "Begin Inner Loop":
-            self.highlight_specific_ranges([("9.8", "9.28")], colors.get("show_edge"))
+            self.highlight_specific_ranges([("9.8", "9.14"),("9.26", "9.28")], colors.get("show_edge"))
+            self.highlight_specific_ranges([("9.15", "9.18")], colors.get("current_node"))
         elif step_type == "Highlight Edge":
             self.highlight_specific_ranges([("10.15", "10.32")], colors.get("discovered_false"))
-            self.highlight_specific_ranges([("10.12", "10.15"),("10.32", "10.37")], colors.get("show_edge"))
+            self.highlight_specific_ranges([("10.12", "10.14"),("10.33", "10.37")], colors.get("show_edge"))
         elif step_type == "Compare Distance":
-            self.highlight_specific_ranges([("11.33", "11.40")], colors.get("show_edge"))
+            self.highlight_specific_ranges([("11.41", "11.45"),("11.16", "11.18")], colors.get("show_edge"))
 
         # Disable the Text widget to make it read-only
         self.pseudocode_display.config(state=DISABLED)

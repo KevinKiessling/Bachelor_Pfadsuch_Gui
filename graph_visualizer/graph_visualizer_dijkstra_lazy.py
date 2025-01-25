@@ -58,13 +58,13 @@ class Graph_Visualizer_Dijkstra_lazy:
                 # StartKnoten wird auf PQ pushed, also alles grau ausser startKnoten #57b3ea für hellblau
                 if step["step_type"] == "Push Start Node to Priority Queue":
                     color = "light grey"
-                    if node == current_node:
-                        color = "#57b3ea"
+                    #if node == current_node:
+                        #color = "#57b3ea"
                 # Knoten im Heap  sind blau, aus Heap entfernter Knoten ist gelb, rest grau
                 if step["step_type"] == "Heap Pop":
                     color = "light grey"
-                    if any(n == node for _, n in step["priority_queue"]):
-                        color = "#57b3ea"
+                    #if any(n == node for _, n in step["priority_queue"]):
+                       # color = "#57b3ea"
                     if node == current_node:
                         color = "yellow"
 
@@ -112,8 +112,8 @@ class Graph_Visualizer_Dijkstra_lazy:
                 #Färbe Knoten die in Queue sind #57b3ea, rest grau
                 if step["step_type"] == "Begin Outer Loop":
                     color = "light grey"
-                    if any(n == node for _, n in step["priority_queue"]):
-                        color = "#57b3ea"
+                   # if any(n == node for _, n in step["priority_queue"]):
+                        #color = "#57b3ea"
 
                 # Aktueller Knoten gelb, rest grau, hier werden nur alle Kanten highlighted
                 if step["step_type"] == "Begin Inner Loop":
