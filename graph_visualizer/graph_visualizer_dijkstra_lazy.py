@@ -59,7 +59,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                 if step["step_type"] == "Push Start Node to Priority Queue":
                     color = "light grey"
                     if node == current_node:
-                        color = "yellow"
+                        color = "#d2cd6f"
                 # Knoten im Heap  sind blau, aus Heap entfernter Knoten ist gelb, rest grau
                 if step["step_type"] == "Heap Pop":
                     color = "light grey"
@@ -70,13 +70,20 @@ class Graph_Visualizer_Dijkstra_lazy:
 
                 # NEEDS WORK!! Füge current node den Discoverten Nodes hinzu, visited nodes = grün, aktueller = #4bf569, rest grau
                 if step["step_type"] == "Visit Node":
-                    color = "light grey"
+                    '''color = "light grey"
                     if visited[node]:
                         color = discovered_node_true_color
                     if node == current_node:
                         color = discovered_node_true_color
                     if not visited[node]:
-                        color = discovered_node_false_color
+                        color = discovered_node_false_color'''
+                    color = "light grey"
+                    if node == current_node:
+                        if visited.get(current_node):
+                            print(visited.get(current_node))
+                            color = discovered_node_true_color
+                        elif not visited.get(current_node):
+                            color = discovered_node_false_color
 
                 #initial visit, orange for false
                 if step["step_type"] == "Initialize Visited":
@@ -139,13 +146,20 @@ class Graph_Visualizer_Dijkstra_lazy:
 
                 # Überspringe besuchte Knoten
                 if step["step_type"] == "Skip Visited Node":
-                    color = "light grey"
+                    '''color = "light grey"
                     if visited[node]:
                         color = discovered_node_true_color
                     if node == current_node:
                         color = discovered_node_true_color
                     if not visited[node]:
-                        color = discovered_node_false_color
+                        color = discovered_node_false_color'''
+                    color = "light grey"
+                    if node == current_node:
+                        if visited.get(current_node):
+                            print(visited.get(current_node))
+                            color = discovered_node_true_color
+                        elif not visited.get(current_node):
+                            color = discovered_node_false_color
 
                 # Überspringe besuchte Nachbarn
                 if step["step_type"] == "Skip Visited Neighbor":
@@ -162,6 +176,14 @@ class Graph_Visualizer_Dijkstra_lazy:
                 if step["step_type"] == "Priority Queue Empty":
                     color = "light grey"
 
+                if step["step_type"] == "Check if visited":
+                    color = "light grey"
+                    if node == current_node:
+                        if visited.get(current_node):
+                            print(visited.get(current_node))
+                            color = discovered_node_true_color
+                        elif not visited.get(current_node):
+                            color = discovered_node_false_color
 
             #Knoten werte
             distance_text = distances.get(node, 0)
@@ -233,6 +255,8 @@ class Graph_Visualizer_Dijkstra_lazy:
                     display_text = f"{node_text}"
                 if step["step_type"] == "Priority Queue Empty":
                     show_start = False
+                if step["step_type"] == "Check if visited":
+                    show_start = False
             if not step:
                 display_text = f"{node_text}"
 
@@ -266,7 +290,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                         "Pick Node", "Initialize Node Distance", "Initialize Visited",
                         "Set Start Node Distance", "Push Start Node to Priority Queue",
                         "Heap Pop", "Visit Node", "Begin Outer Loop",
-                        "Push to Heap", "Skip Visited Node", "Priority Queue Empty"
+                        "Push to Heap", "Skip Visited Node", "Priority Queue Empty", "Check if visited"
                     }:
                         edge_color = "light grey"
                     elif step["step_type"] == "Compare Distance":
@@ -324,7 +348,7 @@ class Graph_Visualizer_Dijkstra_lazy:
         if self.parent.current_step != -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
         weight_color = "black"  # Default weight color
-        weight_current_edge = "red"
+
 
         if step:
             if step["step_type"] == "Algorithm Finished":
@@ -346,6 +370,8 @@ class Graph_Visualizer_Dijkstra_lazy:
             elif step["step_type"] == "Skip Visited Node":
                 weight_color = "light grey"
             elif step["step_type"] == "Heap Pop":
+                weight_color = "light grey"
+            elif step["step_type"] == "Check if visited":
                 weight_color = "light grey"
             #only current edges should do that
 

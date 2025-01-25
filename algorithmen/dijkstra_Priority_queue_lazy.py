@@ -122,7 +122,19 @@ class Dijkstra_Priority_Queue_Lazy():
                 priority_queue=priority_queue,
                 selected_algorithm="Dijkstra_PQ_lazy"
             )
-
+            self.save_state(
+                step_type="Check if visited",
+                current_node=current_node,
+                current_distance=current_distance,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                priority_queue=priority_queue,
+                selected_algorithm="Dijkstra_PQ_lazy"
+            )
             if visited[current_node]:
                 self.save_state(
                     step_type="Skip Visited Node",

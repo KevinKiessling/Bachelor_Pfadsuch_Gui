@@ -330,6 +330,9 @@ class Pseudocode_Frame(Frame):
             if step == "Priority Queue Empty":
                 self.highlight_step("Priority Queue Empty")
                 self.set_step("Keine Elemente In Priority Queue übrig")
+            if step == "Check if visited":
+                self.highlight_step("Check if visited")
+                self.set_step("Prüfe ob Knoten bereits besucht wurde")
 
         if self.parent.selected_algorithm == "Dijkstra_PQ":
             if step == "Select Node":
@@ -434,7 +437,8 @@ class Pseudocode_Frame(Frame):
                 self.highlight_specific_ranges([("7.39", "7.43")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("8.12", "8.32")], colors.get("discovered_true"))
             elif step_type == "Skip Visited Node":
-                self.highlight_specific_ranges([("7.8", "7.38")], colors.get("discovered_true"))
+                self.highlight_specific_ranges([("7.30", "7.38")], colors.get("discovered_true"))
+                self.highlight_specific_ranges([("7.25", "7.29")], colors.get("show_edge"))
             elif step_type == "Begin Inner Loop":
                 self.highlight_specific_ranges([("9.8", "9.14"),("9.27", "9.29")], colors.get("show_edge"))
 
@@ -456,6 +460,10 @@ class Pseudocode_Frame(Frame):
             elif step_type == "Priority Queue Empty":
                 self.highlight_specific_ranges([("5.11", "5.25")], colors.get("Heap"))
                 self.highlight_specific_ranges([("5.5", "5.10"),("5.26", "5.28")], colors.get("show_edge"))
+            elif step_type == "Check if visited":
+                self.highlight_specific_ranges([("7.8", "7.10")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("7.11", "7.24")], colors.get("current_node"))
+
 
 
         # Disable the Text widget to make it read-only
