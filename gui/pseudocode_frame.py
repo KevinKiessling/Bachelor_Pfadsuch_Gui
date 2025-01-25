@@ -210,8 +210,8 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
         if algorithm == "Dijkstra_PQ_lazy":
             self.pcode = f"""1: DijkstraH({self.italicize('Gerichteter Graph G = (V, E),')}
     {self.italicize('Gewichtsfunktion ω : E → N, Startknoten s ∈ V')}):
-2:   {self.bold('foreach')} {self.italicize('v ∈ V')} {self.bold('do')} discovered[{self.italicize('v')}] ← false, {self.italicize('d[v]')} ← ∞) 
-3:   {self.italicize('d[s]')} ← 0, Heap {self.italicize('H')} ← 0, {self.italicize('H')}.insert({self.italicize('(s, d[s])')})) 
+2:   {self.bold('foreach')} {self.italicize('v ∈ V')} {self.bold('do')} discovered[{self.italicize('v')}] ← false, {self.italicize('d[v]')} ← ∞ 
+3:   {self.italicize('d[s]')} ← 0, Heap {self.italicize('H')} ← 0, {self.italicize('H')}.insert({self.italicize('(s, d[s])')}) 
 4:   {self.bold('while')} {self.italicize('H')}.length() > 0 {self.bold('do')} 
 5:      {self.italicize('u')} ← {self.italicize('H')}.extractMin() 
 6:      {self.bold('if')} discovered[{self.italicize('u')}] {self.bold('then')} {self.italicize('continue')} {self.bold('else')} 
