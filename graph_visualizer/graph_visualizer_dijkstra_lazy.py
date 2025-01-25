@@ -233,7 +233,7 @@ class Graph_Visualizer_Dijkstra_lazy:
 
             if node in self.selected_nodes:
                 self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
-                                                  fill="green")
+                                                  fill="light green")
                 self.gui_frame.canvas.create_text(x, y, text=display_text, fill="black", font=("Arial", font_size),
                                                   anchor="center")
                 if show_start and node == self.start_node:
