@@ -216,7 +216,7 @@ class Pseudocode_Frame(Frame):
             "else": "bold",
             "do": "bold",
             "forall": "bold",
-            "not": "bold"
+            " not ": "bold"
         }
         keywords_italic = {
             "gerichteter": "italic",
