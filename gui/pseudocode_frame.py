@@ -178,7 +178,7 @@ class Pseudocode_Frame(Frame):
 5:      u ← H.extractMin() 
 6:      if discovered[u] then continue else 
             discovered[u] ← true
-7:      forall (u, v) ∈ E do 
+7:      forall (u, v) ∈ E  do 
 8:          if not discovered[v] then 
 9:              if d[v] > d[u] + ω(u, v) then 
 10:                 d[v] ← d[u] + ω(u, v) 
@@ -265,38 +265,6 @@ class Pseudocode_Frame(Frame):
 
         self.pseudocode_display.config(state=DISABLED)
 
-
-        ''' Hardcoded Backup
-        self.pseudocode_display.config(state=NORMAL)
-
-        selected_algorithm = self.parent.selected_algorithm
-        if selected_algorithm == "Dijkstra_PQ_lazy":
-            bold_font = font.Font(family="Courier New", size=self.parent.font_size, weight="bold")
-
-            #styling the pseudocode with bold/
-            self.pseudocode_display.tag_add("bold", "3.5", "3.12") # foreach
-            self.pseudocode_display.tag_add("bold", "3.19", "3.21") # do
-
-            self.pseudocode_display.tag_add("bold", "5.5", "5.10") # while
-            self.pseudocode_display.tag_add("bold", "5.26", "5.28") # do
-
-            self.pseudocode_display.tag_add("bold", "7.8", "7.10") # if
-            self.pseudocode_display.tag_add("bold", "7.24", "7.29") # then
-            self.pseudocode_display.tag_add("bold", "7.39", "7.43")  #else
-
-            self.pseudocode_display.tag_add("bold", "9.8", "9.14")  # forall
-            self.pseudocode_display.tag_add("bold", "9.26", "9.28")  # do
-
-            self.pseudocode_display.tag_add("bold", "10.12", "10.18")  # if not
-            self.pseudocode_display.tag_add("bold", "10.33", "10.38")  # then
-
-            self.pseudocode_display.tag_add("bold", "11.16", "11.18")  #if
-            self.pseudocode_display.tag_add("bold", "11.41", "11.45") # then
-
-        self.pseudocode_display.tag_config("bold", font=bold_font)
-
-
-        self.pseudocode_display.config(state=DISABLED)'''
 
     def set_step(self, steptype, calculation=None):
         self.step_label.config(text=f"Aktueller Schritt: {steptype}")
@@ -424,58 +392,71 @@ class Pseudocode_Frame(Frame):
             self.distance_table.insert("", "end", values=(node, display_distance))
 
     def highlight_step(self, step_type):
-        # Temporarily enable the Text widget for styling
+
         self.pseudocode_display.config(state=NORMAL)
         for tag in self.highlighted_tags:
             self.pseudocode_display.tag_remove(tag, "1.0", "end")
-        self.highlighted_tags.clear()  # Clear the list after removal
-        # Define colors for different step types
+        self.highlighted_tags.clear()
+
         colors = {
-            "discovered": "#ffcc99",  # Light orange for discovered
-            "Heap": "#d2cd6f",  # Light blue for Heap
-            "d_value": "#ff9966",  # Light red for d values
-            "u": "#ccffcc",  # Light green for 'u'
-            "v": "#ffccff",  # Light pink for 'v'
-            "current_node": "yellow", # aktueller knoten
+            "discovered": "#ffcc99",
+            "Heap": "#d2cd6f",
+            "d_value": "#ff9966",
+            "u": "#ccffcc",
+            "v": "#ffccff",
+            "current_node": "yellow",
             "discovered_false": "orange",
             "discovered_true": "#00ff40",
             "show_edge": "light grey"
         }
 
-        # Get the color for the given step_type
-        highlight_color = colors.get(step_type, "yellow")  # Default to white if not found
 
-        # Apply highlighting for the given step_type
-        if step_type == "Pick Node":
-            self.highlight_specific_ranges([("3.13", "3.18")], colors.get("current_node"))
-            self.highlight_specific_ranges([("3.5", "3.12"),("3.19", "3.21")], colors.get("show_edge"))
-        elif step_type == "Initialize Visited":
-            self.highlight_specific_ranges([("3.22", "3.43")], colors.get("discovered_false"))
-        elif step_type == "Initialize Node Distance":
-            self.highlight_specific_ranges([("3.45", "3.53")], colors.get("current_node"))
-        elif step_type == "Set Start Node Distance":
-            self.highlight_specific_ranges([("4.5", "4.13")], colors.get("current_node"))
-        elif step_type == "Push Start Node to Priority Queue":
-            self.highlight_specific_ranges([("4.15", "4.46")], colors.get("Heap"))
-        elif step_type == "Begin Outer Loop":
-            self.highlight_specific_ranges([("5.11", "5.25")], colors.get("Heap"))
-            self.highlight_specific_ranges([("5.5", "5.10"),("5.26", "5.28")], colors.get("show_edge"))
-        elif step_type == "Heap Pop":
-            self.highlight_specific_ranges([("6.8", "6.26")], colors.get("current_node"))
-        elif step_type == "Visit Node":
-            self.highlight_specific_ranges([("7.39", "7.43")], colors.get("show_edge"))
-            self.highlight_specific_ranges([("8.12", "8.32")], colors.get("discovered_true"))
-        elif step_type == "Skip Visited Node":
-            self.highlight_specific_ranges([("7.8", "7.38")], colors.get("discovered_true"))
-        elif step_type == "Begin Inner Loop":
-            self.highlight_specific_ranges([("9.8", "9.14"),("9.26", "9.28")], colors.get("show_edge"))
-            #self.highlight_specific_ranges([("9.15", "9.18")], colors.get("current_node"))
-            self.highlight_specific_ranges([("9.15", "9.26")], "#4ecdf8")
-        elif step_type == "Highlight Edge":
-            self.highlight_specific_ranges([("10.15", "10.32")], colors.get("discovered_false"))
-            self.highlight_specific_ranges([("10.12", "10.14"),("10.33", "10.37")], colors.get("show_edge"))
-        elif step_type == "Compare Distance":
-            self.highlight_specific_ranges([("11.41", "11.45"),("11.16", "11.18")], colors.get("show_edge"))
+        highlight_color = colors.get(step_type, "yellow")
+
+        if self.parent.selected_algorithm == "Dijkstra_PQ_lazy":
+            if step_type == "Pick Node":
+                self.highlight_specific_ranges([("3.13", "3.18")], colors.get("current_node"))
+                self.highlight_specific_ranges([("3.5", "3.12"),("3.19", "3.21")], colors.get("show_edge"))
+            elif step_type == "Initialize Visited":
+                self.highlight_specific_ranges([("3.22", "3.43")], colors.get("discovered_false"))
+            elif step_type == "Initialize Node Distance":
+                self.highlight_specific_ranges([("3.45", "3.53")], colors.get("current_node"))
+            elif step_type == "Set Start Node Distance":
+                self.highlight_specific_ranges([("4.5", "4.13")], colors.get("current_node"))
+            elif step_type == "Push Start Node to Priority Queue":
+                self.highlight_specific_ranges([("4.15", "4.46")], colors.get("Heap"))
+            elif step_type == "Begin Outer Loop":
+                self.highlight_specific_ranges([("5.11", "5.25")], colors.get("Heap"))
+                self.highlight_specific_ranges([("5.5", "5.10"),("5.26", "5.28")], colors.get("show_edge"))
+            elif step_type == "Heap Pop":
+                self.highlight_specific_ranges([("6.8", "6.26")], colors.get("current_node"))
+            elif step_type == "Visit Node":
+                self.highlight_specific_ranges([("7.39", "7.43")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("8.12", "8.32")], colors.get("discovered_true"))
+            elif step_type == "Skip Visited Node":
+                self.highlight_specific_ranges([("7.8", "7.38")], colors.get("discovered_true"))
+            elif step_type == "Begin Inner Loop":
+                self.highlight_specific_ranges([("9.8", "9.14"),("9.27", "9.29")], colors.get("show_edge"))
+
+                self.highlight_specific_ranges([("9.15", "9.26")], "#4ecdf8")
+            elif step_type == "Highlight Edge":
+                self.highlight_specific_ranges([("10.15", "10.32")], colors.get("discovered_false"))
+                self.highlight_specific_ranges([("10.12", "10.14"),("10.33", "10.37")], colors.get("show_edge"))
+            elif step_type == "Compare Distance":
+                self.highlight_specific_ranges([("11.41", "11.45"),("11.16", "11.18")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("11.33", "11.40")], "#4ecdf8") # Kante bleibt so
+                self.highlight_specific_ranges([("11.26", "11.30")], "#4ecdf8") # d[u]
+                self.highlight_specific_ranges([("11.19", "11.23")], "#4ecdf8") # d[v]
+            elif step_type == "Update Distance":
+                self.highlight_specific_ranges([("12.34", "12.41")], "#4ecdf8") # Kante bleibt so
+                self.highlight_specific_ranges([("12.27", "12.31")], "#4ecdf8") # d[u]
+                self.highlight_specific_ranges([("12.20", "12.24")], "#4ecdf8") # d[v]
+            elif step_type == "Push to Heap":
+                self.highlight_specific_ranges([("13.20", "13.39")], colors.get("Heap"))
+            elif step_type == "Priority Queue Empty":
+                self.highlight_specific_ranges([("5.11", "5.25")], colors.get("Heap"))
+                self.highlight_specific_ranges([("5.5", "5.10"),("5.26", "5.28")], colors.get("show_edge"))
+
 
         # Disable the Text widget to make it read-only
         self.pseudocode_display.config(state=DISABLED)

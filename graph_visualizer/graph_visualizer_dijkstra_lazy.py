@@ -269,7 +269,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                     elif step["step_type"] == "Compare Distance":
                         edge_color = "light grey"
                         if node == current_node and neighbor == neighbor_list:
-                            edge_color = "light green"
+                            edge_color = "#4ecdf8"
                     elif step["step_type"] == "Highlight Edge":
                         edge_color = "light grey"
                         if node == current_node and neighbor == neighbor_list:
@@ -360,7 +360,7 @@ class Graph_Visualizer_Dijkstra_lazy:
 
                 if current_node and current_neighbor:
                     if node == current_node and neighbor == current_neighbor:
-                        weight_color = "black"
+                        weight_color = "#4ecdf8"
                     else:
                         weight_color = "light grey"
 
