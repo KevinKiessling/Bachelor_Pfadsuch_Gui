@@ -80,7 +80,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                     color = "light grey"
                     if node == current_node:
                         if visited.get(current_node):
-                            print(visited.get(current_node))
+                            #print(visited.get(current_node))
                             color = discovered_node_true_color
                         elif not visited.get(current_node):
                             color = discovered_node_false_color
@@ -164,13 +164,14 @@ class Graph_Visualizer_Dijkstra_lazy:
                 # Überspringe besuchte Nachbarn
                 if step["step_type"] == "Skip Visited Neighbor":
                     color = "light grey"
-
-                    if visited.get(node) is None:
-                        color = "light grey"
-                    elif visited[node]:
+                    # if visited[node]:
+                    # color = discovered_node_true_color
+                    if node == current_node:
+                        color = "yellow"
+                    # if not visited[node]:
+                    # color = discovered_node_false_color
+                    if node in neighbor_list:
                         color = discovered_node_true_color
-                    else:
-                        color = discovered_node_false_color
 
                 #Priority Queue is leer, alles gray
                 if step["step_type"] == "Priority Queue Empty":
@@ -250,6 +251,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                     show_start = False
                 if step["step_type"] == "Skip Visited Node":
                     show_start = False
+                    display_text = f"{node_text}"
                 if step["step_type"] == "Skip Visited Neighbor":
                     show_start = False
                     display_text = f"{node_text}"
@@ -257,6 +259,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                     show_start = False
                 if step["step_type"] == "Check if visited":
                     show_start = False
+                    display_text = f"{node_text}"
             if not step:
                 display_text = f"{node_text}"
 
@@ -317,7 +320,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                     elif step["step_type"] == "Skip Visited Neighbor":
                         edge_color = "light grey"
                         if node == current_node and neighbor == neighbor_list:
-                            edge_color = "light green"
+                            edge_color = "#4ecdf8"
 
                 if neighbor in self.node_positions:
                     x1, y1 = self.node_positions[node]
@@ -413,6 +416,17 @@ class Graph_Visualizer_Dijkstra_lazy:
 
             # alles gewichte -> grau, ausser ausgehender vom aktuellen Knoten. -> besucht grün, offen rot
             elif step["step_type"] == "Begin Inner Loop":
+                current_node = step.get("current_node")
+                visited_nb = step.get("visited_edges")
+                if (node, neighbor) in visited_nb and node == current_node:
+                    #visited edges
+                    #weight_color = "light green"
+                    weight_color = "light grey"
+                elif node == current_node:
+                    weight_color = "#4ecdf8"
+                else:
+                    weight_color = "light grey"
+            elif step["step_type"] == "Skip Visited Neighbor":
                 current_node = step.get("current_node")
                 visited_nb = step.get("visited_edges")
                 if (node, neighbor) in visited_nb and node == current_node:

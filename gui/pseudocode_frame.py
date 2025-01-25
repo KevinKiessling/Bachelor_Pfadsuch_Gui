@@ -444,7 +444,7 @@ class Pseudocode_Frame(Frame):
 
                 self.highlight_specific_ranges([("9.15", "9.26")], "#4ecdf8")
             elif step_type == "Highlight Edge":
-                self.highlight_specific_ranges([("10.15", "10.32")], colors.get("discovered_false"))
+                self.highlight_specific_ranges([("10.15", "10.32")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("10.12", "10.14"),("10.33", "10.37")], colors.get("show_edge"))
             elif step_type == "Compare Distance":
                 self.highlight_specific_ranges([("11.41", "11.45"),("11.16", "11.18")], colors.get("show_edge"))
@@ -462,7 +462,10 @@ class Pseudocode_Frame(Frame):
                 self.highlight_specific_ranges([("5.5", "5.10"),("5.26", "5.28")], colors.get("show_edge"))
             elif step_type == "Check if visited":
                 self.highlight_specific_ranges([("7.8", "7.10")], colors.get("show_edge"))
-                self.highlight_specific_ranges([("7.11", "7.24")], colors.get("current_node"))
+                self.highlight_specific_ranges([("7.11", "7.24")], colors.get("show_edge"))
+            elif step_type == "Skip Visited Neighbor":
+                self.highlight_specific_ranges([("10.15", "10.32")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("10.12", "10.14"), ("10.33", "10.37")], colors.get("show_edge"))
 
 
 
