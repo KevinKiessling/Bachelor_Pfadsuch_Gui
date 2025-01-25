@@ -445,12 +445,12 @@ class Pseudocode_Frame(Frame):
             elif step_type == "Compare Distance":
                 self.highlight_specific_ranges([("11.41", "11.45"),("11.16", "11.18")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("11.33", "11.40")], "#4ecdf8") # Kante bleibt so
-                self.highlight_specific_ranges([("11.26", "11.30")], "#4ecdf8") # d[u]
-                self.highlight_specific_ranges([("11.19", "11.23")], "#4ecdf8") # d[v]
+                self.highlight_specific_ranges([("11.26", "11.30")], "pink") # d[u]
+                self.highlight_specific_ranges([("11.19", "11.23")], "violet") # d[v]
             elif step_type == "Update Distance":
                 self.highlight_specific_ranges([("12.34", "12.41")], "#4ecdf8") # Kante bleibt so
-                self.highlight_specific_ranges([("12.27", "12.31")], "#4ecdf8") # d[u]
-                self.highlight_specific_ranges([("12.20", "12.24")], "#4ecdf8") # d[v]
+                self.highlight_specific_ranges([("12.27", "12.31")], "pink") # d[u]
+                self.highlight_specific_ranges([("12.20", "12.24")], "violet") # d[v]
             elif step_type == "Push to Heap":
                 self.highlight_specific_ranges([("13.20", "13.39")], colors.get("Heap"))
             elif step_type == "Priority Queue Empty":

@@ -55,11 +55,11 @@ class Graph_Visualizer_Dijkstra_lazy:
                     color = "light grey"
                     if node == current_node:
                         color = "yellow"
-                # StartKnoten wird auf PQ pushed, also alles grau ausser startKnoten #57b3ea für hellblau
+                # StartKnoten wird auf PQ pushed, also alles grau ausser startKnoten
                 if step["step_type"] == "Push Start Node to Priority Queue":
                     color = "light grey"
-                    #if node == current_node:
-                        #color = "#57b3ea"
+                    if node == current_node:
+                        color = "yellow"
                 # Knoten im Heap  sind blau, aus Heap entfernter Knoten ist gelb, rest grau
                 if step["step_type"] == "Heap Pop":
                     color = "light grey"
@@ -94,8 +94,10 @@ class Graph_Visualizer_Dijkstra_lazy:
                 # NEEDS WORK!! vergleiche Distanzen also alles bis auf Current node und aktueller nachbar gray, die beiden sind gelb
                 if step["step_type"] == "Compare Distance":
                     color = "light grey"
-                    if node == current_node or node in neighbor_list:
-                        color = "yellow"
+                    if node == current_node:
+                        color = "pink"  #  d[u]
+                    if node in neighbor_list:
+                        color = "violet"  #  d[v]
 
                 # Aktueller Knoten gelb, rest grau.
                 if step["step_type"] == "Highlight Edge":
@@ -124,15 +126,16 @@ class Graph_Visualizer_Dijkstra_lazy:
                 # Update Distanzen von Nachbar, yellow für knoten der updated wird, rest grau
                 if step["step_type"] == "Update Distance":
                     color = "light grey"
-                   # if node == current_node:
-                      #  color = "yellow"
+
+                    if node == current_node:
+                        color = "pink"  #  d[u]
                     if node in neighbor_list:
-                        color = "yellow"
+                        color = "violet"  #  d[v]
                 # push updated knoten to Heap, -> blau, rest grau
                 if step["step_type"] == "Push to Heap":
                     color = "light grey"
                     if node in neighbor_list:
-                        color = "yellow"
+                        color = "violet"
 
                 # Überspringe besuchte Knoten
                 if step["step_type"] == "Skip Visited Node":
@@ -262,11 +265,15 @@ class Graph_Visualizer_Dijkstra_lazy:
                     elif step["step_type"] in {
                         "Pick Node", "Initialize Node Distance", "Initialize Visited",
                         "Set Start Node Distance", "Push Start Node to Priority Queue",
-                        "Heap Pop", "Visit Node", "Begin Outer Loop", "Update Distance",
+                        "Heap Pop", "Visit Node", "Begin Outer Loop",
                         "Push to Heap", "Skip Visited Node", "Priority Queue Empty"
                     }:
                         edge_color = "light grey"
                     elif step["step_type"] == "Compare Distance":
+                        edge_color = "light grey"
+                        if node == current_node and neighbor == neighbor_list:
+                            edge_color = "#4ecdf8"
+                    elif step["step_type"] == "Update Distance":
                         edge_color = "light grey"
                         if node == current_node and neighbor == neighbor_list:
                             edge_color = "#4ecdf8"
@@ -374,7 +381,7 @@ class Graph_Visualizer_Dijkstra_lazy:
 
                 if current_node and current_neighbor:
                     if node == current_node and neighbor == current_neighbor:
-                        weight_color = "black"
+                        weight_color = "#4ecdf8"
                     else:
                         weight_color = "light grey"
 
