@@ -5,7 +5,14 @@ class Pseudocode_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-
+        self.italic_map = str.maketrans(
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+            "𝐴𝐵𝐶𝐷𝐸𝐹𝐺𝐻𝐼𝐽𝐾𝐿𝑀𝑁𝑂𝑃𝑄𝑅𝑆𝑇𝑈𝑉𝑊𝑋𝑌𝑍𝑎𝑏𝑐𝑑𝑒𝑓𝑔ℎ𝑖𝑗𝑘𝑙𝑚𝑛𝑜𝑝𝑞𝑟𝑠𝑡𝑢𝑣𝑤𝑥𝑦𝑧"
+        )
+        self.bold_map = str.maketrans(
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+            "𝗔𝗕𝗖𝗗𝗘𝗙𝗚𝗛𝗜𝗝𝗞𝗟𝗠𝗡𝗢𝗣𝗤𝗥𝗦𝗧𝗨𝗩𝗪𝗫𝗬𝗭𝗮𝗯𝗰𝗱𝗲𝗳𝗴𝗵𝗶𝗷𝗸𝗹𝗺𝗻𝗼𝗽𝗾𝗿𝘀𝘁𝘂𝘃𝘄𝘅𝘆𝘇"
+        )
         self.grid(row=0, column=1, sticky="nsew")
 
 
@@ -17,7 +24,7 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display_frame.grid(row=1, column=0, pady=5, sticky="nsew", padx=10)
 
 
-        self.pseudocode_display = Text(self.pseudocode_display_frame, wrap=WORD, height=28, width=60, takefocus=0)
+        self.pseudocode_display = Text(self.pseudocode_display_frame, wrap=WORD, height=10, width=60, takefocus=0)
         self.pseudocode_display.grid(row=0, column=0, sticky="nsew")
         self.pseudocode_display.config(state=DISABLED)
         self.pseudocode_display.config(
@@ -201,32 +208,22 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
 
 
         if algorithm == "Dijkstra_PQ_lazy":
-            self.pcode = """ Pseudocode: Dijkstra mit Priority Queue(mit Lazy Deletion)
-1: Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten s ∈ V
-2: for each v ∈ V do
-3:      discovered[v] ← false 
-4:      d[v] ← ∞ 
-5: end for
-6: d[s] ← 0
-7: Erstelle einen leeren Heap H 
-8: H.insert((s, d[s])) 
-9: while H.length() > 0 do 
-10:     u ← H.extractMin() 
-11:     if discovered[u] then 
-12:         continue
-13:     else
-14:         discovered[u] ← true 
-15:     end if
-16:     for each (u, v) ∈ E do 
-17:         if not discovered[v] then 
-18:             if d[v] > d[u] + ω(u, v) then 
-19:                 d[v] ← d[u] + ω(u, v) 
-20:                 H.insert((v, d[v])) 
-21:             end if
-22:         end if
-23:     end for
-24: end while
+            self.pcode = f"""1: DijkstraH({self.italicize('Gerichteter Graph G = (V, E),')}
+    {self.italicize('Gewichtsfunktion ω : E → N, Startknoten s ∈ V')}):
+2:   {self.bold('foreach')} {self.italicize('v ∈ V')} {self.bold('do')} discovered[{self.italicize('v')}] ← false, {self.italicize('d[v]')} ← ∞) 
+3:   {self.italicize('d[s]')} ← 0, Heap {self.italicize('H')} ← 0, {self.italicize('H')}.insert({self.italicize('(s, d[s])')})) 
+4:   {self.bold('while')} {self.italicize('H')}.length() > 0 {self.bold('do')} 
+5:      {self.italicize('u')} ← {self.italicize('H')}.extractMin() 
+6:      {self.bold('if')} discovered[{self.italicize('u')}] {self.bold('then')} {self.italicize('continue')} {self.bold('else')} 
+            {self.italicize('discovered[u] ← true')}
+7:      {self.bold('forall')} {self.italicize('(u, v) ∈ E')} {self.bold('do')} 
+8:          {self.bold('if not')} discovered[{self.italicize('v')}] {self.bold('then')} 
+9:              {self.bold('if')} {self.italicize('d[v] > d[u] + ω(u, v)')} {self.bold('then')} 
+10:                 {self.italicize('d[v] ← d[u] + ω(u, v)')} 
+11:                 {self.italicize('H')}.insert(({self.italicize('v, d[v]')}))
 """
+
+
         if algorithm == "Dijkstra_PQ":
             self.pcode = """ Pseudocode: Dijkstra mit Priority Queue
 1: Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten s ∈ V
@@ -257,7 +254,45 @@ Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten 
 26: end while
 """
 
+            '''
+            BACKUP
+            if algorithm == "Dijkstra_PQ_lazy":
+            self.pcode = """ Pseudocode: Dijkstra mit Priority Queue(mit Lazy Deletion)
+1: Input: Gerichteter Graph G = (V, E), Gewichtsfunktion ω : E → N, Startknoten s ∈ V
+2: for each v ∈ V do
+3:      discovered[v] ← false 
+4:      d[v] ← ∞ 
+5: end for
+6: d[s] ← 0
+7: Erstelle einen leeren Heap H 
+8: H.insert((s, d[s])) 
+9: while H.length() > 0 do 
+10:     u ← H.extractMin() 
+11:     if discovered[u] then 
+12:         continue
+13:     else
+14:         discovered[u] ← true 
+15:     end if
+16:     for each (u, v) ∈ E do 
+17:         if not discovered[v] then 
+18:             if d[v] > d[u] + ω(u, v) then 
+19:                 d[v] ← d[u] + ω(u, v) 
+20:                 H.insert((v, d[v])) 
+21:             end if
+22:         end if
+23:     end for
+24: end while
+"""
+            '''
+
         self.set_code_field(self.pcode)
+
+    def bold(self, text):
+        return text.translate(self.bold_map)
+    def italicize(self,text):
+        italicized_text = text.translate(self.italic_map)
+        # Replace ℎ with a consistent substitute
+        return italicized_text.replace("ℎ", "𝘩")
     def set_step(self, steptype, calculation=None):
         self.step_label.config(text=f"Aktueller Schritt: {steptype}")
         #if calculation:
