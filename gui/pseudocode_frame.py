@@ -6,14 +6,7 @@ class Pseudocode_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
-        self.italic_map = str.maketrans(
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-            "𝘈𝘉𝘊𝘋𝘌𝘍𝘎𝘏𝘐𝘑𝘒𝘓𝘔𝘕𝘖𝘗𝘘𝘙𝘚𝘛𝘜𝘝𝘞𝘟𝘠𝘡𝘢𝘣𝘤𝘥𝘦𝘧𝘨𝘩𝘪𝘫𝘬𝘭𝘮𝘯𝘰𝘱𝘲𝘳𝘴𝘵𝘶𝘷𝘸𝘹𝘺𝘻"
-        )
-        self.bold_map = str.maketrans(
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-            "𝗔𝗕𝗖𝗗𝗘𝗙𝗚𝗛𝗜𝗝𝗞𝗟𝗠𝗡𝗢𝗣𝗤𝗥𝗦𝗧𝗨𝗩𝗪𝗫𝗬𝗭𝗮𝗯𝗰𝗱𝗲𝗳𝗴𝗵𝗶𝗷𝗸𝗹𝗺𝗻𝗼𝗽𝗾𝗿𝘀𝘁𝘂𝘃𝘄𝘅𝘆𝘇"
-        )
+        self.highlighted_tags = []
         self.grid(row=0, column=1, sticky="nsew")
 
 
@@ -317,58 +310,57 @@ class Pseudocode_Frame(Frame):
         #self.pseudocode_display.see(f"{x}.0") for putting x on view
         if self.parent.selected_algorithm == "Dijkstra_PQ_lazy":
             if step == "Initialize Node Distance":
-                self.highlight_lines_with_dimming([5])
+                self.highlight_step("Initialize Node Distance")
                 self.set_step("Initialisiere Knoten Distanzen")
                 self.pseudocode_display.see(f"{3}.0")
             if step == "Initialize Visited":
-                self.highlight_lines_with_dimming([4])
+                self.highlight_step("Initialize Visited")
                 self.set_step("Initialisiere besuchte Knoten")
                 self.pseudocode_display.see(f"{3}.0")
             if step == "Pick Node":
-                self.highlight_lines_with_dimming([3, 6])
-                #self.test_highlight_characters_with_dimming(highlight_ranges)
+                self.highlight_step("Pick Node")
                 self.set_step("Wähle Knoten")
             if step == "Set Start Node Distance":
-                self.highlight_lines_with_dimming([7])
+                self.highlight_step("Set Start Node Distance")
                 self.set_step("Setze Distanz von Startknoten")
             if step == "Push Start Node to Priority Queue":
-                self.highlight_lines_with_dimming([8, 9])
+                self.highlight_step("Push Start Node to Priority Queue")
                 self.set_step("Füge Startknoten dem Heap hinzu")
             if step == "Heap Pop":
-                self.highlight_lines_with_dimming([11])
+                self.highlight_step("Heap Pop")
                 self.set_step("Entferne das oberste Heap Element")
             if step == "Algorithm Finished":
-                self.clear_hightlight()
+                self.highlight_step("Algorithm Finished")
                 self.set_step("Algorithmus abgeschlossen")
             if step == "Visit Node":
-                self.highlight_lines_with_dimming([14, 15, 16])
+                self.highlight_step("Visit Node")
                 self.set_step("Setzte Knoten als Besucht")
             if step == "Compare Distance":
-                self.highlight_lines_with_dimming([19, 22])
+                self.highlight_step("Compare Distance")
                 self.set_step("Vergleiche Distanz")
             if step == "Highlight Edge":
-                self.highlight_lines_with_dimming([18, 23])
+                self.highlight_step("Highlight Edge")
                 self.set_step("Wähle Kante wobei Zielknoten nicht vorher besucht")
             if step == "Begin Outer Loop":
-                self.highlight_lines_with_dimming([10, 25])
+                self.highlight_step("Begin Outer Loop")
                 self.set_step("Solange der Heap nicht leer is")
             if step == "Begin Inner Loop":
-                self.highlight_lines_with_dimming([17, 24])
+                self.highlight_step("Begin Inner Loop")
                 self.set_step("Iteriere über alle ausgehenden Kanten")
             if step == "Update Distance":
-                self.highlight_lines_with_dimming([20])
+                self.highlight_step("Update Distance")
                 self.set_step("Update Distanzen und Pushe neue Distanz auf Heap")
             if step == "Push to Heap":
-                self.highlight_lines_with_dimming([21])
+                self.highlight_step("Push to Heap")
                 self.set_step("Update Distanzen und Pushe neue Distanz auf Heap")
             if step == "Skip Visited Node":
-                self.highlight_lines_with_dimming([12, 13])
+                self.highlight_step("Skip Visited Node")
                 self.set_step("Überspringe bereits bearbeitete Knoten")
             if step == "Skip Visited Neighbor":
-                self.highlight_lines_with_dimming([18, 23])
+                self.highlight_step("Skip Visited Neighbor")
                 self.set_step("Überspringe Kante zu bereits besuchten Knoten")
             if step == "Priority Queue Empty":
-                self.highlight_lines_with_dimming([10, 25])
+                self.highlight_step("Priority Queue Empty")
                 self.set_step("Keine Elemente In Priority Queue übrig")
 
         if self.parent.selected_algorithm == "Dijkstra_PQ":
@@ -431,4 +423,64 @@ class Pseudocode_Frame(Frame):
             display_distance = "∞" if distance == float("inf") else distance
             self.distance_table.insert("", "end", values=(node, display_distance))
 
-    # Highlighte bestimmte characters in display.
+    def highlight_step(self, step_type):
+        # Temporarily enable the Text widget for styling
+        self.pseudocode_display.config(state=NORMAL)
+        for tag in self.highlighted_tags:
+            self.pseudocode_display.tag_remove(tag, "1.0", "end")
+        self.highlighted_tags.clear()  # Clear the list after removal
+        # Define colors for different step types
+        colors = {
+            "discovered": "#ffcc99",  # Light orange for discovered
+            "Heap": "#99ccff",  # Light blue for Heap
+            "d_value": "#ff9966",  # Light red for d values
+            "u": "#ccffcc",  # Light green for 'u'
+            "v": "#ffccff",  # Light pink for 'v'
+            "current_node": "yellow", # aktueller knoten
+            "discovered_false": "orange",
+            "discovered_true": "#00ff40",
+            "show_edge": "light grey"
+        }
+
+        # Get the color for the given step_type
+        highlight_color = colors.get(step_type, "yellow")  # Default to white if not found
+
+        # Apply highlighting for the given step_type
+        if step_type == "Pick Node":
+            self.highlight_specific_ranges([("3.5", "3.21")], colors.get("current_node"))
+        elif step_type == "Initialize Visited":
+            self.highlight_specific_ranges([("3.22", "3.43")], colors.get("discovered_false"))
+        elif step_type == "Initialize Node Distance":
+            self.highlight_specific_ranges([("3.45", "3.53")], colors.get("current_node"))
+        elif step_type == "Set Start Node Distance":
+            self.highlight_specific_ranges([("4.5", "4.13")], colors.get("current_node"))
+        elif step_type == "Push Start Node to Priority Queue":
+            self.highlight_specific_ranges([("4.15", "4.46")], colors.get("Heap"))
+        elif step_type == "Begin Outer Loop":
+            self.highlight_specific_ranges([("5.5", "5.28")], colors.get("Heap"))
+        elif step_type == "Heap Pop":
+            self.highlight_specific_ranges([("6.8", "6.26")], colors.get("current_node"))
+        elif step_type == "Visit Node":
+            self.highlight_specific_ranges([("7.39", "7.43")], colors.get("show_edge"))
+            self.highlight_specific_ranges([("8.12", "8.32")], colors.get("discovered_true"))
+        elif step_type == "Skip Visited Node":
+            self.highlight_specific_ranges([("7.8", "7.38")], colors.get("discovered_true"))
+        elif step_type == "Begin Inner Loop":
+            self.highlight_specific_ranges([("9.8", "9.28")], colors.get("show_edge"))
+        elif step_type == "Highlight Edge":
+            self.highlight_specific_ranges([("10.15", "10.32")], colors.get("discovered_false"))
+            self.highlight_specific_ranges([("10.12", "10.15"),("10.32", "10.37")], colors.get("show_edge"))
+        elif step_type == "Compare Distance":
+            self.highlight_specific_ranges([("11.33", "11.40")], colors.get("show_edge"))
+
+        # Disable the Text widget to make it read-only
+        self.pseudocode_display.config(state=DISABLED)
+
+    def highlight_specific_ranges(self, ranges, color):
+        # Highlight each specified range with the given color
+        for start, end in ranges:
+            tag_name = f"highlight_{start}-{end}"
+            self.pseudocode_display.tag_add(f"highlight_{start}-{end}", start, end)
+            self.pseudocode_display.tag_config(f"highlight_{start}-{end}", background=color)
+            self.highlighted_tags.append(tag_name)  # Track the tag for later removal
+

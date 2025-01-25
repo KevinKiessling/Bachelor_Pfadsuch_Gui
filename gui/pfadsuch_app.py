@@ -162,20 +162,20 @@ class PfadsuchApp(Tk):
             self.dijkstra_pq_lazy = Dijkstra_Priority_Queue_Lazy()
             self.update_gui()
             self.steps_finished_algorithm, self.shortest_paths = self.dijkstra_pq_lazy.run_dijkstra_priority_queue_lazy(self.graph, self.start_node)
-            self.code_frame.highlight_lines_with_dimming([2])
+            self.code_frame.highlight_step("Starting Algorithm")
             self.code_frame.set_step(f"Starte Dijkstra mit Priority Queue(mit Lazy Deletion)")
         if self.selected_algorithm == "Dijkstra_PQ":
             self.dijkstra_pq = Dijkstra_Priority_Queue()
             self.update_gui()
             self.steps_finished_algorithm, self.shortest_paths = self.dijkstra_pq.run_dijkstra_priority_queue(self.graph, self.start_node)
-            self.code_frame.highlight_lines_with_dimming([2])
+            self.code_frame.highlight_step("Starting Algorithm")
             self.code_frame.set_step(f"Starte Dijkstra mit Priority Queue(ohne Lazy Deletion)")
         if self.selected_algorithm == "Dijkstra_List":
             self.dijkstra_list = Dijkstra_List()
             self.update_gui()
             self.steps_finished_algorithm, self.shortest_paths = self.dijkstra_list.run_dijkstra_list(
                 self.graph, self.start_node)
-            self.code_frame.highlight_lines_with_dimming([2])
+            self.code_frame.highlight_step("Starting Algorithm")
             self.code_frame.set_step(f"Starte Dijkstra mit Liste")
         #if self.shortest_paths:
          #   self.gui_frame.shortest_paths_button.config(state=NORMAL)
@@ -318,7 +318,8 @@ class PfadsuchApp(Tk):
             if self.selected_algorithm == "Dijkstra_List":
                 self.draw_graph_dijkstra_list(None, None, {node: 0 for node in self.graph}, set(), set())
             if self.steps_finished_algorithm:
-                self.code_frame.highlight_lines_with_dimming([2])
+                self.code_frame.highlight_step("Starting Algorithm")
+                #self.code_frame.highlight_lines_with_dimming([2])
                 if self.selected_algorithm == "Dijkstra_PQ_lazy":
                     self.code_frame.set_step("Starte Dijkstra mit Priority Queue (mit Lazy Deletion)")
                 if self.selected_algorithm == "Dijkstra_PQ":
