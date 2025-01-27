@@ -2,7 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+# Ignore files in the save_files directory
+save_files/Exported_Graph.json
+save_files/config.json
+save_files/test.py
 # C extensions
 *.so
 
