@@ -309,6 +309,7 @@ class Pseudocode_Frame(Frame):
                 self.set_step("Setzte Knoten als Besucht")
             if step == "Compare Distance":
                 self.highlight_step("Compare Distance")
+                self.highlight_row(step_for_highlighting_table["neighbor"])
                 self.set_step("Vergleiche Distanz")
             if step == "Highlight Edge":
                 self.highlight_step("Highlight Edge")
@@ -345,7 +346,15 @@ class Pseudocode_Frame(Frame):
 
         #if self.parent.selected_algorithm == "Dijkstra_List":
 
-
+    def clear_highlights_and_Canvas(self):
+        # Iterate through all rows and remove any tags
+        for item in self.distance_table.get_children():
+            self.distance_table.item(item, tags=())  # Remove all tags
+        self.pseudocode_display.config(state=NORMAL)
+        for tag in self.highlighted_tags:
+            self.pseudocode_display.tag_remove(tag, "1.0", "end")
+        self.pseudocode_display.config(state=DISABLED)
+        self.canvas.delete("all")
 
     # Löscht Tabelle
     def clear_table(self):
@@ -371,11 +380,7 @@ class Pseudocode_Frame(Frame):
         self.highlighted_tags.clear()
 
         colors = {
-            "discovered": "#ffcc99",
             "Heap": "#d2cd6f",
-            "d_value": "#ff9966",
-            "u": "#ccffcc",
-            "v": "#ffccff",
             "current_node": "yellow",
             "discovered_false": "orange",
             "discovered_true": "#00ff40",
@@ -414,15 +419,16 @@ class Pseudocode_Frame(Frame):
                 self.highlight_specific_ranges([("9.15", "9.26")], "#4ecdf8")
             elif step_type == "Highlight Edge":
                 self.highlight_specific_ranges([("10.15", "10.32")], colors.get("show_edge"))
-                self.highlight_specific_ranges([("10.12", "10.14"),("10.33", "10.37")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("10.12", "10.14")], colors.get("show_edge"))
             elif step_type == "Compare Distance":
-                self.highlight_specific_ranges([("11.41", "11.45"),("11.16", "11.18")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("11.16", "11.18"),("10.33", "10.37")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("11.33", "11.40")], "#4ecdf8") # Kante bleibt so
-                self.highlight_specific_ranges([("11.26", "11.30")], "pink") # d[u]
+                self.highlight_specific_ranges([("11.26", "11.30")], colors.get("current_node")) # d[u]
                 self.highlight_specific_ranges([("11.19", "11.23")], "violet") # d[v]
             elif step_type == "Update Distance":
+                self.highlight_specific_ranges([("11.41", "11.45")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("12.34", "12.41")], "#4ecdf8") # Kante bleibt so
-                self.highlight_specific_ranges([("12.27", "12.31")], "pink") # d[u]
+                self.highlight_specific_ranges([("12.27", "12.31")], colors.get("current_node")) # d[u]
                 self.highlight_specific_ranges([("12.20", "12.24")], "violet") # d[v]
             elif step_type == "Push to Heap":
                 self.highlight_specific_ranges([("13.20", "13.39")], colors.get("Heap"))

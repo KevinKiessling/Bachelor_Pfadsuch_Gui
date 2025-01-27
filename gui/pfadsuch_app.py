@@ -35,6 +35,18 @@ class PfadsuchApp(Tk):
         self.selected_nodes = []
         self.selected_algorithm = "Dijkstra_PQ_lazy"
 
+        #farben für highlighting im pseudocode und in Graph
+        self.color_heap = "#d2cd6f"
+        self.color_d_v = "violet"
+        self.color_d_u = "yellow"
+        self.color_discovered_true = "00ff40"
+        self.color_discovered_false = "orange"
+        self.color_default = "yellow"
+        self.color_edge_highlight = "#4ecdf8"
+
+        #zum ausgrauen
+        self.color_greyed = "light grey"
+
         self.visited_edge_color = "lawn green"
         self.highlighted_edge_color = "red"
         self.visited_node_color = "lawn green"
@@ -142,6 +154,7 @@ class PfadsuchApp(Tk):
     def start_algorithm(self):
         if self.current_step:
             self.steps_finished_algorithm = []
+            self.code_frame.clear_highlights_and_Canvas()
             self.current_step = -1
             self.code_frame.clear_table()
            # self.code_frame.clear_hightlight()
@@ -271,6 +284,7 @@ class PfadsuchApp(Tk):
         self.current_step = -1
         self.start_node = ""
         self.update_gui()
+        self.code_frame.clear_highlights_and_Canvas()
 
         self.code_frame.clear_table()
         #TO DO CLEAR TABLE HIGHLIGHT
@@ -302,7 +316,7 @@ class PfadsuchApp(Tk):
         self.selected_nodes = []
         self.start_node = ""
         self.code_frame.clear_table()
-        self.code_frame.clear_hightlight()
+        self.code_frame.clear_highlights_and_Canvas()
         self.gui_frame.operation_history = []
         self.gui_frame.reset_node_ids()
         self.update_gui()

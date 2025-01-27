@@ -102,7 +102,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                 if step["step_type"] == "Compare Distance":
                     color = "light grey"
                     if node == current_node:
-                        color = "pink"  #  d[u]
+                        color = "yellow"  #  d[u]
                     if node in neighbor_list:
                         color = "violet"  #  d[v]
 
@@ -135,7 +135,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                     color = "light grey"
 
                     if node == current_node:
-                        color = "pink"  #  d[u]
+                        color = "yellow"  #  d[u]
                     if node in neighbor_list:
                         color = "violet"  #  d[v]
                 # push updated knoten to Heap, -> blau, rest grau
