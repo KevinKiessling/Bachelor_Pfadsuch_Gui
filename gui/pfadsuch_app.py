@@ -10,6 +10,7 @@ from graph_visualizer.graph_visualizer_dijkstra_lazy import *
 from graph_visualizer.graph_visualizer_dijkstra import *
 from graph_visualizer.graph_visualizer_dijkstra_list import *
 from graph_visualizer.graph_visualizer_path import *
+import networkx as nx
 import math
 import copy
 class PfadsuchApp(Tk):
@@ -180,8 +181,8 @@ class PfadsuchApp(Tk):
                 self.graph, self.start_node)
             self.code_frame.highlight_step("Starting Algorithm")
             self.code_frame.set_step(f"Starte Dijkstra mit Liste")
-        #if self.shortest_paths:
-         #   self.gui_frame.shortest_paths_button.config(state=NORMAL)
+
+        self.test_dijkstra_algorithm(self.start_node)
 
 
     def set_starting_node(self, node):
@@ -375,5 +376,26 @@ class PfadsuchApp(Tk):
         self.graph_draw_path = Graph_Visualizer_Path(self.gui_frame, self.node_positions, self.graph, self.selected_nodes, self.start_node, self)
         self.graph_draw_path.draw_path(path)
 
+    #Function to test Dijkstra Results, Compare mine to networkxs' dijkstra
+    def test_dijkstra_algorithm(self, source_node):
+        graph_data = self.graph
+        G = nx.DiGraph()
+        for node, neighbors in graph_data.items():
+            for neighbor, weight in neighbors.items():
+                G.add_edge(node, neighbor, weight=weight)
 
+        computed_distances_nx = nx.single_source_dijkstra_path_length(G, source_node)
+
+        computed_distances_step = self.steps_finished_algorithm[self.current_step]["distances"]
+
+        for node, expected_distance in computed_distances_nx.items():
+            computed_distance_step = computed_distances_step.get(node, float('inf'))
+            if computed_distance_step != expected_distance and not (
+                    computed_distance_step == float('inf') and expected_distance == float('inf')
+            ):
+                print(f"Test failed for node {node}: expected {expected_distance}, got {computed_distance_step}")
+                return False
+
+        print("All tests passed.")
+        return True
 

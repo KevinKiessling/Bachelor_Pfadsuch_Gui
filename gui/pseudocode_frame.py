@@ -36,24 +36,19 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display.tag_configure("highlight", background="#ffff00")
         self.pseudocode_display.tag_configure("dim", background="#f0f0f0")
 
-
         self.scrollbar_pseudocode = Scrollbar(self.pseudocode_display_frame, orient="vertical",
                                               command=self.pseudocode_display.yview)
         self.scrollbar_pseudocode.grid(row=0, column=1, sticky="ns")
         self.pseudocode_display.configure(yscrollcommand=self.scrollbar_pseudocode.set)
 
-
         self.pseudocode_display_frame.grid_columnconfigure(0, weight=1)
         self.pseudocode_display_frame.grid_rowconfigure(0, weight=1)
-
 
         self.distance_table_label = Label(self, text="Aktuelle Distanzen", font=("Arial", 12))
         self.distance_table_label.grid(row=2, column=0, pady=5, sticky="ew", padx=10)
 
-
         self.distance_table_frame = Frame(self, bd=1, relief=SOLID)
         self.distance_table_frame.grid(row=3, column=0, sticky="nsew", padx=10)
-
 
         self.distance_table = ttk.Treeview(self.distance_table_frame, columns=("Node", "Distance"), show="headings",
                                            height=5)
@@ -100,18 +95,16 @@ class Pseudocode_Frame(Frame):
         self.table.pack(expand=True, fill="both")
         self.table_frame.pack_forget()  '''
 
-        # Initialize with the canvas visible
+
         self.current_view = "canvas"
         #self.draw_priority_queue(self.priority_queue)
         self.canvas_frame.pack(expand=True, fill="both", padx=10, pady=10)
 
-        # Bind the configure event to adjust tree when resizing
+
         self.canvas.bind("<Configure>", self.on_resize)
 
         self.pcode = ""
         self.set_algorithm(self.parent.selected_algorithm)
-
-
 
         self.grid_rowconfigure(0, weight=0)  # Step label row
         self.grid_rowconfigure(1, weight=1)  # Pseudocode display
@@ -119,7 +112,6 @@ class Pseudocode_Frame(Frame):
         self.grid_rowconfigure(3, weight=1, minsize=100)  # Distance table
         self.grid_rowconfigure(4, weight=0)  # Priority queue label row
         self.grid_rowconfigure(5, weight=1, minsize=100)  # Heap/list canvas
-
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=0)
@@ -130,7 +122,6 @@ class Pseudocode_Frame(Frame):
 
     # draws heap with highlighting
     def update_priority_queue(self, pq):
-
 
         if not self.parent.current_step == -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
@@ -147,7 +138,8 @@ class Pseudocode_Frame(Frame):
                 self.draw_priority_queue(pq, node, dis)
             else:
                 self.draw_priority_queue(pq)
-
+        else:
+            self.draw_priority_queue(pq)
         '''Remove Table for now
         self.populate_table(pq)'''
         self.priority_queue = pq.copy()
