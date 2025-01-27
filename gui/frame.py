@@ -373,33 +373,6 @@ class My_Frame(Frame):
         )
         debug_checkbox.pack(anchor="w", pady=10, padx=10)
 
-
-        heap_frame = Frame(general_tab_frame)
-
-
-        heap_var = self.parent.selected_datastructure_view
-
-
-        heap_label = Label(
-            heap_frame,
-            text="Darstellung Datenstruktur:"
-        )
-
-
-        heap_options = ["Heap", "Priority Queue"]
-        heap_dropdown = OptionMenu(
-            heap_frame,
-            heap_var,
-            *heap_options
-        )
-
-
-        heap_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
-        heap_dropdown.grid(row=0, column=1, padx=10, pady=10, sticky="w")
-
-
-        heap_frame.pack(anchor="w", pady=10, padx=10)
-
         random_mode_var = BooleanVar(value=self.parent.random_edge_mode)
         random_checkbox_frame = Frame(general_tab_frame)
         random_checkbox_frame.pack(anchor="w", pady=10, padx=10)
@@ -478,7 +451,6 @@ class My_Frame(Frame):
             self.parent.random_edge_mode = random_mode_var.get()
             self.parent.animation_speed = speed_var.get()
             self.parent.font_size = font_var.get()
-            self.parent.selected_datastructure_view.set(heap_var.get())
             max_edge_weight = max_weight_var.get()
 
             if max_edge_weight < 0 or max_edge_weight >= 100000:
