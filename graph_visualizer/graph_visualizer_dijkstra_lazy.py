@@ -59,7 +59,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                 if step["step_type"] == "Push Start Node to Priority Queue":
                     color = "light grey"
                     if node == current_node:
-                        color = "#d2cd6f"
+                        color = self.parent.color_heap
                 # Knoten im Heap  sind blau, aus Heap entfernter Knoten ist gelb, rest grau
                 if step["step_type"] == "Heap Pop":
                     color = "light grey"
@@ -142,7 +142,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                 if step["step_type"] == "Push to Heap":
                     color = "light grey"
                     if node in neighbor_list:
-                        color = "violet"
+                        color = self.parent.color_heap
 
                 # Überspringe besuchte Knoten
                 if step["step_type"] == "Skip Visited Node":

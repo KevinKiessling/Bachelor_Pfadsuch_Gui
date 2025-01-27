@@ -127,8 +127,26 @@ class Pseudocode_Frame(Frame):
     def update_font_size(self):
         self.pseudocode_display.config(font=("Courier New", self.parent.font_size))
         self.style_pseudocode_initial()
+
+    # draws heap with highlighting
     def update_priority_queue(self, pq):
-        self.draw_priority_queue(pq)
+
+
+        if not self.parent.current_step == -1:
+            step = self.parent.steps_finished_algorithm[self.parent.current_step]
+        if step:
+
+            if step["step_type"] == "Push Start Node to Priority Queue":
+                dis = step["distances"].get(step["current_node"])
+                node = step["current_node"]
+
+                self.draw_priority_queue(pq, node, dis)
+            elif step["step_type"] == "Push to Heap":
+                dis = step["distances"].get(step["neighbor"])
+                node = step["neighbor"]
+                self.draw_priority_queue(pq, node, dis)
+            else:
+                self.draw_priority_queue(pq)
 
         '''Remove Table for now
         self.populate_table(pq)'''
@@ -412,7 +430,7 @@ class Pseudocode_Frame(Frame):
         self.highlighted_tags.clear()
 
         colors = {
-            "Heap": "#d2cd6f",
+            "Heap": self.parent.color_heap,
             "current_node": "yellow",
             "discovered_false": "orange",
             "discovered_true": "#00ff40",
@@ -500,22 +518,30 @@ class Pseudocode_Frame(Frame):
                 self.table.insert("", "end", values=item)
         self.table.tag_configure("highlight", background="yellow")'''
 
-    def draw_priority_queue(self, priority_queue):
+    #draws priority queue as a Tree, with optional parameters, that are used to highlight a node
+    def draw_priority_queue(self, priority_queue, highlight_node=None, highlight_distance=None):
         self.canvas.delete("all")
 
         def draw_node(x, y, text, is_highlighted=False):
             radius = 30
-            color = "yellow" if is_highlighted else "lightgrey"
+            color = self.parent.color_heap if is_highlighted else "lightgrey"
             self.canvas.create_oval(x - radius, y - radius, x + radius, y + radius, fill=color)
             self.canvas.create_text(x, y, text=text, font=("Arial", 12), fill="black")
             return x, y
 
-        def draw_tree(index, x, y, dx):
+        def draw_tree(index, x, y, dx, highlight_node, highlight_distance):
             if index >= len(priority_queue):
                 return
 
             node = priority_queue[index]
-            is_highlighted = node[0] == self.highlight_node
+
+
+            is_highlighted = (
+                    (highlight_node is not None and node[1] == highlight_node) and
+                    (highlight_distance is not None and node[0] == highlight_distance)
+            )
+
+
             x, y = draw_node(x, y, f"{node[1]}\n{node[0]}", is_highlighted)
 
             left_child_idx = 2 * index + 1
@@ -524,18 +550,16 @@ class Pseudocode_Frame(Frame):
             if left_child_idx < len(priority_queue):
                 left_x, left_y = x - dx, y + 60
                 self.canvas.create_line(x, y + 30, left_x, left_y - 30)
-                draw_tree(left_child_idx, left_x, left_y, dx // 2)
+                draw_tree(left_child_idx, left_x, left_y, dx // 2, highlight_node, highlight_distance)
 
             if right_child_idx < len(priority_queue):
                 right_x, right_y = x + dx, y + 60
                 self.canvas.create_line(x, y + 30, right_x, right_y - 30)
-                draw_tree(right_child_idx, right_x, right_y, dx // 2)
-
+                draw_tree(right_child_idx, right_x, right_y, dx // 2, highlight_node, highlight_distance)
 
         width = self.canvas.winfo_width()
         if width > 0:
-            draw_tree(0, width // 2, 50, width // 4)
-
+            draw_tree(0, width // 2, 50, width // 4, highlight_node, highlight_distance)
 
         #self.populate_table(priority_queue)
 
