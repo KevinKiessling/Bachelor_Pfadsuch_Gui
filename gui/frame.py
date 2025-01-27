@@ -465,47 +465,70 @@ class My_Frame(Frame):
 
         # COLOR TAB
         default_colors = {
-            "visited_edge": "lawn green",
-            "highlighted_edge": "orange",
-            "visited_node": "lawn green",
-            "current_node": "yellow",
-            "path_color": "light blue"
+            "color_heap": "#d2cd6f",
+            "color_d_v": "violet",
+            "color_d_u": "yellow",
+            "color_discovered_true": "#00ff40",
+            "color_discovered_false": "orange",
+            "color_default": "yellow",
+            "color_edge_highlight": "#4ecdf8",
+            "color_shortest_path": "light blue"
         }
+
         color_tab = Frame(notebook)
         notebook.add(color_tab, text="Farb Einstellungen")
+
         def choose_color(element):
             color = colorchooser.askcolor()[1]
             if color:
-                if element == 'visited_edge':
-                    self.parent.visited_edge_color = color
-                    visited_edge_button.config(bg=color)
-                elif element == 'highlighted_edge':
-                    self.parent.highlighted_edge_color = color
-                    highlighted_edge_button.config(bg=color)
-                elif element == 'visited_node':
-                    self.parent.visited_node_color = color
-                    visited_node_button.config(bg=color)
-                elif element == 'current_node':
-                    self.parent.current_node_color = color
-                    current_node_button.config(bg=color)
-                elif element == 'path_color':
-                    self.parent.path_color = color
-                    path_color_button.config(bg=color)
+                if element == 'color_heap':
+                    self.parent.color_heap = color
+                    color_heap_button.config(bg=color)
+                elif element == 'color_d_v':
+                    self.parent.color_d_v = color
+                    color_d_v_button.config(bg=color)
+                elif element == 'color_d_u':
+                    self.parent.color_d_u = color
+                    color_d_u_button.config(bg=color)
+                elif element == 'color_discovered_true':
+                    self.parent.color_discovered_true = color
+                    color_discovered_true_button.config(bg=color)
+                elif element == 'color_discovered_false':
+                    self.parent.color_discovered_false = color
+                    color_discovered_false_button.config(bg=color)
+                elif element == 'color_default':
+                    self.parent.color_default = color
+                    color_default_button.config(bg=color)
+                elif element == 'color_edge_highlight':
+                    self.parent.color_edge_highlight = color
+                    color_edge_highlight_button.config(bg=color)
+                elif element == 'color_shortest_path':
+                    self.parent.color_shortest_path = color
+                    color_shortest_path_button.config(bg=color)
+
 
         def reset_colors():
-            # Reset colors to default values
-            self.parent.visited_edge_color = default_colors["visited_edge"]
-            self.parent.highlighted_edge_color = default_colors["highlighted_edge"]
-            self.parent.visited_node_color = default_colors["visited_node"]
-            self.parent.current_node_color = default_colors["current_node"]
-            self.parent.path_color = default_colors["path_color"]
 
-            # Update button backgrounds to match defaults
-            visited_edge_button.config(bg=self.parent.visited_edge_color)
-            highlighted_edge_button.config(bg=self.parent.highlighted_edge_color)
-            visited_node_button.config(bg=self.parent.visited_node_color)
-            current_node_button.config(bg=self.parent.current_node_color)
-            path_color_button.config(bg=self.parent.path_color)
+            self.parent.color_heap = default_colors["color_heap"]
+            self.parent.color_d_v = default_colors["color_d_v"]
+            self.parent.color_d_u = default_colors["color_d_u"]
+            self.parent.color_discovered_true = default_colors["color_discovered_true"]
+            self.parent.color_discovered_false = default_colors["color_discovered_false"]
+            self.parent.color_default = default_colors["color_default"]
+            self.parent.color_edge_highlight = default_colors["color_edge_highlight"]
+            self.parent.color_shortest_path = default_colors["color_shortest_path"]
+
+
+            color_heap_button.config(bg=self.parent.color_heap)
+            color_d_v_button.config(bg=self.parent.color_d_v)
+            color_d_u_button.config(bg=self.parent.color_d_u)
+            color_discovered_true_button.config(bg=self.parent.color_discovered_true)
+            color_discovered_false_button.config(bg=self.parent.color_discovered_false)
+            color_default_button.config(bg=self.parent.color_default)
+            color_edge_highlight_button.config(bg=self.parent.color_edge_highlight)
+            color_shortest_path_button.config(bg=self.parent.color_shortest_path)
+
+
         def create_color_button(frame, text, element):
             button = Button(frame, text="    ", width=5, command=lambda: choose_color(element))
             button.grid(row=0, column=0, padx=10)
@@ -513,31 +536,50 @@ class My_Frame(Frame):
             label.grid(row=0, column=1, padx=10)
             return button
 
-        visited_edge_button_frame = Frame(color_tab)
-        visited_edge_button = create_color_button(visited_edge_button_frame, "Besuchte Kante", 'visited_edge')
-        visited_edge_button_frame.pack(pady=5)
-        visited_edge_button.config(bg=self.parent.visited_edge_color)
 
-        highlighted_edge_button_frame = Frame(color_tab)
-        highlighted_edge_button = create_color_button(highlighted_edge_button_frame, "Hervorgehobene Kante",
-                                                      'highlighted_edge')
-        highlighted_edge_button_frame.pack(pady=5)
-        highlighted_edge_button.config(bg=self.parent.highlighted_edge_color)
+        color_heap_button_frame = Frame(color_tab)
+        color_heap_button = create_color_button(color_heap_button_frame, "Heap Farbe", 'color_heap')
+        color_heap_button_frame.pack(pady=5)
+        color_heap_button.config(bg=self.parent.color_heap)
 
-        visited_node_button_frame = Frame(color_tab)
-        visited_node_button = create_color_button(visited_node_button_frame, "Besuchter Knoten", 'visited_node')
-        visited_node_button_frame.pack(pady=5)
-        visited_node_button.config(bg=self.parent.visited_node_color)
+        color_d_v_button_frame = Frame(color_tab)
+        color_d_v_button = create_color_button(color_d_v_button_frame, "D-V Farbe", 'color_d_v')
+        color_d_v_button_frame.pack(pady=5)
+        color_d_v_button.config(bg=self.parent.color_d_v)
 
-        current_node_button_frame = Frame(color_tab)
-        current_node_button = create_color_button(current_node_button_frame, "Aktueller Knoten", 'current_node')
-        current_node_button_frame.pack(pady=5)
-        current_node_button.config(bg=self.parent.current_node_color)
+        color_d_u_button_frame = Frame(color_tab)
+        color_d_u_button = create_color_button(color_d_u_button_frame, "D-U Farbe", 'color_d_u')
+        color_d_u_button_frame.pack(pady=5)
+        color_d_u_button.config(bg=self.parent.color_d_u)
 
-        path_color_button_frame = Frame(color_tab)
-        path_color_button = create_color_button(path_color_button_frame, "Kürzester Pfad", 'path_color')
-        path_color_button_frame.pack(pady=5)
-        path_color_button.config(bg=self.parent.path_color)
+        color_discovered_true_button_frame = Frame(color_tab)
+        color_discovered_true_button = create_color_button(color_discovered_true_button_frame, "Entdeckter Knoten Wahr",
+                                                           'color_discovered_true')
+        color_discovered_true_button_frame.pack(pady=5)
+        color_discovered_true_button.config(bg=self.parent.color_discovered_true)
+
+        color_discovered_false_button_frame = Frame(color_tab)
+        color_discovered_false_button = create_color_button(color_discovered_false_button_frame,
+                                                            "Entdeckter Knoten Falsch", 'color_discovered_false')
+        color_discovered_false_button_frame.pack(pady=5)
+        color_discovered_false_button.config(bg=self.parent.color_discovered_false)
+
+        color_default_button_frame = Frame(color_tab)
+        color_default_button = create_color_button(color_default_button_frame, "Standard Farbe", 'color_default')
+        color_default_button_frame.pack(pady=5)
+        color_default_button.config(bg=self.parent.color_default)
+
+        color_edge_highlight_button_frame = Frame(color_tab)
+        color_edge_highlight_button = create_color_button(color_edge_highlight_button_frame, "Hervorgehobene Kante",
+                                                          'color_edge_highlight')
+        color_edge_highlight_button_frame.pack(pady=5)
+        color_edge_highlight_button.config(bg=self.parent.color_edge_highlight)
+
+        color_shortest_path_button_frame = Frame(color_tab)
+        color_shortest_path_button = create_color_button(color_shortest_path_button_frame, "Kürzester Pfad",
+                                                         'color_shortest_path')
+        color_shortest_path_button_frame.pack(pady=5)
+        color_shortest_path_button.config(bg=self.parent.color_shortest_path)
 
         reset_button = Button(color_tab, text="Zurücksetzen", command=reset_colors)
         reset_button.pack(pady=20)
@@ -698,19 +740,19 @@ class My_Frame(Frame):
                             )
 
                 if node1 != node2 and weight is not None:
-                    # Handle edge replacement or updating
-                    if node2 in self.parent.graph[node1]:  # Edge already exists in the same direction
+
+                    if node2 in self.parent.graph[node1]:
                         if self.parent.debug:
                             print(f"Kante von {node1} zu {node2} existiert bereits. Gewicht aktualisieren.")
                         self.parent.graph[node1][node2] = weight
                         self.operation_history.append(("update_edge", (node1, node2, weight)))
-                    elif node1 in self.parent.graph[node2]:  # Reverse edge exists
+                    elif node1 in self.parent.graph[node2]:
                         if self.parent.debug:
                             print(f"Kante von {node2} zu {node1} existiert. Richtung ersetzen.")
-                        del self.parent.graph[node2][node1]  # Remove reverse edge
+                        del self.parent.graph[node2][node1]
                         self.parent.graph[node1][node2] = weight
                         self.operation_history.append(("replace_edge", (node2, node1, node1, node2, weight)))
-                    else:  # No edge exists, add a new one
+                    else:
                         self.parent.graph[node1][node2] = weight
                         self.operation_history.append(("add_edge", (node1, node2, weight)))
                         if self.parent.debug:

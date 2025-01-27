@@ -275,38 +275,22 @@ class Pseudocode_Frame(Frame):
             "∞": "infinity",
         }
 
-        for keyword, style in keywords_bold.items():
-            start_idx = "1.0"
-            while True:
+        def apply_tag_to_keywords(keywords_dict):
+            for keyword, style in keywords_dict.items():
+                start_idx = "1.0"
+                while start_idx:
+                    start_idx = self.pseudocode_display.search(keyword, start_idx, stopindex="end")
+                    if start_idx:
+                        end_idx = f"{start_idx}+{len(keyword)}c"
+                        self.pseudocode_display.tag_add(style, start_idx, end_idx)
+                        start_idx = end_idx
+                    else:
+                        break
 
-                start_idx = self.pseudocode_display.search(keyword, start_idx, stopindex="end")
-                if not start_idx:
-                    break
-                end_idx = f"{start_idx}+{len(keyword)}c"
-                self.pseudocode_display.tag_add(style, start_idx, end_idx)
-                start_idx = end_idx
 
-        for keyword, style in keywords_infinity.items():
-            start_idx = "1.0"
-            while True:
-
-                start_idx = self.pseudocode_display.search(keyword, start_idx, stopindex="end")
-                if not start_idx:
-                    break
-                end_idx = f"{start_idx}+{len(keyword)}c"
-                self.pseudocode_display.tag_add(style, start_idx, end_idx)
-                start_idx = end_idx
-
-        for keyword, style in keywords_italic.items():
-            start_idx = "1.0"
-            while True:
-
-                start_idx = self.pseudocode_display.search(keyword, start_idx, stopindex="end")
-                if not start_idx:
-                    break
-                end_idx = f"{start_idx}+{len(keyword)}c"
-                self.pseudocode_display.tag_add(style, start_idx, end_idx)
-                start_idx = end_idx
+        apply_tag_to_keywords(keywords_bold)
+        apply_tag_to_keywords(keywords_infinity)
+        apply_tag_to_keywords(keywords_italic)
 
 
         self.pseudocode_display.config(state=DISABLED)

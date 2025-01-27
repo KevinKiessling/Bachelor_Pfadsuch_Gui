@@ -31,9 +31,9 @@ class Graph_Visualizer_Path:
 
         for node, (x, y) in self.parent.node_positions.items():
             if node == start_node:
-                color = self.parent.path_color
+                color = self.parent.color_shortest_path
             elif node == target_node:
-                color = self.parent.path_color
+                color = self.parent.color_shortest_path
             else:
                 color = "light grey"
 
@@ -91,7 +91,7 @@ class Graph_Visualizer_Path:
                 edge_color = "light grey"
 
                 if (node, neighbor) in path:
-                    edge_color = self.parent.path_color
+                    edge_color = self.parent.color_shortest_path
 
                 if neighbor in self.parent.node_positions:
 

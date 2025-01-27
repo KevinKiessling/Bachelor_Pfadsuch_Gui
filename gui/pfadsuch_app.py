@@ -41,21 +41,11 @@ class PfadsuchApp(Tk):
         self.color_heap = "#d2cd6f"
         self.color_d_v = "violet"
         self.color_d_u = "yellow"
-        self.color_discovered_true = "00ff40"
+        self.color_discovered_true = "#00ff40"
         self.color_discovered_false = "orange"
         self.color_default = "yellow"
         self.color_edge_highlight = "#4ecdf8"
         self.color_shortest_path = "light blue"
-        self.color_greyed = "light grey"
-
-
-
-        self.visited_edge_color = "lawn green"
-        self.highlighted_edge_color = "red"
-        self.visited_node_color = "lawn green"
-        self.current_node_color = "yellow"
-        self.path_color = "light blue"
-
 
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
         self.geometry('1850x1100')
@@ -100,11 +90,14 @@ class PfadsuchApp(Tk):
                 self.default_graph_pos = config.get("default_graph_pos", self.default_graph_pos)
                 self.max_edge_weight = config.get("max_edge_weight", self.max_edge_weight)
 
-                self.visited_edge_color = config.get("visited_edge_color", self.visited_edge_color)
-                self.highlighted_edge_color = config.get("highlighted_edge_color", self.highlighted_edge_color)
-                self.visited_node_color = config.get("visited_node_color", self.visited_node_color)
-                self.current_node_color = config.get("current_node_color", self.current_node_color)
-                self.path_color = config.get("path_color", self.path_color)
+                self.color_heap = config.get("color_heap", self.color_heap)
+                self.color_d_v = config.get("color_d_v", self.color_d_v)
+                self.color_d_u = config.get("color_d_u", self.color_d_u)
+                self.color_discovered_true = config.get("color_discovered_true", self.color_discovered_true)
+                self.color_discovered_false = config.get("color_discovered_false", self.color_discovered_false)
+                self.color_default = config.get("color_default", self.color_default)
+                self.color_edge_highlight = config.get("color_edge_highlight", self.color_edge_highlight)
+                self.color_shortest_path = config.get("color_shortest_path", self.color_shortest_path)
                 self.font_size = config.get("font_size", self.font_size)
 
             except json.JSONDecodeError as e:
@@ -135,14 +128,14 @@ class PfadsuchApp(Tk):
             "default_graph_pos": self.default_graph_pos,
             "default_graph": self.default_graph,
             "max_edge_weight": self.max_edge_weight,
-            "visited_edge_color": self.visited_edge_color,
-            "highlighted_edge_color": self.highlighted_edge_color,
-            "visited_node_color": self.visited_node_color,
-            "current_node_color": self.current_node_color,
-            "path_color": self.path_color,
-            "font_size": self.font_size
-
-           # "darkmode": self.darkmode
+            "color_heap": self.color_heap,
+            "color_d_v": self.color_d_v,
+            "color_d_u": self.color_d_u,
+            "color_discovered_true": self.color_discovered_true,
+            "color_discovered_false": self.color_discovered_false,
+            "color_default": self.color_default,
+            "color_edge_highlight": self.color_edge_highlight,
+            "color_shortest_path": self.color_shortest_path,
         }
         with open(self.CONFIG_FILE, "w") as f:
             json.dump(config, f, indent=4)
@@ -291,6 +284,7 @@ class PfadsuchApp(Tk):
         self.shortest_paths = {}
         if not self.shortest_paths:
             self.gui_frame.shortest_paths_button.config(state=DISABLED)
+            self.gui_frame.prev_button.config(state=DISABLED)
         if self.selected_algorithm in {"Dijkstra_PQ_lazy", "Dijkstra_PQ"}:
             self.code_frame.priority_queue_label.config(text="Heap")
             #self.code_frame.priority_queue_table.heading("Node", text="Knoten")
@@ -326,7 +320,7 @@ class PfadsuchApp(Tk):
         self.graph_draw_list = Graph_Visualizer_Dijkstra_List(self.gui_frame, self.node_positions, self.graph,
                                                            self.selected_nodes, self.start_node, self)
         self.gui_frame.canvas.delete("all")
-
+        self.gui_frame.prev_button.config(state=DISABLED)
         if self.current_step == -1:
             if self.selected_algorithm == "Dijkstra_PQ_lazy":
                 self.graph_draw_lazy.draw_graph_dijkstra_lazy(None, None, {node: 0 for node in self.graph}, set(), set())
@@ -345,6 +339,7 @@ class PfadsuchApp(Tk):
                     self.code_frame.set_step("Starte Dijkstra mit Liste")
             return
 
+        self.gui_frame.prev_button.config(state=NORMAL)
         step = self.steps_finished_algorithm[self.current_step]
         current_node = step["current_node"]
         neighbor = step["neighbor"]
