@@ -43,9 +43,10 @@ class PfadsuchApp(Tk):
         self.color_discovered_false = "orange"
         self.color_default = "yellow"
         self.color_edge_highlight = "#4ecdf8"
-
-        #zum ausgrauen
+        self.color_shortest_path = "light blue"
         self.color_greyed = "light grey"
+
+
 
         self.visited_edge_color = "lawn green"
         self.highlighted_edge_color = "red"

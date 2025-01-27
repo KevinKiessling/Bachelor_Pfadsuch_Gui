@@ -156,7 +156,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                     color = "light grey"
                     if node == current_node:
                         if visited.get(current_node):
-                            print(visited.get(current_node))
+                            #print(visited.get(current_node))
                             color = discovered_node_true_color
                         elif not visited.get(current_node):
                             color = discovered_node_false_color
@@ -181,7 +181,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                     color = "light grey"
                     if node == current_node:
                         if visited.get(current_node):
-                            print(visited.get(current_node))
+                            #print(visited.get(current_node))
                             color = discovered_node_true_color
                         elif not visited.get(current_node):
                             color = discovered_node_false_color
