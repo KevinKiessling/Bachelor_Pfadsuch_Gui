@@ -135,6 +135,35 @@ class Pseudocode_Frame(Frame):
         self.priority_queue = pq.copy()
 
 
+    #highlighted die zu dem nodename gehöhrende Row in der Distance Tabelle
+    def highlight_row(self, node_name):
+
+        for item in self.distance_table.get_children():
+            self.distance_table.item(item, tags=())
+
+
+        for index, item in enumerate(self.distance_table.get_children()):
+            row_values = self.distance_table.item(item, "values")
+            if row_values[0] == node_name:
+                self.distance_table.item(item, tags=("highlight",))
+
+                self.distance_table.see(item)
+                self.center_item_in_view(index)
+                break
+
+
+        self.distance_table.tag_configure("highlight", background="yellow", foreground="black")
+
+    def center_item_in_view(self, index):
+
+        children = self.distance_table.get_children()
+        total_items = len(children)
+
+
+        if total_items > 0:
+            fraction = index / max(total_items - 1, 1)
+            self.distance_table.yview_moveto(fraction - (1 / len(children) / 2))
+
     def set_algorithm(self, algorithm):
         if algorithm == "Dijkstra_List":
             self.pcode = ""
@@ -240,6 +269,12 @@ class Pseudocode_Frame(Frame):
 
     # zwischen funktion die je nach step type die zugehörige Line im Pseudocode gelb markiert
     def highlight(self, step):
+        if not self.parent.current_step == -1:
+            step_for_highlighting_table = self.parent.steps_finished_algorithm[self.parent.current_step]
+        if step_for_highlighting_table:
+            current_node = step_for_highlighting_table["current_node"]
+
+
         if self.parent.debug:
             print(step)
         #self.pseudocode_display.see(f"{x}.0") for putting x on view
@@ -247,6 +282,7 @@ class Pseudocode_Frame(Frame):
             if step == "Initialize Node Distance":
                 self.highlight_step("Initialize Node Distance")
                 self.set_step("Initialisiere Knoten Distanzen")
+                self.highlight_row(current_node)
                 self.pseudocode_display.see(f"{3}.0")
             if step == "Initialize Visited":
                 self.highlight_step("Initialize Visited")
@@ -258,6 +294,7 @@ class Pseudocode_Frame(Frame):
             if step == "Set Start Node Distance":
                 self.highlight_step("Set Start Node Distance")
                 self.set_step("Setze Distanz von Startknoten")
+                self.highlight_row(current_node)
             if step == "Push Start Node to Priority Queue":
                 self.highlight_step("Push Start Node to Priority Queue")
                 self.set_step("Füge Startknoten dem Heap hinzu")
@@ -284,6 +321,7 @@ class Pseudocode_Frame(Frame):
                 self.set_step("Iteriere über alle ausgehenden Kanten")
             if step == "Update Distance":
                 self.highlight_step("Update Distance")
+                self.highlight_row(step_for_highlighting_table["neighbor"])
                 self.set_step("Update Distanzen")
             if step == "Push to Heap":
                 self.highlight_step("Push to Heap")

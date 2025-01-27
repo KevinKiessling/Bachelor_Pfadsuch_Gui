@@ -32,12 +32,12 @@ class Dijkstra_Priority_Queue_Lazy():
                 priority_queue=priority_queue,
                 selected_algorithm="Dijkstra_PQ_lazy"
             )
-            distances[node] = float('inf')
+
             visited[node] = False  # Set visited status to False for each node
             self.save_state(
                 step_type="Initialize Visited",
                 current_node=node,
-                current_distance=distances[node],
+                current_distance=None,
                 neighbor=None,
                 edge_weight=None,
                 distances=distances,
@@ -47,6 +47,7 @@ class Dijkstra_Priority_Queue_Lazy():
                 priority_queue=priority_queue,
                 selected_algorithm="Dijkstra_PQ_lazy"
             )
+            distances[node] = float('inf')
             self.save_state(
                 step_type="Initialize Node Distance",
                 current_node=node,

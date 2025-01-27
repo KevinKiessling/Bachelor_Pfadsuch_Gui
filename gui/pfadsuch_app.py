@@ -356,8 +356,6 @@ class PfadsuchApp(Tk):
                 if self.shortest_paths:
                     self.gui_frame.shortest_paths_button.config(state=NORMAL)
                 return
-            if step["step_type"] == "Highlight Edge":
-                self.draw_graph_dijkstra_normal(current_node, neighbor, distances, visited, visited_edges)
             else:
                 self.draw_graph_dijkstra_normal(current_node, neighbor, distances, visited, visited_edges)
 
