@@ -134,7 +134,7 @@ class Pseudocode_Frame(Frame):
 
         if not self.parent.current_step == -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
-        if step:
+
 
             if step["step_type"] == "Push Start Node to Priority Queue":
                 dis = step["distances"].get(step["current_node"])
