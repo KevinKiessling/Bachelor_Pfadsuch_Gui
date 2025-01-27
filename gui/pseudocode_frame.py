@@ -20,7 +20,7 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display_frame.grid(row=1, column=0, pady=5, sticky="nsew", padx=10)
 
 
-        self.pseudocode_display = Text(self.pseudocode_display_frame, wrap=WORD, height=10, width=60, takefocus=0)
+        self.pseudocode_display = Text(self.pseudocode_display_frame, wrap=WORD, height=12, width=60, takefocus=0)
         self.pseudocode_display.grid(row=0, column=0, sticky="nsew")
         self.pseudocode_display.config(state=DISABLED)
         self.pseudocode_display.config(
@@ -164,9 +164,24 @@ class Pseudocode_Frame(Frame):
             fraction = index / max(total_items - 1, 1)
             self.distance_table.yview_moveto(fraction - (1 / len(children) / 2))
 
+    #Setzt den Text für das Pseudocode display, je nach algorithmus
     def set_algorithm(self, algorithm):
+
         if algorithm == "Dijkstra_List":
-            self.pcode = ""
+            self.pcode = """1:DijkstraH(Gerichteter Graph G = (V, E),
+    Gewichtsfunktion ω : E → N, Startknoten s ∈ V):
+2:   foreach v ∈ V do discovered[v] ← false
+3:   foreach v ∈ V do d(s) ← ∞ 
+4:   d(s) ← 0, List L ← ()
+5:   foreach v ∈ V do L.add(v)
+6:   while not L.empty() do 
+7:      wähle u ∈ L mit kleinstem Wert d[u]
+8:      L.remove(u)
+9:      discovered[u] ← true
+10:     forall (u, v) ∈ E  do
+11:         if not discovered[v] then
+              d[v] ← min(d[v], d[u] + ω(u, v))"""
+
         elif algorithm == "Dijkstra_PQ_lazy":
             self.pcode = """1:DijkstraH(Gerichteter Graph G = (V, E),
     Gewichtsfunktion ω : E → N, Startknoten s ∈ V):
@@ -181,8 +196,22 @@ class Pseudocode_Frame(Frame):
 9:              if d[v] > d[u] + ω(u, v) then 
 10:                 d[v] ← d[u] + ω(u, v) 
 11:                 H.insert((v, d[v]))"""
+
         elif algorithm == "Dijkstra_PQ":
-            self.pcode = ""
+            self.pcode = """1:DijkstraH(Gerichteter Graph G = (V, E),
+    Gewichtsfunktion ω : E → N, Startknoten s ∈ V):
+2:   foreach v ∈ V do discovered[v] ← false, d[v] ← ∞ 
+3:   d[s] ← 0, Heap H ← 0, H.insert((s, d[s])) 
+4:   while H.length() > 0 do 
+5:      u ← H.extractMin() 
+6:      discovered[u] ← true            
+7:      forall (u, v) ∈ E  do 
+8:          if not discovered[v] then 
+9:              if d[v] > d[u] + ω(u, v) then 
+10:                 bestimme Position i von v in H, 
+                    H.delete(i)
+11:                 d[v] ← d[u] + ω(u, v) 
+12:                 H.insert((v, d[v]))"""
 
 
         self.pseudocode_display.config(state=NORMAL)
@@ -201,8 +230,9 @@ class Pseudocode_Frame(Frame):
 
         bold_font = font.Font(family="Courier New", size=self.parent.font_size, weight="bold")
         italic_font = font.Font(family="Courier New", size=self.parent.font_size, slant="italic")
+        infinity_font = font.Font(family="Courier New", size=self.parent.font_size+3)
 
-
+        self.pseudocode_display.tag_config("infinity", font=infinity_font)
         self.pseudocode_display.tag_config("bold", font=bold_font)
         self.pseudocode_display.tag_config("italic", font=italic_font)
 
@@ -226,15 +256,23 @@ class Pseudocode_Frame(Frame):
             "Startknoten s": "italic",
             "d[v]": "italic",
             "s, d[s]": "italic",
-            "H": "italic",
+            "H.": "italic",
             "u ←": "italic",
             "[u]": "italic",
             "continue": "italic",
-            "true": "italic",
-            "(u, v)": "italic",
+            "u, v": "italic",
             "d[u]": "italic",
             "v, d[v]": "italic",
-
+            "d[s]": "italic",
+            "H ←": "italic",
+            "ω": "italic",
+            " L ": "italic",
+            "L.": "italic",
+            "bestimme Position i von v in H": "italic",
+            " v ": "italic"
+        }
+        keywords_infinity = {
+            "∞": "infinity",
         }
 
         for keyword, style in keywords_bold.items():
@@ -248,6 +286,16 @@ class Pseudocode_Frame(Frame):
                 self.pseudocode_display.tag_add(style, start_idx, end_idx)
                 start_idx = end_idx
 
+        for keyword, style in keywords_infinity.items():
+            start_idx = "1.0"
+            while True:
+
+                start_idx = self.pseudocode_display.search(keyword, start_idx, stopindex="end")
+                if not start_idx:
+                    break
+                end_idx = f"{start_idx}+{len(keyword)}c"
+                self.pseudocode_display.tag_add(style, start_idx, end_idx)
+                start_idx = end_idx
 
         for keyword, style in keywords_italic.items():
             start_idx = "1.0"
@@ -508,12 +556,10 @@ class Pseudocode_Frame(Frame):
         #self.populate_table(priority_queue)
 
     def on_resize(self, event):
-
         if self.current_view == "canvas":
-
             self.draw_priority_queue(self.priority_queue)
 
-    ''' remoe table
+    ''' removed tableview
     def toggle_view(self):
         if self.current_view == "canvas":
             self.canvas_frame.pack_forget()  # Hide the canvas frame
@@ -527,10 +573,8 @@ class Pseudocode_Frame(Frame):
             self.current_view = "canvas"'''
 
     def setup_frames(self):
-
         self.canvas_frame.pack_propagate(False)
         #self.table_frame.pack_propagate(False)
-
         # Set the width and height for the frames
         self.canvas_frame.config(width=800, height=400)
         #self.table_frame.config(width=800, height=400)
