@@ -2,14 +2,16 @@ from tkinter import *
 from tkinter import ttk
 import math
 from tkinter import font
+import random
 class Pseudocode_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
         self.highlighted_tags = []
         self.grid(row=0, column=1, sticky="nsew")
+        self.priority_queue = {}
 
-
+        self.highlight_node = None
         self.step_label = Label(self, text="Aktueller Schritt: ", font=("Arial", 12))
         self.step_label.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
 
@@ -75,29 +77,36 @@ class Pseudocode_Frame(Frame):
         self.priority_queue_label = Label(self, text="Priority Queue", font=("Arial", 12))
         self.priority_queue_label.grid(row=4, column=0, pady=5, sticky="ew", padx=10)
 
-
-        self.priority_queue_frame = Frame(self, bd=1, relief=SOLID)
-        self.priority_queue_frame.grid(row=5, column=0, sticky="nsew", padx=10, pady=(0, 5))
-
-
-        self.priority_queue_table = ttk.Treeview(self.priority_queue_frame, columns=("Node", "Priority"),
-                                                 show="headings", height=5)
-        self.priority_queue_table.grid(row=0, column=0, sticky="nsew")
-        self.priority_queue_table.heading("Node", text="Knoten")
-        self.priority_queue_table.heading("Priority", text="Priorität")
-        self.priority_queue_table.column("Node", anchor=CENTER)
-        self.priority_queue_table.column("Priority", anchor=CENTER)
+        self.main_frame = Frame(self, bd=0, relief=SOLID)
+        self.main_frame.grid(row=5, column=0, sticky="nsew", padx=10)
 
 
-        self.scrollbar_priority = Scrollbar(self.priority_queue_frame, orient="vertical",
-                                            command=self.priority_queue_table.yview)
-        self.scrollbar_priority.grid(row=0, column=1, sticky="ns")
-        self.priority_queue_table.configure(yscrollcommand=self.scrollbar_priority.set)
+        ''' Remove the switch button for now and just have the Heap/list on a canvas
+        self.toggle_button = Button(self.main_frame, text="Switch to Table", command=self.toggle_view)
+        #self.toggle_button.pack(pady=10)'''
 
 
-        self.priority_queue_frame.grid_columnconfigure(0, weight=1)
-        self.priority_queue_frame.grid_rowconfigure(0, weight=1)
+        self.canvas_frame = Frame(self.main_frame, bd=1, relief="solid")
+        self.canvas = Canvas(self.canvas_frame, bg="white")
+        self.canvas.pack(expand=True, fill="both")
+        self.canvas_frame.pack_forget()
 
+
+        '''Remove table for now
+        self.table_frame = Frame(self.main_frame, bd=1, relief="solid")
+        self.table = ttk.Treeview(self.table_frame, columns=("Knoten", "Distance"), show="headings", height=10)
+        self.table.heading("Knoten", text="Knoten")
+        self.table.heading("Distance", text="Distance")
+        self.table.pack(expand=True, fill="both")
+        self.table_frame.pack_forget()  '''
+
+        # Initialize with the canvas visible
+        self.current_view = "canvas"
+        #self.draw_priority_queue(self.priority_queue)
+        self.canvas_frame.pack(expand=True, fill="both", padx=10, pady=10)
+
+        # Bind the configure event to adjust tree when resizing
+        self.canvas.bind("<Configure>", self.on_resize)
 
         self.pcode = ""
         self.set_algorithm(self.parent.selected_algorithm)
@@ -109,7 +118,7 @@ class Pseudocode_Frame(Frame):
         self.grid_rowconfigure(2, weight=0)  # Distance table label row
         self.grid_rowconfigure(3, weight=1, minsize=100)  # Distance table
         self.grid_rowconfigure(4, weight=0)  # Priority queue label row
-        self.grid_rowconfigure(5, weight=1, minsize=100)  # Priority queue
+        self.grid_rowconfigure(5, weight=1, minsize=100)  # Heap/list canvas
 
 
         self.grid_columnconfigure(0, weight=1)
@@ -119,52 +128,12 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display.config(font=("Courier New", self.parent.font_size))
         self.style_pseudocode_initial()
     def update_priority_queue(self, pq):
+        self.draw_priority_queue(pq)
 
-        if self.parent.selected_algorithm in {"Dijkstra_PQ_lazy", "Dijkstra_PQ"}:
-            self.priority_queue_label.config(text="Priority Queue")
-            self.priority_queue_table.heading("Node", text="Knoten")
-            self.priority_queue_table.heading("Priority", text="Priorität")
-        elif self.parent.selected_algorithm == "Dijkstra_List":
-            self.priority_queue_label.config(text="Liste")
-            self.priority_queue_table.heading("Node", text="Knoten")
-            self.priority_queue_table.heading("Priority", text="Distanz")
+        '''Remove Table for now
+        self.populate_table(pq)'''
+        self.priority_queue = pq.copy()
 
-
-        for item in self.priority_queue_table.get_children():
-            self.priority_queue_table.delete(item)
-
-
-        for priority, node in pq:
-            display_priority = "∞" if priority == float("inf") else priority
-            self.priority_queue_table.insert("", "end", values=(node, display_priority))
-
-
-    # hightlighted die jeweilige Linie im Code, Multilines machen das aber etwas komisch, funktioniert aber soweit
-    def highlight_lines_with_dimming(self, line_numbers):
-
-        self.pseudocode_display.config(state=NORMAL)
-
-        self.pseudocode_display.tag_remove("highlight", "1.0", END)
-        #self.pseudocode_display.tag_configure("highlight", background="light green", foreground="black")
-        self.pseudocode_display.tag_remove("dim", "1.0", END)
-
-
-        for line_number in line_numbers:
-            if line_number <= 0:
-                continue
-            start = f"{line_number}.0"
-            end = f"{line_number}.end"
-            self.pseudocode_display.tag_add("highlight", start, end)
-
-
-        total_lines = int(self.pseudocode_display.index('end-1c').split('.')[0])
-        for i in range(1, total_lines + 1):
-            if i not in line_numbers:
-                start = f"{i}.0"
-                end = f"{i}.end"
-                self.pseudocode_display.tag_add("dim", start, end)
-
-        self.pseudocode_display.config(state=DISABLED)
 
     def set_algorithm(self, algorithm):
         if algorithm == "Dijkstra_List":
@@ -250,7 +219,7 @@ class Pseudocode_Frame(Frame):
                 self.pseudocode_display.tag_add(style, start_idx, end_idx)
                 start_idx = end_idx
 
-        # Apply italic styling
+
         for keyword, style in keywords_italic.items():
             start_idx = "1.0"
             while True:
@@ -268,8 +237,6 @@ class Pseudocode_Frame(Frame):
 
     def set_step(self, steptype, calculation=None):
         self.step_label.config(text=f"Aktueller Schritt: {steptype}")
-        #if calculation:
-            #self.calculation_label.config(text=f"Berechnung: {calculation}")
 
     # zwischen funktion die je nach step type die zugehörige Line im Pseudocode gelb markiert
     def highlight(self, step):
@@ -334,46 +301,12 @@ class Pseudocode_Frame(Frame):
                 self.highlight_step("Check if visited")
                 self.set_step("Prüfe ob Knoten bereits besucht wurde")
 
-        if self.parent.selected_algorithm == "Dijkstra_PQ":
-            if step == "Select Node":
-                self.highlight_lines_with_dimming([10, 11, 12, 13, 14, 15, 16, 27])
-                self.set_step("Wähle Knoten")
-            if step == "Initialization":
-                self.highlight_lines_with_dimming([3, 4, 5, 6, 7, 8, 9])
-                self.set_step("Initialisierung")
-            if step == "Compare Distance":
-                self.highlight_lines_with_dimming([19, 24])
-                self.set_step("Vergleiche Distanzen")
-            if step == "Highlight Edge":
-                self.highlight_lines_with_dimming([17, 18, 25, 26])
-                self.set_step("Wähle neue Kante")
-            if step == "Update Distance":
-                self.highlight_lines_with_dimming([20, 21, 22, 23])
-                self.set_step("Update Distanzen")
-            if step == "Algorithm Finished":
-                self.clear_hightlight()
-                self.set_step("Algorithmus abgeschlossen")
+        #if self.parent.selected_algorithm == "Dijkstra_PQ":
 
 
-        if self.parent.selected_algorithm == "Dijkstra_List":
-            if step == "Select Node":
-                self.highlight_lines_with_dimming([14, 15, 16, 17, 23])
-                self.set_step("Wähle Knoten")
-            if step == "Initialization":
-                self.highlight_lines_with_dimming([3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
-                self.set_step("Initialisierung")
-            if step == "Compare Distance":
-                self.highlight_lines_with_dimming([20])
-                self.set_step("Vergleiche Distanzen")
-            if step == "Highlight Edge":
-                self.highlight_lines_with_dimming([18, 19, 21, 22])
-                self.set_step("Wähle neue Kante")
-            if step == "Update Distance":
-                self.highlight_lines_with_dimming([20])
-                self.set_step("Update Distanzen")
-            if step == "Algorithm Finished":
-                self.clear_hightlight()
-                self.set_step("Algorithmus abgeschlossen")
+
+        #if self.parent.selected_algorithm == "Dijkstra_List":
+
 
 
     # Löscht Tabelle
@@ -381,10 +314,8 @@ class Pseudocode_Frame(Frame):
         for item in self.distance_table.get_children():
             self.distance_table.delete(item)
 
-    # entfernt highlighting
-    def clear_hightlight(self):
-        self.pseudocode_display.tag_remove("highlight", "1.0", END)
-        self.pseudocode_display.tag_remove("dim", "1.0", END)
+
+
 
     # Tabelle mit aktuellen distanzen
     def update_distances(self, distances):
@@ -469,14 +400,94 @@ class Pseudocode_Frame(Frame):
 
 
 
-        # Disable the Text widget to make it read-only
+
         self.pseudocode_display.config(state=DISABLED)
 
     def highlight_specific_ranges(self, ranges, color):
-        # Highlight each specified range with the given color
+
         for start, end in ranges:
             tag_name = f"highlight_{start}-{end}"
             self.pseudocode_display.tag_add(f"highlight_{start}-{end}", start, end)
             self.pseudocode_display.tag_config(f"highlight_{start}-{end}", background=color)
-            self.highlighted_tags.append(tag_name)  # Track the tag for later removal
+            self.highlighted_tags.append(tag_name)
+
+    '''remove tableview
+    def populate_table(self, priority_queue):
+        # Clear the table first
+        for row in self.table.get_children():
+            self.table.delete(row)
+        # Populate the table with current data
+        for item in priority_queue:
+            if item[0] == self.highlight_node:
+                self.table.insert("", "end", values=item, tags="highlight")
+            else:
+                self.table.insert("", "end", values=item)
+        self.table.tag_configure("highlight", background="yellow")'''
+
+    def draw_priority_queue(self, priority_queue):
+        self.canvas.delete("all")
+
+        def draw_node(x, y, text, is_highlighted=False):
+            radius = 30
+            color = "yellow" if is_highlighted else "lightgrey"
+            self.canvas.create_oval(x - radius, y - radius, x + radius, y + radius, fill=color)
+            self.canvas.create_text(x, y, text=text, font=("Arial", 12), fill="black")
+            return x, y
+
+        def draw_tree(index, x, y, dx):
+            if index >= len(priority_queue):
+                return
+
+            node = priority_queue[index]
+            is_highlighted = node[0] == self.highlight_node
+            x, y = draw_node(x, y, f"{node[1]}\n{node[0]}", is_highlighted)
+
+            left_child_idx = 2 * index + 1
+            right_child_idx = 2 * index + 2
+
+            if left_child_idx < len(priority_queue):
+                left_x, left_y = x - dx, y + 60
+                self.canvas.create_line(x, y + 30, left_x, left_y - 30)
+                draw_tree(left_child_idx, left_x, left_y, dx // 2)
+
+            if right_child_idx < len(priority_queue):
+                right_x, right_y = x + dx, y + 60
+                self.canvas.create_line(x, y + 30, right_x, right_y - 30)
+                draw_tree(right_child_idx, right_x, right_y, dx // 2)
+
+
+        width = self.canvas.winfo_width()
+        if width > 0:
+            draw_tree(0, width // 2, 50, width // 4)
+
+
+        #self.populate_table(priority_queue)
+
+    def on_resize(self, event):
+
+        if self.current_view == "canvas":
+
+            self.draw_priority_queue(self.priority_queue)
+
+    ''' remoe table
+    def toggle_view(self):
+        if self.current_view == "canvas":
+            self.canvas_frame.pack_forget()  # Hide the canvas frame
+            self.table_frame.pack(expand=True, fill="both", padx=10, pady=10)  # Show the table frame
+            self.toggle_button.config(text="Switch to Tree")
+            self.current_view = "table"
+        else:
+            self.table_frame.pack_forget()  # Hide the table frame
+            self.canvas_frame.pack(expand=True, fill="both", padx=10, pady=10)  # Show the canvas frame
+            self.toggle_button.config(text="Switch to Table")
+            self.current_view = "canvas"'''
+
+    def setup_frames(self):
+
+        self.canvas_frame.pack_propagate(False)
+        #self.table_frame.pack_propagate(False)
+
+        # Set the width and height for the frames
+        self.canvas_frame.config(width=800, height=400)
+        #self.table_frame.config(width=800, height=400)
 

@@ -144,7 +144,7 @@ class PfadsuchApp(Tk):
             self.steps_finished_algorithm = []
             self.current_step = -1
             self.code_frame.clear_table()
-            self.code_frame.clear_hightlight()
+           # self.code_frame.clear_hightlight()
 
         if self.start_node is None or self.start_node == '':
             start_node = tkinter.simpledialog.askstring("Startknoten wählen", "Bitte Startknoten auswählen")
@@ -271,20 +271,23 @@ class PfadsuchApp(Tk):
         self.current_step = -1
         self.start_node = ""
         self.update_gui()
+
         self.code_frame.clear_table()
-        self.code_frame.clear_hightlight()
+        #TO DO CLEAR TABLE HIGHLIGHT
+        #self.code_frame.clear_hightlight()
+
         self.code_frame.set_step("")
         self.shortest_paths = {}
         if not self.shortest_paths:
             self.gui_frame.shortest_paths_button.config(state=DISABLED)
         if self.selected_algorithm in {"Dijkstra_PQ_lazy", "Dijkstra_PQ"}:
-            self.code_frame.priority_queue_label.config(text="Priority Queue")
-            self.code_frame.priority_queue_table.heading("Node", text="Knoten")
-            self.code_frame.priority_queue_table.heading("Priority", text="Priorität")
+            self.code_frame.priority_queue_label.config(text="Heap")
+            #self.code_frame.priority_queue_table.heading("Node", text="Knoten")
+            #self.code_frame.priority_queue_table.heading("Priority", text="Priorität")
         elif self.selected_algorithm == "Dijkstra_List":
             self.code_frame.priority_queue_label.config(text="Liste")
-            self.code_frame.priority_queue_table.heading("Node", text="Knoten")
-            self.code_frame.priority_queue_table.heading("Priority", text="Distanz")
+            #self.code_frame.priority_queue_table.heading("Node", text="Knoten")
+            #self.code_frame.priority_queue_table.heading("Priority", text="Distanz")
 
 
 
@@ -331,11 +334,11 @@ class PfadsuchApp(Tk):
         step = self.steps_finished_algorithm[self.current_step]
         current_node = step["current_node"]
         neighbor = step["neighbor"]
-        distances = step["distances"]
-        priority_queue = step["priority_queue"]
+        distances = step["distances"].copy()
+        priority_queue = step["priority_queue"].copy()
         self.code_frame.update_distances(distances)
-        visited = step["visited"]
-        visited_edges = step["visited_edges"]
+        visited = step["visited"].copy()
+        visited_edges = step["visited_edges"].copy()
         if self.debug:
             print(step)
 
