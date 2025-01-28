@@ -371,27 +371,48 @@ class PfadsuchApp(Tk):
         self.graph_draw_path = Graph_Visualizer_Path(self.gui_frame, self.node_positions, self.graph, self.selected_nodes, self.start_node, self)
         self.graph_draw_path.draw_path(path)
 
-    #Function to test Dijkstra Results, Compare mine to networkxs' dijkstra
+    #Function um berechnete Distanzen mit networkx Ergebniss zu vergleichen
     def test_dijkstra_algorithm(self, source_node):
         graph_data = self.graph
         G = nx.DiGraph()
+
+
         for node, neighbors in graph_data.items():
+            G.add_node(node)
             for neighbor, weight in neighbors.items():
                 G.add_edge(node, neighbor, weight=weight)
 
+
+        print(f"Graph nodes: {list(G.nodes)}")
+        print(f"Graph edges: {list(G.edges(data=True))}")
+        print(f"Source node: {source_node}")
+
+
+        if source_node not in G:
+            print(f"Error: Source node {source_node} is not in the graph.")
+            return False
+
+
         computed_distances_nx = nx.single_source_dijkstra_path_length(G, source_node)
 
+
         computed_distances_step = self.steps_finished_algorithm[-1]["distances"]
-        print(computed_distances_nx)
-        print(computed_distances_step)
-        for node, expected_distance in computed_distances_nx.items():
+
+        print("NetworkX computed distances:", computed_distances_nx)
+        print("Algorithm computed distances:", computed_distances_step)
+
+
+        all_nodes = set(computed_distances_nx.keys()).union(set(computed_distances_step.keys()))
+        for node in all_nodes:
+            expected_distance = computed_distances_nx.get(node, float('inf'))
             computed_distance_step = computed_distances_step.get(node, float('inf'))
-            if computed_distance_step != expected_distance and not (
-                    computed_distance_step == float('inf') and expected_distance == float('inf')
-            ):
+
+            if computed_distance_step != expected_distance:
                 print(f"Test failed for node {node}: expected {expected_distance}, got {computed_distance_step}")
                 return False
 
         print("All tests passed.")
         return True
+
+
 
