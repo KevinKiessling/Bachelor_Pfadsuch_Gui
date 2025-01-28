@@ -176,6 +176,10 @@ class Graph_Visualizer_Dijkstra:
                 # Priority Queue is leer, alles gray
                 if step["step_type"] == "Priority Queue Empty":
                     color = "light grey"
+                if step["step_type"] == "Find Position in Heap":
+                    color = "light grey"
+                if step["step_type"] == "Remove from Heap":
+                    color = "light grey"
 
                 if step["step_type"] == "Check if visited":
                     color = "light grey"
@@ -260,6 +264,10 @@ class Graph_Visualizer_Dijkstra:
                 if step["step_type"] == "Check if visited":
                     show_start = False
                     display_text = f"{node_text}"
+                if step["step_type"] == "Find Position in Heap":
+                    show_start = False
+                if step["step_type"] == "Remove from Heap":
+                    show_start = False
             if not step:
                 display_text = f"{node_text}"
 
@@ -320,6 +328,11 @@ class Graph_Visualizer_Dijkstra:
                         edge_color = "light grey"
                         if node == current_node and neighbor == neighbor_list:
                             edge_color = self.parent.color_edge_highlight
+                    elif step["step_type"] == "Find Position in Heap":
+                        edge_color = "light grey"
+                    elif step["step_type"] == "Remove from Heap":
+                        edge_color = "light grey"
+
 
                 if neighbor in self.node_positions:
                     x1, y1 = self.node_positions[node]
@@ -362,6 +375,8 @@ class Graph_Visualizer_Dijkstra:
                 weight_color = "light grey"
             elif step["step_type"] == "Initialize Visited":
                 weight_color = "light grey"
+            elif step["step_type"] == "Find Position in Heap":
+                weight_color = "light grey"
             elif step["step_type"] == "Priority Queue Empty":
                 weight_color = "light grey"
             elif step["step_type"] == "Push Start Node to Priority Queue":
@@ -399,6 +414,8 @@ class Graph_Visualizer_Dijkstra:
                         weight_color = "light grey"
 
             elif step["step_type"] == "Push to Heap":
+                weight_color = "light grey"
+            elif step["step_type"] == "Remove from Heap":
                 weight_color = "light grey"
             # only current edges should do that
             elif step["step_type"] == "Update Distance":

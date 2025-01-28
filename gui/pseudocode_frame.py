@@ -126,13 +126,16 @@ class Pseudocode_Frame(Frame):
         if not self.parent.current_step == -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
 
-
             if step["step_type"] == "Push Start Node to Priority Queue":
                 dis = step["distances"].get(step["current_node"])
                 node = step["current_node"]
 
                 self.draw_priority_queue(pq, node, dis)
             elif step["step_type"] == "Push to Heap":
+                dis = step["distances"].get(step["neighbor"])
+                node = step["neighbor"]
+                self.draw_priority_queue(pq, node, dis)
+            elif step["step_type"] == "Find Position in Heap":
                 dis = step["distances"].get(step["neighbor"])
                 node = step["neighbor"]
                 self.draw_priority_queue(pq, node, dis)
