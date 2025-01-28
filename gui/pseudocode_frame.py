@@ -146,7 +146,7 @@ class Pseudocode_Frame(Frame):
 
 
     #highlighted die zu dem nodename gehöhrende Row in der Distance Tabelle
-    def highlight_row(self, node_name):
+    def highlight_row(self, node_name_1, node_name_2=None):
 
         for item in self.distance_table.get_children():
             self.distance_table.item(item, tags=())
@@ -154,18 +154,33 @@ class Pseudocode_Frame(Frame):
 
         for index, item in enumerate(self.distance_table.get_children()):
             row_values = self.distance_table.item(item, "values")
-            if row_values[0] == node_name:
-                self.distance_table.item(item, tags=("highlight",))
-
+            if row_values[0] == node_name_1:
+                self.distance_table.item(item, tags=("highlight_1",))
                 self.distance_table.see(item)
                 self.center_item_in_view(index)
                 break
-        self.distance_table.tag_configure("highlight", background=self.parent.color_default, foreground="black")
+
+
+        if node_name_2:
+            for index, item in enumerate(self.distance_table.get_children()):
+                row_values = self.distance_table.item(item, "values")
+                if row_values[0] == node_name_2:
+                    self.distance_table.item(item, tags=("highlight_2",))
+                    self.distance_table.see(item)
+                    self.center_item_in_view(index)
+                    break
+
+
+        self.distance_table.tag_configure("highlight_1", background=self.parent.color_default, foreground="black")
+        self.distance_table.tag_configure("highlight_2", background=self.parent.color_d_v, foreground="black")
+
 
         if not self.parent.current_step == -1:
             step_var = self.parent.steps_finished_algorithm[self.parent.current_step]
             if step_var["step_type"] == "Update Distance" or step_var["step_type"] == "Compare Distance":
-                self.distance_table.tag_configure("highlight", background=self.parent.color_d_v, foreground="black")
+                self.distance_table.tag_configure("highlight_1", background=self.parent.color_default,
+                                                  foreground="black")
+                self.distance_table.tag_configure("highlight_2", background=self.parent.color_d_v, foreground="black")
 
     def center_item_in_view(self, index):
 
@@ -354,7 +369,7 @@ class Pseudocode_Frame(Frame):
                 self.set_step("Setzte Knoten als Besucht")
             if step == "Compare Distance":
                 self.highlight_step("Compare Distance")
-                self.highlight_row(step_for_highlighting_table["neighbor"])
+                self.highlight_row(current_node, step_for_highlighting_table["neighbor"])
                 self.set_step("Vergleiche Distanz")
             if step == "Highlight Edge":
                 self.highlight_step("Highlight Edge")
@@ -367,7 +382,7 @@ class Pseudocode_Frame(Frame):
                 self.set_step("Iteriere über alle ausgehenden Kanten")
             if step == "Update Distance":
                 self.highlight_step("Update Distance")
-                self.highlight_row(step_for_highlighting_table["neighbor"])
+                self.highlight_row(current_node, step_for_highlighting_table["neighbor"])
                 self.set_step("Update Distanzen")
             if step == "Push to Heap":
                 self.highlight_step("Push to Heap")
