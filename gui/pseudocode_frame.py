@@ -631,8 +631,8 @@ class Pseudocode_Frame(Frame):
                 self.highlight_specific_ranges([("7.8", "7.10")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("7.11", "7.24")], colors.get("show_edge"))
             elif step_type == "Skip Visited Neighbor":
-                self.highlight_specific_ranges([("10.15", "10.32")], colors.get("show_edge"))
-                self.highlight_specific_ranges([("10.12", "10.14"), ("10.33", "10.37")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("9.15", "9.32")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("9.12", "9.14"), ("9.33", "9.37")], colors.get("show_edge"))
 
 
 
