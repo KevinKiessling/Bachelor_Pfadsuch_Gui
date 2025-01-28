@@ -196,7 +196,19 @@ class Dijkstra_Priority_Queue:
                     selected_algorithm="Dijkstra_PQ_lazy"
                 )
                 if new_distance < distances[neighbor]:
-                    # Remove the old entry for this node in the priority queue
+                    self.save_state(
+                        step_type="Find Position in Heap",
+                        current_node=current_node,
+                        current_distance=current_distance,
+                        neighbor=neighbor,
+                        edge_weight=edge_weight,
+                        distances=distances,
+                        prev_nodes=prev_nodes,
+                        visited=visited,
+                        visited_edges=visited_edges,
+                        priority_queue=priority_queue,
+                        selected_algorithm="Dijkstra_PQ_lazy"
+                    )
                     self.remove_from_priority_queue(priority_queue, neighbor)
                     self.save_state(
                         step_type="Remove from Heap",
