@@ -249,7 +249,7 @@ class My_Frame(Frame):
             self.delete_note(op_data)
         elif op_type == "add_edge":
             node1, node2, _ = op_data
-            if node2 in self.parent.graph[node1]:
+            if node1 in self.parent.graph and node2 in self.parent.graph[node1]:
                 del self.parent.graph[node1][node2]
                 if self.parent.debug:
                     print(f"Strg+z Kante von {node1} nach {node2} rückgängig gemacht")
