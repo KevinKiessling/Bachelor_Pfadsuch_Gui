@@ -381,8 +381,9 @@ class PfadsuchApp(Tk):
 
         computed_distances_nx = nx.single_source_dijkstra_path_length(G, source_node)
 
-        computed_distances_step = self.steps_finished_algorithm[self.current_step]["distances"]
-
+        computed_distances_step = self.steps_finished_algorithm[-1]["distances"]
+        print(computed_distances_nx)
+        print(computed_distances_step)
         for node, expected_distance in computed_distances_nx.items():
             computed_distance_step = computed_distances_step.get(node, float('inf'))
             if computed_distance_step != expected_distance and not (

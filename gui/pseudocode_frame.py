@@ -400,7 +400,67 @@ class Pseudocode_Frame(Frame):
                 self.highlight_step("Check if visited")
                 self.set_step("Prüfe ob Knoten bereits besucht wurde")
 
-        #if self.parent.selected_algorithm == "Dijkstra_PQ":
+        if self.parent.selected_algorithm == "Dijkstra_PQ":
+            if step == "Initialize Node Distance":
+                self.highlight_step("Initialize Node Distance")
+                self.set_step("Initialisiere Knoten Distanzen")
+                self.highlight_row(current_node)
+                self.pseudocode_display.see(f"{3}.0")
+            if step == "Initialize Visited":
+                self.highlight_step("Initialize Visited")
+                self.set_step("Initialisiere besuchte Knoten")
+                self.pseudocode_display.see(f"{3}.0")
+            if step == "Pick Node":
+                self.highlight_step("Pick Node")
+                self.set_step("Wähle Knoten")
+            if step == "Set Start Node Distance":
+                self.highlight_step("Set Start Node Distance")
+                self.set_step("Setze Distanz von Startknoten")
+                self.highlight_row(current_node)
+            if step == "Push Start Node to Priority Queue":
+                self.highlight_step("Push Start Node to Priority Queue")
+                self.set_step("Füge Startknoten dem Heap hinzu")
+            if step == "Heap Pop":
+                self.highlight_step("Heap Pop")
+                self.set_step("Entferne das oberste Heap Element")
+            if step == "Algorithm Finished":
+                self.highlight_step("Algorithm Finished")
+                self.set_step("Algorithmus abgeschlossen")
+            if step == "Visit Node":
+                self.highlight_step("Visit Node")
+                self.set_step("Setzte Knoten als Besucht")
+            if step == "Compare Distance":
+                self.highlight_step("Compare Distance")
+                self.highlight_row(current_node, step_for_highlighting_table["neighbor"])
+                self.set_step("Vergleiche Distanz")
+            if step == "Highlight Edge":
+                self.highlight_step("Highlight Edge")
+                self.set_step("Wähle Kante wobei Zielknoten nicht vorher besucht")
+            if step == "Begin Outer Loop":
+                self.highlight_step("Begin Outer Loop")
+                self.set_step("Solange der Heap nicht leer is")
+            if step == "Begin Inner Loop":
+                self.highlight_step("Begin Inner Loop")
+                self.set_step("Iteriere über alle ausgehenden Kanten")
+            if step == "Update Distance":
+                self.highlight_step("Update Distance")
+                self.highlight_row(current_node, step_for_highlighting_table["neighbor"])
+                self.set_step("Update Distanzen")
+            if step == "Push to Heap":
+                self.highlight_step("Push to Heap")
+                self.set_step("Pushe neue Distanz auf Heap")
+            if step == "Skip Visited Node":
+                self.highlight_step("Skip Visited Node")
+                self.set_step("Überspringe bereits bearbeitete Knoten")
+            if step == "Skip Visited Neighbor":
+                self.highlight_step("Skip Visited Neighbor")
+                self.set_step("Überspringe Kante zu bereits besuchten Knoten")
+            if step == "Priority Queue Empty":
+                self.highlight_step("Priority Queue Empty")
+                self.set_step("Keine Elemente In Priority Queue übrig")
+            if step == "Check if visited":
+                self.highlight_step("Check if visited")
+                self.set_step("Prüfe ob Knoten bereits besucht wurde")
 
 
 
@@ -503,6 +563,59 @@ class Pseudocode_Frame(Frame):
             elif step_type == "Skip Visited Neighbor":
                 self.highlight_specific_ranges([("10.15", "10.32")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("10.12", "10.14"), ("10.33", "10.37")], colors.get("show_edge"))
+
+        if self.parent.selected_algorithm == "Dijkstra_PQ":
+            if step_type == "Pick Node":
+                self.highlight_specific_ranges([("3.13", "3.18")], colors.get("current_node"))
+                self.highlight_specific_ranges([("3.5", "3.12"),("3.19", "3.21")], colors.get("show_edge"))
+            elif step_type == "Initialize Visited":
+                self.highlight_specific_ranges([("3.22", "3.43")], colors.get("discovered_false"))
+            elif step_type == "Initialize Node Distance":
+                self.highlight_specific_ranges([("3.45", "3.53")], colors.get("current_node"))
+            elif step_type == "Set Start Node Distance":
+                self.highlight_specific_ranges([("4.5", "4.13")], colors.get("current_node"))
+            elif step_type == "Push Start Node to Priority Queue":
+                self.highlight_specific_ranges([("4.15", "4.46")], colors.get("Heap"))
+            elif step_type == "Begin Outer Loop":
+                self.highlight_specific_ranges([("5.11", "5.25")], colors.get("Heap"))
+                self.highlight_specific_ranges([("5.5", "5.10"),("5.26", "5.28")], colors.get("show_edge"))
+            elif step_type == "Heap Pop":
+                self.highlight_specific_ranges([("6.8", "6.26")], colors.get("current_node"))
+            elif step_type == "Visit Node":
+                self.highlight_specific_ranges([("7.39", "7.43")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("8.12", "8.32")], colors.get("discovered_true"))
+            elif step_type == "Skip Visited Node":
+                self.highlight_specific_ranges([("7.30", "7.38")], colors.get("discovered_true"))
+                self.highlight_specific_ranges([("7.25", "7.29")], colors.get("show_edge"))
+            elif step_type == "Begin Inner Loop":
+                self.highlight_specific_ranges([("9.8", "9.14"),("9.27", "9.29")], colors.get("show_edge"))
+
+                self.highlight_specific_ranges([("9.15", "9.26")], colors.get("highlighted_edge"))
+            elif step_type == "Highlight Edge":
+                self.highlight_specific_ranges([("10.15", "10.32")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("10.12", "10.14")], colors.get("show_edge"))
+            elif step_type == "Compare Distance":
+                self.highlight_specific_ranges([("11.16", "11.18"),("10.33", "10.37")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("11.33", "11.40")], colors.get("highlighted_edge")) # Kante bleibt so
+                self.highlight_specific_ranges([("11.26", "11.30")], colors.get("current_node")) # d[u]
+                self.highlight_specific_ranges([("11.19", "11.23")], colors.get("d_v")) # d[v]
+            elif step_type == "Update Distance":
+                self.highlight_specific_ranges([("11.41", "11.45")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("12.34", "12.41")], colors.get("highlighted_edge")) # Kante bleibt so
+                self.highlight_specific_ranges([("12.27", "12.31")], colors.get("current_node")) # d[u]
+                self.highlight_specific_ranges([("12.20", "12.24")], colors.get("d_v")) # d[v]
+            elif step_type == "Push to Heap":
+                self.highlight_specific_ranges([("13.20", "13.39")], colors.get("Heap"))
+            elif step_type == "Priority Queue Empty":
+                self.highlight_specific_ranges([("5.11", "5.25")], colors.get("Heap"))
+                self.highlight_specific_ranges([("5.5", "5.10"),("5.26", "5.28")], colors.get("show_edge"))
+            elif step_type == "Check if visited":
+                self.highlight_specific_ranges([("7.8", "7.10")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("7.11", "7.24")], colors.get("show_edge"))
+            elif step_type == "Skip Visited Neighbor":
+                self.highlight_specific_ranges([("10.15", "10.32")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("10.12", "10.14"), ("10.33", "10.37")], colors.get("show_edge"))
+
 
 
 
