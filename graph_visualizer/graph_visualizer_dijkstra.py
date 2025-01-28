@@ -144,23 +144,6 @@ class Graph_Visualizer_Dijkstra:
                     if node in neighbor_list:
                         color = self.parent.color_heap
 
-                # Überspringe besuchte Knoten
-                if step["step_type"] == "Skip Visited Node":
-                    '''color = "light grey"
-                    if visited[node]:
-                        color = discovered_node_true_color
-                    if node == current_node:
-                        color = discovered_node_true_color
-                    if not visited[node]:
-                        color = discovered_node_false_color'''
-                    color = "light grey"
-                    if node == current_node:
-                        if visited.get(current_node):
-                            # print(visited.get(current_node))
-                            color = discovered_node_true_color
-                        elif not visited.get(current_node):
-                            color = discovered_node_false_color
-
                 # Überspringe besuchte Nachbarn
                 if step["step_type"] == "Skip Visited Neighbor":
                     color = "light grey"
@@ -178,17 +161,10 @@ class Graph_Visualizer_Dijkstra:
                     color = "light grey"
                 if step["step_type"] == "Find Position in Heap":
                     color = "light grey"
+                    if node in neighbor_list and any(node == item[1] for item in step["priority_queue"]):
+                        color = self.parent.color_heap
                 if step["step_type"] == "Remove from Heap":
                     color = "light grey"
-
-                if step["step_type"] == "Check if visited":
-                    color = "light grey"
-                    if node == current_node:
-                        if visited.get(current_node):
-                            # print(visited.get(current_node))
-                            color = discovered_node_true_color
-                        elif not visited.get(current_node):
-                            color = discovered_node_false_color
 
             # Knoten werte
             distance_text = distances.get(node, 0)
@@ -253,17 +229,11 @@ class Graph_Visualizer_Dijkstra:
                     show_start = False
                 if step["step_type"] == "Push to Heap":
                     show_start = False
-                if step["step_type"] == "Skip Visited Node":
-                    show_start = False
-                    display_text = f"{node_text}"
                 if step["step_type"] == "Skip Visited Neighbor":
                     show_start = False
                     display_text = f"{node_text}"
                 if step["step_type"] == "Priority Queue Empty":
                     show_start = False
-                if step["step_type"] == "Check if visited":
-                    show_start = False
-                    display_text = f"{node_text}"
                 if step["step_type"] == "Find Position in Heap":
                     show_start = False
                 if step["step_type"] == "Remove from Heap":
@@ -387,8 +357,7 @@ class Graph_Visualizer_Dijkstra:
                 weight_color = "light grey"
             elif step["step_type"] == "Heap Pop":
                 weight_color = "light grey"
-            elif step["step_type"] == "Check if visited":
-                weight_color = "light grey"
+
             # only current edges should do that
 
             elif step["step_type"] == "Highlight Edge":

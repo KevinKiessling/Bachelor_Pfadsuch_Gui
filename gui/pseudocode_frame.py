@@ -592,9 +592,6 @@ class Pseudocode_Frame(Frame):
                 self.highlight_specific_ranges([("6.8", "6.26")], colors.get("current_node"))
             elif step_type == "Visit Node":
                 self.highlight_specific_ranges([("7.8", "7.28")], colors.get("discovered_true"))
-            elif step_type == "Skip Visited Node":
-                self.highlight_specific_ranges([("7.30", "7.38")], colors.get("discovered_true"))
-                self.highlight_specific_ranges([("7.25", "7.29")], colors.get("show_edge"))
             elif step_type == "Begin Inner Loop":
                 self.highlight_specific_ranges([("8.8", "8.14"),("8.27", "8.29")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("8.15", "8.26")], colors.get("highlighted_edge"))
@@ -627,9 +624,7 @@ class Pseudocode_Frame(Frame):
             elif step_type == "Priority Queue Empty":
                 self.highlight_specific_ranges([("5.11", "5.25")], colors.get("Heap"))
                 self.highlight_specific_ranges([("5.5", "5.10"),("5.26", "5.28")], colors.get("show_edge"))
-            elif step_type == "Check if visited":
-                self.highlight_specific_ranges([("7.8", "7.10")], colors.get("show_edge"))
-                self.highlight_specific_ranges([("7.11", "7.24")], colors.get("show_edge"))
+
             elif step_type == "Skip Visited Neighbor":
                 self.highlight_specific_ranges([("9.15", "9.32")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("9.12", "9.14"), ("9.33", "9.37")], colors.get("show_edge"))
@@ -666,7 +661,7 @@ class Pseudocode_Frame(Frame):
         self.canvas.delete("all")
 
         def draw_node(x, y, text, is_highlighted=False):
-            radius = 30
+            radius = 35
             color = self.parent.color_heap if is_highlighted else "lightgrey"
             self.canvas.create_oval(x - radius, y - radius, x + radius, y + radius, fill=color)
             self.canvas.create_text(x, y, text=text, font=("Arial", 12), fill="black")
@@ -691,13 +686,13 @@ class Pseudocode_Frame(Frame):
             right_child_idx = 2 * index + 2
 
             if left_child_idx < len(priority_queue):
-                left_x, left_y = x - dx, y + 60
-                self.canvas.create_line(x, y + 30, left_x, left_y - 30)
+                left_x, left_y = x - dx, y + 70
+                self.canvas.create_line(x, y + 35, left_x, left_y - 35)
                 draw_tree(left_child_idx, left_x, left_y, dx // 2, highlight_node, highlight_distance)
 
             if right_child_idx < len(priority_queue):
-                right_x, right_y = x + dx, y + 60
-                self.canvas.create_line(x, y + 30, right_x, right_y - 30)
+                right_x, right_y = x + dx, y + 70
+                self.canvas.create_line(x, y + 35, right_x, right_y - 35)
                 draw_tree(right_child_idx, right_x, right_y, dx // 2, highlight_node, highlight_distance)
 
         width = self.canvas.winfo_width()
