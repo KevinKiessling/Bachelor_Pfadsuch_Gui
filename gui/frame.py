@@ -71,6 +71,7 @@ class My_Frame(Frame):
         self.canvas.bind("<Button-1>", self.add_node)
         self.canvas.bind("<Button-3>", self.add_edge)
         self.canvas.bind("<Button-2>", self.remove_clicked_element)
+        self.canvas.bind("<Control-Button-1>", self.remove_clicked_element)
         self.focus_set()
         self.bind("<Right>", self.go_to_next_step)
         self.bind("<Left>", self.go_step_back)
