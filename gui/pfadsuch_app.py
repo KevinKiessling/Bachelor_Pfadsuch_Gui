@@ -41,8 +41,8 @@ class PfadsuchApp(Tk):
         #farben für highlighting im pseudocode und in Graph
         self.color_heap = "#d2cd6f"
         self.color_d_v = "violet"
-        self.color_discovered_true = "#00ff40"
-        self.color_discovered_false = "orange"
+        self.color_discovered_true = "orange"
+        self.color_discovered_false = "#00ff40"
         self.color_default = "yellow"
         self.color_edge_highlight = "#4ecdf8"
         self.color_shortest_path = "light blue"
