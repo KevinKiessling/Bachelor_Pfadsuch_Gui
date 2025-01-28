@@ -554,7 +554,7 @@ class Pseudocode_Frame(Frame):
             )
 
 
-            x, y = draw_node(x, y, f"{node[1]}\n{node[0]}", is_highlighted)
+            x, y = draw_node(x, y, f"{node[1]}, {node[0]}", is_highlighted)
 
             left_child_idx = 2 * index + 1
             right_child_idx = 2 * index + 2
