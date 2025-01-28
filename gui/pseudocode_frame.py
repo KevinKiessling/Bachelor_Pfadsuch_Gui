@@ -160,9 +160,12 @@ class Pseudocode_Frame(Frame):
                 self.distance_table.see(item)
                 self.center_item_in_view(index)
                 break
+        self.distance_table.tag_configure("highlight", background=self.parent.color_default, foreground="black")
 
-
-        self.distance_table.tag_configure("highlight", background="yellow", foreground="black")
+        if not self.parent.current_step == -1:
+            step_var = self.parent.steps_finished_algorithm[self.parent.current_step]
+            if step_var["step_type"] == "Update Distance" or step_var["step_type"] == "Compare Distance":
+                self.distance_table.tag_configure("highlight", background=self.parent.color_d_v, foreground="black")
 
     def center_item_in_view(self, index):
 
@@ -423,10 +426,12 @@ class Pseudocode_Frame(Frame):
 
         colors = {
             "Heap": self.parent.color_heap,
-            "current_node": "yellow",
-            "discovered_false": "orange",
-            "discovered_true": "#00ff40",
-            "show_edge": "light grey"
+            "current_node": self.parent.color_default,
+            "discovered_false": self.parent.color_discovered_false,
+            "discovered_true": self.parent.color_discovered_true,
+            "d_v": self.parent.color_d_v,
+            "show_edge": "light grey",
+            "highlighted_edge": self.parent.color_edge_highlight
         }
 
 
@@ -458,20 +463,20 @@ class Pseudocode_Frame(Frame):
             elif step_type == "Begin Inner Loop":
                 self.highlight_specific_ranges([("9.8", "9.14"),("9.27", "9.29")], colors.get("show_edge"))
 
-                self.highlight_specific_ranges([("9.15", "9.26")], "#4ecdf8")
+                self.highlight_specific_ranges([("9.15", "9.26")], colors.get("highlighted_edge"))
             elif step_type == "Highlight Edge":
                 self.highlight_specific_ranges([("10.15", "10.32")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("10.12", "10.14")], colors.get("show_edge"))
             elif step_type == "Compare Distance":
                 self.highlight_specific_ranges([("11.16", "11.18"),("10.33", "10.37")], colors.get("show_edge"))
-                self.highlight_specific_ranges([("11.33", "11.40")], "#4ecdf8") # Kante bleibt so
+                self.highlight_specific_ranges([("11.33", "11.40")], colors.get("highlighted_edge")) # Kante bleibt so
                 self.highlight_specific_ranges([("11.26", "11.30")], colors.get("current_node")) # d[u]
-                self.highlight_specific_ranges([("11.19", "11.23")], "violet") # d[v]
+                self.highlight_specific_ranges([("11.19", "11.23")], colors.get("d_v")) # d[v]
             elif step_type == "Update Distance":
                 self.highlight_specific_ranges([("11.41", "11.45")], colors.get("show_edge"))
-                self.highlight_specific_ranges([("12.34", "12.41")], "#4ecdf8") # Kante bleibt so
+                self.highlight_specific_ranges([("12.34", "12.41")], colors.get("highlighted_edge")) # Kante bleibt so
                 self.highlight_specific_ranges([("12.27", "12.31")], colors.get("current_node")) # d[u]
-                self.highlight_specific_ranges([("12.20", "12.24")], "violet") # d[v]
+                self.highlight_specific_ranges([("12.20", "12.24")], colors.get("d_v")) # d[v]
             elif step_type == "Push to Heap":
                 self.highlight_specific_ranges([("13.20", "13.39")], colors.get("Heap"))
             elif step_type == "Priority Queue Empty":

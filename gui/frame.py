@@ -467,10 +467,8 @@ class My_Frame(Frame):
         default_colors = {
             "color_heap": "#d2cd6f",
             "color_d_v": "violet",
-            "color_d_u": "yellow",
             "color_discovered_true": "#00ff40",
             "color_discovered_false": "orange",
-            "color_default": "yellow",
             "color_edge_highlight": "#4ecdf8",
             "color_shortest_path": "light blue"
         }
@@ -487,18 +485,12 @@ class My_Frame(Frame):
                 elif element == 'color_d_v':
                     self.parent.color_d_v = color
                     color_d_v_button.config(bg=color)
-                elif element == 'color_d_u':
-                    self.parent.color_d_u = color
-                    color_d_u_button.config(bg=color)
                 elif element == 'color_discovered_true':
                     self.parent.color_discovered_true = color
                     color_discovered_true_button.config(bg=color)
                 elif element == 'color_discovered_false':
                     self.parent.color_discovered_false = color
                     color_discovered_false_button.config(bg=color)
-                elif element == 'color_default':
-                    self.parent.color_default = color
-                    color_default_button.config(bg=color)
                 elif element == 'color_edge_highlight':
                     self.parent.color_edge_highlight = color
                     color_edge_highlight_button.config(bg=color)
@@ -511,20 +503,16 @@ class My_Frame(Frame):
 
             self.parent.color_heap = default_colors["color_heap"]
             self.parent.color_d_v = default_colors["color_d_v"]
-            self.parent.color_d_u = default_colors["color_d_u"]
             self.parent.color_discovered_true = default_colors["color_discovered_true"]
             self.parent.color_discovered_false = default_colors["color_discovered_false"]
-            self.parent.color_default = default_colors["color_default"]
             self.parent.color_edge_highlight = default_colors["color_edge_highlight"]
             self.parent.color_shortest_path = default_colors["color_shortest_path"]
 
 
             color_heap_button.config(bg=self.parent.color_heap)
             color_d_v_button.config(bg=self.parent.color_d_v)
-            color_d_u_button.config(bg=self.parent.color_d_u)
             color_discovered_true_button.config(bg=self.parent.color_discovered_true)
             color_discovered_false_button.config(bg=self.parent.color_discovered_false)
-            color_default_button.config(bg=self.parent.color_default)
             color_edge_highlight_button.config(bg=self.parent.color_edge_highlight)
             color_shortest_path_button.config(bg=self.parent.color_shortest_path)
 
@@ -547,27 +535,17 @@ class My_Frame(Frame):
         color_d_v_button_frame.pack(pady=5)
         color_d_v_button.config(bg=self.parent.color_d_v)
 
-        color_d_u_button_frame = Frame(color_tab)
-        color_d_u_button = create_color_button(color_d_u_button_frame, "D-U Farbe", 'color_d_u')
-        color_d_u_button_frame.pack(pady=5)
-        color_d_u_button.config(bg=self.parent.color_d_u)
-
         color_discovered_true_button_frame = Frame(color_tab)
-        color_discovered_true_button = create_color_button(color_discovered_true_button_frame, "Entdeckter Knoten Wahr",
+        color_discovered_true_button = create_color_button(color_discovered_true_button_frame, "discovered[v] ← true",
                                                            'color_discovered_true')
         color_discovered_true_button_frame.pack(pady=5)
         color_discovered_true_button.config(bg=self.parent.color_discovered_true)
 
         color_discovered_false_button_frame = Frame(color_tab)
         color_discovered_false_button = create_color_button(color_discovered_false_button_frame,
-                                                            "Entdeckter Knoten Falsch", 'color_discovered_false')
+                                                            "discovered[v] ← false", 'color_discovered_false')
         color_discovered_false_button_frame.pack(pady=5)
         color_discovered_false_button.config(bg=self.parent.color_discovered_false)
-
-        color_default_button_frame = Frame(color_tab)
-        color_default_button = create_color_button(color_default_button_frame, "Standard Farbe", 'color_default')
-        color_default_button_frame.pack(pady=5)
-        color_default_button.config(bg=self.parent.color_default)
 
         color_edge_highlight_button_frame = Frame(color_tab)
         color_edge_highlight_button = create_color_button(color_edge_highlight_button_frame, "Hervorgehobene Kante",

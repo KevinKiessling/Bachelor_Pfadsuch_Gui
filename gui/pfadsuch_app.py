@@ -41,7 +41,6 @@ class PfadsuchApp(Tk):
         #farben für highlighting im pseudocode und in Graph
         self.color_heap = "#d2cd6f"
         self.color_d_v = "violet"
-        self.color_d_u = "yellow"
         self.color_discovered_true = "#00ff40"
         self.color_discovered_false = "orange"
         self.color_default = "yellow"
@@ -93,10 +92,8 @@ class PfadsuchApp(Tk):
 
                 self.color_heap = config.get("color_heap", self.color_heap)
                 self.color_d_v = config.get("color_d_v", self.color_d_v)
-                self.color_d_u = config.get("color_d_u", self.color_d_u)
                 self.color_discovered_true = config.get("color_discovered_true", self.color_discovered_true)
                 self.color_discovered_false = config.get("color_discovered_false", self.color_discovered_false)
-                self.color_default = config.get("color_default", self.color_default)
                 self.color_edge_highlight = config.get("color_edge_highlight", self.color_edge_highlight)
                 self.color_shortest_path = config.get("color_shortest_path", self.color_shortest_path)
                 self.font_size = config.get("font_size", self.font_size)
@@ -131,10 +128,8 @@ class PfadsuchApp(Tk):
             "max_edge_weight": self.max_edge_weight,
             "color_heap": self.color_heap,
             "color_d_v": self.color_d_v,
-            "color_d_u": self.color_d_u,
             "color_discovered_true": self.color_discovered_true,
             "color_discovered_false": self.color_discovered_false,
-            "color_default": self.color_default,
             "color_edge_highlight": self.color_edge_highlight,
             "color_shortest_path": self.color_shortest_path,
         }
