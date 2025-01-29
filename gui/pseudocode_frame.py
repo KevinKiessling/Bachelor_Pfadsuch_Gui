@@ -120,11 +120,43 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display.config(font=("Courier New", self.parent.font_size))
         self.style_pseudocode_initial()
 
+    def draw_list(self, list_data, distances):
+        self.canvas.delete("all")
+        print(list_data)
+        print(distances)
+        width = self.canvas.winfo_width()
+        height = self.canvas.winfo_height()
+        num_elements = len(list_data)
+
+        element_width = max(70, width // max(1, num_elements) - 5)
+        element_height = 45
+        padding = 5
+        cols = max(1, width // (element_width + padding))
+        rows = (num_elements + cols - 1) // cols
+
+        for i, value in enumerate(list_data):
+            row, col = divmod(i, cols)
+            x1 = col * (element_width + padding)
+            y1 = row * (element_height + padding)
+            x2, y2 = x1 + element_width, y1 + element_height
+            color = "light grey"
+            self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="black")
+
+
+            self.canvas.create_text((x1 + x2) // 2, y1 + 12, text=str(value), font=("Arial", 12, "bold"))
+
+
+            distance = distances.get(value, float('inf'))
+            distance_text = f"d[{value}] = {distance if distance != float('inf') else '∞'}"
+            self.canvas.create_text((x1 + x2) // 2, y1 + 32, text=distance_text, font=("Arial", 10))
+
     # draws heap with highlighting
     def update_priority_queue(self, pq):
-        if self.parent.selected_algorithm == "Dijkstra_List":
-            print("todo draw liste")
-            return
+        if not self.parent.current_step == -1:
+            step = self.parent.steps_finished_algorithm[self.parent.current_step]
+            if self.parent.selected_algorithm == "Dijkstra_List":
+                self.draw_list(pq, step["distances"])
+                return
         if not self.parent.current_step == -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
 
@@ -705,7 +737,16 @@ class Pseudocode_Frame(Frame):
 
     def on_resize(self, event):
         if self.current_view == "canvas":
-            self.draw_priority_queue(self.priority_queue)
+            if self.parent.selected_algorithm == "Dijkstra_PQ_lazy" or self.parent.selected_algorithm == "Dijkstra_PQ":
+                self.draw_priority_queue(self.priority_queue)
+            else:
+                if self.parent.current_step == -1:
+                    return
+                else:
+
+                    step = self.parent.steps_finished_algorithm[self.parent.current_step]
+                    list_var = step["list"]
+                    self.draw_list(list_var, step["distances"])
 
     ''' removed tableview
     def toggle_view(self):
