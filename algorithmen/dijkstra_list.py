@@ -7,41 +7,151 @@ class Dijkstra_List():
         self.shortest_path_edges = {}
 
     def run_dijkstra_list(self, graph, startnode):
-        distances = {node: float("inf") for node in graph}
-        distances[startnode] = 0
-        L = list(graph.keys())
+        distances = {}
+
+
+        L = list()
         prev_nodes = {}
         path_edges = {startnode: []}
-        visited = set()
+        visited = {}
         visited_edges = set()
+        #line 2
+        for node in graph:
+            visited[node] = None
+            self.save_state(
+                step_type="Pick Node",
+                current_node=node,
+                current_distance=None,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                current_list=L,
+                selected_algorithm="Dijkstra_List"
+            )
 
-        def convert_to_priority_queue(L, distances):
+            visited[node] = False  # Set visited status to False for each node
+            self.save_state(
+                step_type="Initialize Visited",
+                current_node=node,
+                current_distance=None,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                current_list=L,
+                selected_algorithm="Dijkstra_List"
+            )
+        #line 3
+        for node in graph:
+            self.save_state(
+                step_type="Pick Node",
+                current_node=node,
+                current_distance=None,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                current_list=L,
+                selected_algorithm="Dijkstra_List"
+            )
 
-            #return sorted([(distances[node], node) for node in L], key=lambda x: x[0])
-            return distances
-
+            distances[node] = float('inf')  # Set visited status to False for each node
+            self.save_state(
+                step_type="Initialize Node Distance",
+                current_node=node,
+                current_distance=None,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                current_list=L,
+                selected_algorithm="Dijkstra_List"
+            )
+        #line 4, 1
+        distances[startnode] = 0
         self.save_state(
-            step_type="Initialization",
-            current_node=None,
+            step_type="Set Start Node Distance",
+            current_node=startnode,
             current_distance=None,
             neighbor=None,
             edge_weight=None,
             distances=distances,
             prev_nodes=prev_nodes,
-            visited=visited.copy(),
+            visited=visited,
             visited_edges=visited_edges,
             current_list=L,
-            selected_algorithm="Dijkstra_List",
+            selected_algorithm="Dijkstra_List"
         )
+        #line 4,2
+        self.save_state(
+            step_type="Initialize List",
+            current_node=startnode,
+            current_distance=None,
+            neighbor=None,
+            edge_weight=None,
+            distances=distances,
+            prev_nodes=prev_nodes,
+            visited=visited,
+            visited_edges=visited_edges,
+            current_list=L,
+            selected_algorithm="Dijkstra_List"
+        )
+        for node in graph:
+            self.save_state(
+                step_type="Pick Node",
+                current_node=node,
+                current_distance=None,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                current_list=L,
+                selected_algorithm="Dijkstra_List"
+            )
+            L.append(node)
+            self.save_state(
+                step_type="Add Node to List",
+                current_node=node,
+                current_distance=None,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                current_list=L,
+                selected_algorithm="Dijkstra_List"
+            )
+
 
         while L:
-            u = min(L, key=lambda node: distances[node])
-            L.remove(u)
-
-            visited.add(u)
-
             self.save_state(
-                step_type="Select Node",
+                step_type="Begin Outer Loop",
+                current_node=None,
+                current_distance=None,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                current_list=L,
+                selected_algorithm="Dijkstra_List"
+            )
+            u = min(L, key=lambda node: distances[node])
+            self.save_state(
+                step_type="Find Min in List",
                 current_node=u,
                 current_distance=distances[u],
                 neighbor=None,
@@ -53,14 +163,68 @@ class Dijkstra_List():
                 current_list=L,
                 selected_algorithm="Dijkstra_List",
             )
-            #if distances[u] == float("inf"):
-               # continue
+            L.remove(u)
+            self.save_state(
+                step_type="Remove min from List",
+                current_node=u,
+                current_distance=distances[u],
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited.copy(),
+                visited_edges=visited_edges,
+                current_list=L,
+                selected_algorithm="Dijkstra_List",
+            )
+            current_distance, current_node = distances[u], u
+            print(u)
+            visited[u] = True
 
+            self.save_state(
+                step_type="Visit Node u ",
+                current_node=current_node,
+                current_distance=current_distance,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited.copy(),
+                visited_edges=visited_edges,
+                current_list=L,
+                selected_algorithm="Dijkstra_List",
+            )
 
             for neighbor, edge_weight in graph[u].items():
-                if neighbor in visited:
+                self.save_state(
+                    step_type="Begin Inner Loop",
+                    current_node=current_node,
+                    current_distance=current_distance,
+                    neighbor=neighbor,
+                    edge_weight=edge_weight,
+                    distances=distances,
+                    prev_nodes=prev_nodes,
+                    visited=visited,
+                    visited_edges=visited_edges,
+                    current_list=L,
+                    selected_algorithm="Dijkstra_List"
+                )
+                if visited[neighbor]:
+                    self.save_state(
+                        step_type="Skip Visited Neighbor",
+                        current_node=current_node,
+                        current_distance=current_distance,
+                        neighbor=neighbor,
+                        edge_weight=edge_weight,
+                        distances=distances,
+                        prev_nodes=prev_nodes,
+                        visited=visited,
+                        visited_edges=visited_edges,
+                        current_list=L,
+                        selected_algorithm="Dijkstra_List"
+                    )
                     continue
-                visited_edges.add((u, neighbor))
+                visited_edges.add((current_node, neighbor))
 
                 self.save_state(
                     step_type="Highlight Edge",
@@ -99,7 +263,20 @@ class Dijkstra_List():
                     current_list=L,
                     selected_algorithm="Dijkstra_List",
                 )
-
+        if not L:
+            self.save_state(
+                step_type="List Empty",
+                current_node=None,
+                current_distance=None,
+                neighbor=None,
+                edge_weight=None,
+                distances=distances,
+                prev_nodes=prev_nodes,
+                visited=visited,
+                visited_edges=visited_edges,
+                current_list=L,
+                selected_algorithm="Dijkstra_List"
+            )
         self.save_state(
             step_type="Algorithm Finished",
             current_node=None,

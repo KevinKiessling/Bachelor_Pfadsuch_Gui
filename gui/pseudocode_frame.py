@@ -122,16 +122,18 @@ class Pseudocode_Frame(Frame):
 
     def draw_list(self, list_data, distances):
         self.canvas.delete("all")
-        print(list_data)
-        print(distances)
-        width = self.canvas.winfo_width()
-        height = self.canvas.winfo_height()
+
+        width = max(1, self.canvas.winfo_width())
+        height = max(1, self.canvas.winfo_height())
         num_elements = len(list_data)
 
-        element_width = max(70, width // max(1, num_elements) - 5)
+        if num_elements == 0:
+            return
+
+        element_width = max(70, width // num_elements - 5)
         element_height = 45
         padding = 5
-        cols = max(1, width // (element_width + padding))
+        cols = max(1, width // (element_width + padding))  # Ensure cols is at least 1
         rows = (num_elements + cols - 1) // cols
 
         for i, value in enumerate(list_data):
@@ -142,9 +144,7 @@ class Pseudocode_Frame(Frame):
             color = "light grey"
             self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="black")
 
-
             self.canvas.create_text((x1 + x2) // 2, y1 + 12, text=str(value), font=("Arial", 12, "bold"))
-
 
             distance = distances.get(value, float('inf'))
             distance_text = f"d[{value}] = {distance if distance != float('inf') else '∞'}"
@@ -236,7 +236,7 @@ class Pseudocode_Frame(Frame):
             self.pcode = """1:DijkstraH(Gerichteter Graph G = (V, E),
     Gewichtsfunktion ω : E → N, Startknoten s ∈ V):
 2:   foreach v ∈ V do discovered[v] ← false
-3:   foreach v ∈ V do d(s) ← ∞ 
+3:   foreach v ∈ V do d(v) ← ∞ 
 4:   d(s) ← 0, List L ← ()
 5:   foreach v ∈ V do L.add(v)
 6:   while not L.empty() do 
