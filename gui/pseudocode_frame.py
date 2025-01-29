@@ -506,6 +506,81 @@ class Pseudocode_Frame(Frame):
                 self.set_step("Entferne Element an Position i aus dem Heap")
 
 
+        if self.parent.selected_algorithm == "Dijkstra_List":
+            if step == "Initialize Node Distance":
+                self.highlight_step("Initialize Node Distance")
+                self.set_step("Initialisiere Knoten Distanzen")
+                self.highlight_row(current_node)
+                self.pseudocode_display.see(f"{3}.0")
+            if step == "Initialize Visited":
+                self.highlight_step("Initialize Visited")
+                self.set_step("Initialisiere besuchte Knoten")
+                self.pseudocode_display.see(f"{3}.0")
+            if step == "Pick Node_1":
+                self.highlight_step("Pick Node_1")
+                self.set_step("Wähle Knoten1")
+            if step == "Pick Node_2":
+                self.highlight_step("Pick Node_2")
+                self.set_step("Wähle Knoten2")
+            if step == "Pick Node_3":
+                self.highlight_step("Pick Node_3")
+                self.set_step("Wähle Knoten3")
+            if step == "Set Start Node Distance":
+                self.highlight_step("Set Start Node Distance")
+                self.set_step("Setze Distanz von Startknoten")
+                self.highlight_row(current_node)
+            if step == "Initialize List":
+                self.highlight_step("Initialize List")
+                self.set_step("Initialize List")
+            if step == "Add Node to List":
+                self.highlight_step("Add Node to List")
+                self.set_step("Add Node to List")
+            if step == "Algorithm Finished":
+                self.highlight_step("Algorithm Finished")
+                self.set_step("Algorithmus abgeschlossen")
+            if step == "Visit Node":
+                self.highlight_step("Visit Node")
+                self.set_step("Setzte Knoten als Besucht")
+            if step == "Compare Distance":
+                self.highlight_step("Compare Distance")
+                self.highlight_row(current_node, step_for_highlighting_table["neighbor"])
+                self.set_step("Vergleiche Distanz")
+            if step == "Highlight Edge":
+                self.highlight_step("Highlight Edge")
+                self.set_step("Wähle Kante wobei Zielknoten nicht vorher besucht")
+            if step == "Begin Outer Loop":
+                self.highlight_step("Begin Outer Loop")
+                self.set_step("Solange der Heap nicht leer is")
+            if step == "Begin Inner Loop":
+                self.highlight_step("Begin Inner Loop")
+                self.set_step("Iteriere über alle ausgehenden Kanten")
+            if step == "Update Distance":
+                self.highlight_step("Update Distance")
+                self.highlight_row(current_node, step_for_highlighting_table["neighbor"])
+                self.set_step("Update Distanzen")
+            if step == "Find Min in List":
+                self.highlight_step("Find Min in List")
+                self.set_step("Find Min in List")
+            if step == "Skip Visited Node":
+                self.highlight_step("Skip Visited Node")
+                self.set_step("Überspringe bereits bearbeitete Knoten")
+            if step == "Skip Visited Neighbor":
+                self.highlight_step("Skip Visited Neighbor")
+                self.set_step("Überspringe Kante zu bereits besuchten Knoten")
+            if step == "Remove min from List":
+                self.highlight_step("Remove min from List")
+                self.set_step("Remove min from List")
+            if step == "Check if visited":
+                self.highlight_step("Check if visited")
+                self.set_step("Prüfe ob Knoten bereits besucht wurde")
+            if step == "Visit Node u ":
+                self.highlight_step("Visit Node u ")
+                self.set_step("Visit Node u ")
+            if step == "List Empty":
+                self.highlight_step("List Empty")
+                self.set_step("List Empty")
+
+
         #if self.parent.selected_algorithm == "Dijkstra_List":
 
     def clear_highlights_and_Canvas(self):
@@ -663,6 +738,57 @@ class Pseudocode_Frame(Frame):
                 self.highlight_specific_ranges([("9.15", "9.32")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("9.12", "9.14"), ("9.33", "9.37")], colors.get("show_edge"))
 
+
+        if self.parent.selected_algorithm == "Dijkstra_List":
+            if step_type == "Pick Node_1":
+                self.highlight_specific_ranges([("3.13", "3.18")], colors.get("current_node"))
+                self.highlight_specific_ranges([("3.5", "3.12")], colors.get("show_edge"))
+            if step_type == "Pick Node_2":
+                self.highlight_specific_ranges([("4.13", "4.18")], colors.get("current_node"))
+                self.highlight_specific_ranges([("4.5", "4.12")], colors.get("show_edge"))
+            if step_type == "Pick Node_3":
+                self.highlight_specific_ranges([("6.13", "6.18")], colors.get("current_node"))
+                self.highlight_specific_ranges([("6.5", "6.12"),("6.19", "6.21")], colors.get("show_edge"))
+            elif step_type == "Initialize Visited":
+                self.highlight_specific_ranges([("3.19", "3.21")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("3.22", "3.43")], colors.get("discovered_false"))
+            elif step_type == "Initialize Node Distance":
+                self.highlight_specific_ranges([("4.19", "4.21")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("4.22", "4.30")], colors.get("current_node"))
+
+            elif step_type == "Set Start Node Distance":
+                self.highlight_specific_ranges([("5.5", "5.13")], colors.get("current_node"))
+
+            elif step_type == "Begin Outer Loop":
+                self.highlight_specific_ranges([("5.11", "5.25")], colors.get("Heap"))
+                self.highlight_specific_ranges([("5.5", "5.10"),("5.26", "5.28")], colors.get("show_edge"))
+
+            elif step_type == "Visit Node":
+                self.highlight_specific_ranges([("7.8", "7.28")], colors.get("discovered_true"))
+            elif step_type == "Begin Inner Loop":
+                self.highlight_specific_ranges([("8.8", "8.14"),("8.27", "8.29")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("8.15", "8.26")], colors.get("highlighted_edge"))
+            elif step_type == "Highlight Edge":
+                self.highlight_specific_ranges([("9.15", "9.32"),("9.12", "9.14")], colors.get("show_edge"))
+            elif step_type == "Compare Distance":
+                self.highlight_specific_ranges([("10.16", "10.18"),("9.33", "9.37")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("10.33", "10.40")], colors.get("highlighted_edge")) # Kante bleibt so
+                self.highlight_specific_ranges([("10.26", "10.30")], colors.get("current_node")) # d[u]
+                self.highlight_specific_ranges([("10.19", "10.23")], colors.get("d_v")) # d[v]
+            elif step_type == "Initialize List":
+                print("test")
+                self.highlight_specific_ranges([("5.15", "5.26")], colors.get("Heap"))
+
+
+            elif step_type == "Update Distance":
+                self.highlight_specific_ranges([("10.41", "10.45")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("13.34", "13.41")], colors.get("highlighted_edge")) # Kante bleibt so
+                self.highlight_specific_ranges([("13.27", "13.31")], colors.get("current_node")) # d[u]
+                self.highlight_specific_ranges([("13.20", "13.24")], colors.get("d_v")) # d[v]
+
+            elif step_type == "Skip Visited Neighbor":
+                self.highlight_specific_ranges([("9.15", "9.32")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("9.12", "9.14"), ("9.33", "9.37")], colors.get("show_edge"))
 
 
 

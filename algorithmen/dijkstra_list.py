@@ -19,7 +19,7 @@ class Dijkstra_List():
         for node in graph:
             visited[node] = None
             self.save_state(
-                step_type="Pick Node",
+                step_type="Pick Node_1",
                 current_node=node,
                 current_distance=None,
                 neighbor=None,
@@ -49,7 +49,7 @@ class Dijkstra_List():
         #line 3
         for node in graph:
             self.save_state(
-                step_type="Pick Node",
+                step_type="Pick Node_2",
                 current_node=node,
                 current_distance=None,
                 neighbor=None,
@@ -107,7 +107,7 @@ class Dijkstra_List():
         )
         for node in graph:
             self.save_state(
-                step_type="Pick Node",
+                step_type="Pick Node_3",
                 current_node=node,
                 current_distance=None,
                 neighbor=None,
