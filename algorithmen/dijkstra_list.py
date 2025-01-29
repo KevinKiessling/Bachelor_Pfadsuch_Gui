@@ -17,7 +17,8 @@ class Dijkstra_List():
 
         def convert_to_priority_queue(L, distances):
 
-            return sorted([(distances[node], node) for node in L], key=lambda x: x[0])
+            #return sorted([(distances[node], node) for node in L], key=lambda x: x[0])
+            return distances
 
         self.save_state(
             step_type="Initialization",
@@ -29,7 +30,7 @@ class Dijkstra_List():
             prev_nodes=prev_nodes,
             visited=visited.copy(),
             visited_edges=visited_edges,
-            priority_queue=convert_to_priority_queue(L, distances),
+            current_list=L,
             selected_algorithm="Dijkstra_List",
         )
 
@@ -49,7 +50,7 @@ class Dijkstra_List():
                 prev_nodes=prev_nodes,
                 visited=visited.copy(),
                 visited_edges=visited_edges,
-                priority_queue=convert_to_priority_queue(L, distances),
+                current_list=L,
                 selected_algorithm="Dijkstra_List",
             )
             #if distances[u] == float("inf"):
@@ -71,7 +72,7 @@ class Dijkstra_List():
                     prev_nodes=prev_nodes,
                     visited=visited.copy(),
                     visited_edges=visited_edges,
-                    priority_queue=convert_to_priority_queue(L, distances),
+                    current_list=L,
                     selected_algorithm="Dijkstra_List",
                 )
 
@@ -95,7 +96,7 @@ class Dijkstra_List():
                     prev_nodes=prev_nodes,
                     visited=visited.copy(),
                     visited_edges=visited_edges,
-                    priority_queue=convert_to_priority_queue(L, distances),
+                    current_list=L,
                     selected_algorithm="Dijkstra_List",
                 )
 
@@ -109,7 +110,7 @@ class Dijkstra_List():
             prev_nodes=prev_nodes,
             visited=visited.copy(),
             visited_edges=visited_edges,
-            priority_queue=convert_to_priority_queue(L, distances),
+            current_list=L,
             selected_algorithm="Dijkstra_List",
         )
 
@@ -127,7 +128,7 @@ class Dijkstra_List():
         prev_nodes,
         visited,
         visited_edges,
-        priority_queue,
+        current_list,
         selected_algorithm,
     ):
         state = {
@@ -141,7 +142,7 @@ class Dijkstra_List():
             "prev_nodes": prev_nodes.copy(),
             "visited": visited.copy(),
             "visited_edges": visited_edges.copy(),
-            "priority_queue": priority_queue[:],
+            "list": current_list.copy(),
         }
         self.steps.append(state)
 

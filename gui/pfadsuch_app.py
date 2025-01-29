@@ -340,7 +340,13 @@ class PfadsuchApp(Tk):
         current_node = step["current_node"]
         neighbor = step["neighbor"]
         distances = step["distances"].copy()
-        priority_queue = step["priority_queue"].copy()
+
+        #Lade entweder eine Priority Queue oder eine Liste, je nach algorithmus.
+        if self.selected_algorithm == "Dijkstra_PQ_lazy" or self.selected_algorithm == "Dijkstra_PQ":
+            priority_queue = step["priority_queue"].copy()
+        else:
+            priority_queue = step["list"].copy()
+
         self.code_frame.update_distances(distances)
         visited = step["visited"].copy()
         visited_edges = step["visited_edges"].copy()

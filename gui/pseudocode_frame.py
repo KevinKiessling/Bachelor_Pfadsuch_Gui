@@ -122,7 +122,9 @@ class Pseudocode_Frame(Frame):
 
     # draws heap with highlighting
     def update_priority_queue(self, pq):
-
+        if self.parent.selected_algorithm == "Dijkstra_List":
+            print("todo draw liste")
+            return
         if not self.parent.current_step == -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
 
