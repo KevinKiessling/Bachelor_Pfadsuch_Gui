@@ -18,7 +18,8 @@ class My_Frame(Frame):
         self.shortest_paths_window = None
         self.parent = parent
         self.operation_history = []
-        self.node_flags = {}  # Dictionary to manage node availability
+        self.node_flags = {}
+        self.dragging_node = None# Dictionary to manage node availability
         self.reset_node_ids()
         self.grid(row=0, column=0, sticky="nsew")
         self.grid_columnconfigure(0, weight=1)
@@ -68,10 +69,17 @@ class My_Frame(Frame):
         self.canvas_frame.grid_rowconfigure(0, weight=1)
         self.canvas_frame.grid_columnconfigure(0, weight=1)
 
-        self.canvas.bind("<Button-1>", self.add_node)
+
+        #self.canvas.bind("<Button-1>", self.add_node)
         self.canvas.bind("<Button-3>", self.add_edge)
         self.canvas.bind("<Button-2>", self.remove_clicked_element)
         self.canvas.bind("<Control-Button-1>", self.remove_clicked_element)
+
+        self.canvas.bind("<ButtonPress-1>", self.on_press)
+        self.canvas.bind("<B1-Motion>", self.on_drag)
+        self.canvas.bind("<ButtonRelease-1>", self.on_release)
+        self.canvas.bind("<Double-1>", self.on_double_click)
+
         self.focus_set()
         self.bind("<Right>", self.go_to_next_step)
         self.bind("<Left>", self.go_step_back)
@@ -115,7 +123,36 @@ class My_Frame(Frame):
         self.menu_bar.add_cascade(label="Todos", menu=self.help)
         self.help.add_command(label="Todos", command=self.open_tutorial)
 
+    def on_press(self, event):
+        x, y = event.x, event.y
+        clicked_node = self.get_node_at_position(x, y)
 
+        if clicked_node:
+            self.dragging_node = clicked_node
+        else:
+            self.add_node(event)
+
+    def on_double_click(self, event):
+        x, y = event.x, event.y
+        clicked_node = self.get_node_at_position(x, y)
+
+        if clicked_node:
+            self.parent.set_starting_node(clicked_node)
+            if self.parent.debug:
+                print(f"Startknoten gesetzt auf {clicked_node}")
+        else:
+            if self.parent.debug:
+                print("Kein Knoten unter Doppelklick gefunden!")
+    def on_drag(self, event):
+        if self.dragging_node is not None:
+
+            self.parent.node_positions[self.dragging_node] = (event.x, event.y)
+            self.parent.reset()
+
+    def on_release(self, event):
+        if self.dragging_node is not None:
+            #self.operation_history.append(("move_node", self.dragging_node, (event.x, event.y)))
+            self.dragging_node = None
     # öffnet ein Fenster mit Buttons um die kürzesten Pfade zu zeichnen
     def open_shortest_paths(self):
         if hasattr(self, "shortest_paths_window") and self.shortest_paths_window is not None:
@@ -645,22 +682,23 @@ class My_Frame(Frame):
 
     #Knoten hinzufügen
     def add_node(self, event):
-
         x, y = event.x, event.y
-
         clicked_node = self.get_node_at_position(x, y)
         self.parent.reset()
+
         if clicked_node:
             if self.parent.debug:
                 print("Startknoten wählen statt neuer Knoten")
             self.parent.set_starting_node(clicked_node)
             return
+
         min_dis = 60
         for node, (c_x, c_y) in self.parent.node_positions.items():
             if math.hypot(c_x - x, c_y - y) < min_dis:
                 if self.parent.debug:
                     print(f"Knoten ist zu nah an {node}, bitte etwas weiter entfernt einfügen")
                 return
+
         new_node = self.get_next_id()
         self.parent.graph[new_node] = {}
         self.parent.node_positions[new_node] = (x, y)

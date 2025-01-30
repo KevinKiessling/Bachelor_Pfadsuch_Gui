@@ -214,10 +214,10 @@ class PfadsuchApp(Tk):
     def fast_forward(self):
         if self.debug:
             print("fast forward")
-        if self.steps_finished_algorithm == []:
-            self.start_algorithm()
         if self.fast_forward_paused:
             return
+        if self.steps_finished_algorithm == []:
+            self.start_algorithm()
         if self.current_step < len(self.steps_finished_algorithm) -1:
             self.current_step += 1
             self.update_gui()
@@ -264,6 +264,7 @@ class PfadsuchApp(Tk):
 
     #Setzt den Algorithmus komplett zurück, aber behält den Graph geladen
     def reset(self):
+        self.fast_forward_paused = True
         if self.debug:
             print("resetting without clear")
         self.steps_finished_algorithm = []
