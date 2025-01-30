@@ -30,9 +30,10 @@ class Graph_Visualizer_Dijkstra_List:
         if self.parent.current_step != -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
             print(step)
-        discovered_node_true_color = "#00ff40"
-        discovered_node_false_color = "orange"
-
+        discovered_node_true_color = self.parent.color_discovered_true
+        discovered_node_false_color = self.parent.color_discovered_false
+        current_node_color = self.parent.color_default
+        d_v_color = self.parent.color_d_v
         # Draw nodes
         for node, (x, y) in self.node_positions.items():
             # color nodes based on steptype
@@ -44,29 +45,29 @@ class Graph_Visualizer_Dijkstra_List:
                 if step["step_type"] == "Pick Node":
                     color = "light grey"
                     if node == current_node:
-                        color = "yellow"
+                        color = current_node_color
                 #  NEEDS WORK!! Aktueller Knoten gelb, sonst grau
                 if step["step_type"] == "Initialize Node Distance":
                     color = "light grey"
                     if node == current_node:
-                        color = "yellow"
+                        color = current_node_color
                 # StartKnoten gelb, rest grau
                 if step["step_type"] == "Set Start Node Distance":
                     color = "light grey"
                     if node == current_node:
-                        color = "yellow"
+                        color = current_node_color
                 # StartKnoten wird auf PQ pushed, also alles grau ausser startKnoten
                 if step["step_type"] == "Push Start Node to Priority Queue":
                     color = "light grey"
                     if node == current_node:
-                        color = "#d2cd6f"
+                        color = self.parent.color_heap
                 # Knoten im Heap  sind blau, aus Heap entfernter Knoten ist gelb, rest grau
                 if step["step_type"] == "Heap Pop":
                     color = "light grey"
-                    #if any(n == node for _, n in step["priority_queue"]):
-                       # color = "#57b3ea"
+                    # if any(n == node for _, n in step["priority_queue"]):
+                    # color = "#57b3ea"
                     if node == current_node:
-                        color = "yellow"
+                        color = current_node_color
 
                 # NEEDS WORK!! Füge current node den Discoverten Nodes hinzu, visited nodes = grün, aktueller = #4bf569, rest grau
                 if step["step_type"] == "Visit Node":
@@ -80,15 +81,14 @@ class Graph_Visualizer_Dijkstra_List:
                     color = "light grey"
                     if node == current_node:
                         if visited.get(current_node):
-                            #print(visited.get(current_node))
+                            # print(visited.get(current_node))
                             color = discovered_node_true_color
                         elif not visited.get(current_node):
                             color = discovered_node_false_color
 
-                #initial visit, orange for false
+                # initial visit, orange for false
                 if step["step_type"] == "Initialize Visited":
                     color = "light grey"
-
 
                     # das If crashed niemals, da .get safe ist.
                     if visited.get(node) is None:
@@ -102,64 +102,47 @@ class Graph_Visualizer_Dijkstra_List:
                 if step["step_type"] == "Compare Distance":
                     color = "light grey"
                     if node == current_node:
-                        color = "yellow"  #  d[u]
+                        color = current_node_color  # d[u]
                     if node in neighbor_list:
-                        color = "violet"  #  d[v]
+                        color = d_v_color  # d[v]
 
                 # Aktueller Knoten gelb, rest grau.
                 if step["step_type"] == "Highlight Edge":
                     color = "light grey"
-                    #if visited[node]:
-                       # color = discovered_node_true_color
+                    # if visited[node]:
+                    # color = discovered_node_true_color
                     if node == current_node:
-                        color = "yellow"
-                    #if not visited[node]:
-                        #color = discovered_node_false_color
+                        color = current_node_color
+                    # if not visited[node]:
+                    # color = discovered_node_false_color
                     if node in neighbor_list:
                         color = discovered_node_false_color
 
-                #Färbe Knoten die in Queue sind #57b3ea, rest grau
+                # Färbe Knoten die in Queue sind #57b3ea, rest grau
                 if step["step_type"] == "Begin Outer Loop":
                     color = "light grey"
-                   # if any(n == node for _, n in step["priority_queue"]):
-                        #color = "#57b3ea"
+                # if any(n == node for _, n in step["priority_queue"]):
+                # color = "#57b3ea"
 
                 # Aktueller Knoten gelb, rest grau, hier werden nur alle Kanten highlighted
                 if step["step_type"] == "Begin Inner Loop":
                     color = "light grey"
                     if node == current_node:
-                        color = "yellow"
+                        color = current_node_color
 
                 # Update Distanzen von Nachbar, yellow für knoten der updated wird, rest grau
                 if step["step_type"] == "Update Distance":
                     color = "light grey"
 
                     if node == current_node:
-                        color = "yellow"  #  d[u]
+                        color = current_node_color  # d[u]
                     if node in neighbor_list:
-                        color = "violet"  #  d[v]
+                        color = d_v_color  # d[v]
                 # push updated knoten to Heap, -> blau, rest grau
                 if step["step_type"] == "Push to Heap":
                     color = "light grey"
                     if node in neighbor_list:
-                        color = "violet"
-
-                # Überspringe besuchte Knoten
-                if step["step_type"] == "Skip Visited Node":
-                    '''color = "light grey"
-                    if visited[node]:
-                        color = discovered_node_true_color
-                    if node == current_node:
-                        color = discovered_node_true_color
-                    if not visited[node]:
-                        color = discovered_node_false_color'''
-                    color = "light grey"
-                    if node == current_node:
-                        if visited.get(current_node):
-                            #print(visited.get(current_node))
-                            color = discovered_node_true_color
-                        elif not visited.get(current_node):
-                            color = discovered_node_false_color
+                        color = self.parent.color_heap
 
                 # Überspringe besuchte Nachbarn
                 if step["step_type"] == "Skip Visited Neighbor":
@@ -173,20 +156,17 @@ class Graph_Visualizer_Dijkstra_List:
                     if node in neighbor_list:
                         color = discovered_node_true_color
 
-                #Priority Queue is leer, alles gray
+                # Priority Queue is leer, alles gray
                 if step["step_type"] == "Priority Queue Empty":
                     color = "light grey"
-
-                if step["step_type"] == "Check if visited":
+                if step["step_type"] == "Find Position in Heap":
                     color = "light grey"
-                    if node == current_node:
-                        if visited.get(current_node):
-                            #print(visited.get(current_node))
-                            color = discovered_node_true_color
-                        elif not visited.get(current_node):
-                            color = discovered_node_false_color
+                    if node in neighbor_list and any(node == item[1] for item in step["priority_queue"]):
+                        color = self.parent.color_heap
+                if step["step_type"] == "Remove from Heap":
+                    color = "light grey"
 
-            #Knoten werte
+            # Knoten werte
             distance_text = distances.get(node, 0)
             distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
 
@@ -208,7 +188,7 @@ class Graph_Visualizer_Dijkstra_List:
             # Flag to display "start" on start node
             show_start = True
 
-            #change node display text
+            # change node display text
             if step:
                 # Show distances and node Name when finished
                 if step["step_type"] == "Algorithm Finished":
@@ -249,20 +229,17 @@ class Graph_Visualizer_Dijkstra_List:
                     show_start = False
                 if step["step_type"] == "Push to Heap":
                     show_start = False
-                if step["step_type"] == "Skip Visited Node":
-                    show_start = False
-                    display_text = f"{node_text}"
                 if step["step_type"] == "Skip Visited Neighbor":
                     show_start = False
                     display_text = f"{node_text}"
                 if step["step_type"] == "Priority Queue Empty":
                     show_start = False
-                if step["step_type"] == "Check if visited":
+                if step["step_type"] == "Find Position in Heap":
                     show_start = False
-                    display_text = f"{node_text}"
+                if step["step_type"] == "Remove from Heap":
+                    show_start = False
             if not step:
                 display_text = f"{node_text}"
-
 
             if node in self.selected_nodes:
                 self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
@@ -299,28 +276,32 @@ class Graph_Visualizer_Dijkstra_List:
                     elif step["step_type"] == "Compare Distance":
                         edge_color = "light grey"
                         if node == current_node and neighbor == neighbor_list:
-                            edge_color = "#4ecdf8"
+                            edge_color = self.parent.color_edge_highlight
                     elif step["step_type"] == "Update Distance":
                         edge_color = "light grey"
                         if node == current_node and neighbor == neighbor_list:
-                            edge_color = "#4ecdf8"
+                            edge_color = self.parent.color_edge_highlight
                     elif step["step_type"] == "Highlight Edge":
                         edge_color = "light grey"
                         if node == current_node and neighbor == neighbor_list:
-                            edge_color = "#4ecdf8"
+                            edge_color = self.parent.color_edge_highlight
                     elif step["step_type"] == "Begin Inner Loop":
                         if (node, neighbor) in visited_edges and node == current_node:
-                            #visited edges
-                            #edge_color = "light green"
+                            # visited edges
+                            # edge_color = "light green"
                             edge_color = "light grey"
                         elif node == current_node:
-                            edge_color = "#4ecdf8"
+                            edge_color = self.parent.color_edge_highlight
                         else:
                             edge_color = "light grey"
                     elif step["step_type"] == "Skip Visited Neighbor":
                         edge_color = "light grey"
                         if node == current_node and neighbor == neighbor_list:
-                            edge_color = "#4ecdf8"
+                            edge_color = self.parent.color_edge_highlight
+                    elif step["step_type"] == "Find Position in Heap":
+                        edge_color = "light grey"
+                    elif step["step_type"] == "Remove from Heap":
+                        edge_color = "light grey"
 
                 if neighbor in self.node_positions:
                     x1, y1 = self.node_positions[node]
@@ -352,7 +333,6 @@ class Graph_Visualizer_Dijkstra_List:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
         weight_color = "black"  # Default weight color
 
-
         if step:
             if step["step_type"] == "Algorithm Finished":
                 weight_color = "black"
@@ -364,6 +344,8 @@ class Graph_Visualizer_Dijkstra_List:
                 weight_color = "light grey"
             elif step["step_type"] == "Initialize Visited":
                 weight_color = "light grey"
+            elif step["step_type"] == "Find Position in Heap":
+                weight_color = "light grey"
             elif step["step_type"] == "Priority Queue Empty":
                 weight_color = "light grey"
             elif step["step_type"] == "Push Start Node to Priority Queue":
@@ -374,9 +356,8 @@ class Graph_Visualizer_Dijkstra_List:
                 weight_color = "light grey"
             elif step["step_type"] == "Heap Pop":
                 weight_color = "light grey"
-            elif step["step_type"] == "Check if visited":
-                weight_color = "light grey"
-            #only current edges should do that
+
+            # only current edges should do that
 
             elif step["step_type"] == "Highlight Edge":
                 weight_color = "light grey"
@@ -384,7 +365,7 @@ class Graph_Visualizer_Dijkstra_List:
                 current_neighbor = step.get("neighbor")
 
                 if current_node and current_neighbor and node == current_node and neighbor == current_neighbor:
-                    weight_color = "#4ecdf8"
+                    weight_color = self.parent.color_edge_highlight
 
             elif step["step_type"] == "Visit Node":
                 weight_color = "light grey"
@@ -396,11 +377,13 @@ class Graph_Visualizer_Dijkstra_List:
 
                 if current_node and current_neighbor:
                     if node == current_node and neighbor == current_neighbor:
-                        weight_color = "#4ecdf8"
+                        weight_color = self.parent.color_edge_highlight
                     else:
                         weight_color = "light grey"
 
             elif step["step_type"] == "Push to Heap":
+                weight_color = "light grey"
+            elif step["step_type"] == "Remove from Heap":
                 weight_color = "light grey"
             # only current edges should do that
             elif step["step_type"] == "Update Distance":
@@ -410,7 +393,7 @@ class Graph_Visualizer_Dijkstra_List:
 
                 if current_node and current_neighbor:
                     if node == current_node and neighbor == current_neighbor:
-                        weight_color = "#4ecdf8"
+                        weight_color = self.parent.color_edge_highlight
                     else:
                         weight_color = "light grey"
 
@@ -419,22 +402,22 @@ class Graph_Visualizer_Dijkstra_List:
                 current_node = step.get("current_node")
                 visited_nb = step.get("visited_edges")
                 if (node, neighbor) in visited_nb and node == current_node:
-                    #visited edges
-                    #weight_color = "light green"
+                    # visited edges
+                    # weight_color = "light green"
                     weight_color = "light grey"
                 elif node == current_node:
-                    weight_color = "#4ecdf8"
+                    weight_color = self.parent.color_edge_highlight
                 else:
                     weight_color = "light grey"
             elif step["step_type"] == "Skip Visited Neighbor":
                 current_node = step.get("current_node")
                 visited_nb = step.get("visited_edges")
                 if (node, neighbor) in visited_nb and node == current_node:
-                    #visited edges
-                    #weight_color = "light green"
+                    # visited edges
+                    # weight_color = "light green"
                     weight_color = "light grey"
                 elif node == current_node:
-                    weight_color = "#4ecdf8"
+                    weight_color = self.parent.color_edge_highlight
                 else:
                     weight_color = "light grey"
 
@@ -471,7 +454,6 @@ class Graph_Visualizer_Dijkstra_List:
         step = {}
         if self.parent.current_step != -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
-
 
         # change edge color depending on state
         if step:
