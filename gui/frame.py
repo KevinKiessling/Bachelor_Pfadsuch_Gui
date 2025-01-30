@@ -527,7 +527,7 @@ class My_Frame(Frame):
 
 
         color_heap_button_frame = Frame(color_tab)
-        color_heap_button = create_color_button(color_heap_button_frame, "Heap Farbe", 'color_heap')
+        color_heap_button = create_color_button(color_heap_button_frame, "Heap/List Farbe", 'color_heap')
         color_heap_button_frame.pack(pady=5)
         color_heap_button.config(bg=self.parent.color_heap)
 

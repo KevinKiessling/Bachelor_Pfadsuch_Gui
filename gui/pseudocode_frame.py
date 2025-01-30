@@ -638,55 +638,73 @@ class Pseudocode_Frame(Frame):
         if self.parent.selected_algorithm == "Dijkstra_PQ_lazy":
             if step_type == "Pick Node":
                 self.highlight_specific_ranges([("3.13", "3.18")], colors.get("current_node"))
-                self.highlight_specific_ranges([("3.5", "3.12"),("3.19", "3.21")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("3.5", "3.12")], colors.get("show_edge"))
+
             elif step_type == "Initialize Visited":
                 self.highlight_specific_ranges([("3.22", "3.43")], colors.get("discovered_false"))
+                self.highlight_specific_ranges([("3.19", "3.21")], colors.get("show_edge"))
             elif step_type == "Initialize Node Distance":
                 self.highlight_specific_ranges([("3.45", "3.53")], colors.get("current_node"))
+                self.highlight_specific_ranges([("3.19", "3.21")], colors.get("show_edge"))
             elif step_type == "Set Start Node Distance":
                 self.highlight_specific_ranges([("4.5", "4.13")], colors.get("current_node"))
             elif step_type == "Push Start Node to Priority Queue":
                 self.highlight_specific_ranges([("4.15", "4.46")], colors.get("Heap"))
             elif step_type == "Begin Outer Loop":
                 self.highlight_specific_ranges([("5.11", "5.25")], colors.get("Heap"))
-                self.highlight_specific_ranges([("5.5", "5.10"),("5.26", "5.28")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("5.5", "5.10")], colors.get("show_edge"))
+               # self.highlight_specific_ranges([("5.26", "5.28")], colors.get("show_edge"))
             elif step_type == "Heap Pop":
+                self.highlight_specific_ranges([("5.26", "5.28")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("6.8", "6.26")], colors.get("current_node"))
             elif step_type == "Visit Node":
+                self.highlight_specific_ranges([("5.26", "5.28")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("7.39", "7.43")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("8.12", "8.32")], colors.get("discovered_true"))
             elif step_type == "Skip Visited Node":
+                self.highlight_specific_ranges([("5.26", "5.28")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("7.30", "7.38")], colors.get("discovered_true"))
                 self.highlight_specific_ranges([("7.25", "7.29")], colors.get("show_edge"))
             elif step_type == "Begin Inner Loop":
-                self.highlight_specific_ranges([("9.8", "9.14"),("9.27", "9.29")], colors.get("show_edge"))
-
+                self.highlight_specific_ranges([("5.26", "5.28")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("9.8", "9.14")], colors.get("show_edge"))
+                #self.highlight_specific_ranges([("9.27", "9.29")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("9.15", "9.26")], colors.get("highlighted_edge"))
             elif step_type == "Highlight Edge":
+                self.highlight_specific_ranges([("9.27", "9.29")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("5.26", "5.28")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("10.15", "10.32")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("10.12", "10.14")], colors.get("show_edge"))
             elif step_type == "Compare Distance":
+                self.highlight_specific_ranges([("9.27", "9.29")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("5.26", "5.28")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("11.16", "11.18"),("10.33", "10.37")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("11.33", "11.40")], colors.get("highlighted_edge")) # Kante bleibt so
                 self.highlight_specific_ranges([("11.26", "11.30")], colors.get("current_node")) # d[u]
                 self.highlight_specific_ranges([("11.19", "11.23")], colors.get("d_v")) # d[v]
             elif step_type == "Update Distance":
+                self.highlight_specific_ranges([("9.27", "9.29"),("10.33", "10.37")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("5.26", "5.28")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("11.41", "11.45")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("12.34", "12.41")], colors.get("highlighted_edge")) # Kante bleibt so
                 self.highlight_specific_ranges([("12.27", "12.31")], colors.get("current_node")) # d[u]
                 self.highlight_specific_ranges([("12.20", "12.24")], colors.get("d_v")) # d[v]
             elif step_type == "Push to Heap":
+                self.highlight_specific_ranges([("9.27", "9.29"),("10.33", "10.37")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("5.26", "5.28")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("11.41", "11.45")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("13.20", "13.39")], colors.get("Heap"))
             elif step_type == "Priority Queue Empty":
                 self.highlight_specific_ranges([("5.11", "5.25")], colors.get("Heap"))
                 self.highlight_specific_ranges([("5.5", "5.10"),("5.26", "5.28")], colors.get("show_edge"))
             elif step_type == "Check if visited":
+                self.highlight_specific_ranges([("5.26", "5.28")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("7.8", "7.10")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("7.11", "7.24")], colors.get("show_edge"))
             elif step_type == "Skip Visited Neighbor":
+                self.highlight_specific_ranges([("5.26", "5.28"),("9.27", "9.29")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("10.15", "10.32")], colors.get("show_edge"))
-                self.highlight_specific_ranges([("10.12", "10.14"), ("10.33", "10.37")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("10.12", "10.14")], colors.get("show_edge"))
 
         if self.parent.selected_algorithm == "Dijkstra_PQ":
             if step_type == "Pick Node":
@@ -803,8 +821,11 @@ class Pseudocode_Frame(Frame):
                 self.highlight_specific_ranges([("7.25", "7.27")], colors.get("show_edge"))
 
             elif step_type == "Skip Visited Neighbor":
-                self.highlight_specific_ranges([("9.15", "9.32")], colors.get("show_edge"))
-                self.highlight_specific_ranges([("9.12", "9.14"), ("9.33", "9.37")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("12.15", "12.32")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("12.12", "12.14")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("7.25", "7.27"),("11.27", "11.29")], colors.get("show_edge"))
+
+
             elif step_type == "Find Min in List":
                 self.highlight_specific_ranges([("7.25", "7.27")], colors.get("show_edge")) # do
                 self.highlight_specific_ranges([("8.8", "8.43")], colors.get("Heap"))
