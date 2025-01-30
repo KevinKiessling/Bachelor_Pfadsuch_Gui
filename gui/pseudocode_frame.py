@@ -120,7 +120,7 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display.config(font=("Courier New", self.parent.font_size))
         self.style_pseudocode_initial()
 
-    def draw_list(self, list_data, distances):
+    def draw_list(self, list_data, distances, highlight_node=None):
         self.canvas.delete("all")
 
         width = max(1, self.canvas.winfo_width())
@@ -141,9 +141,10 @@ class Pseudocode_Frame(Frame):
             x1 = col * (element_width + padding)
             y1 = row * (element_height + padding)
             x2, y2 = x1 + element_width, y1 + element_height
-            color = "light grey"
-            self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="black")
 
+            color = self.parent.color_heap if value == highlight_node else "light grey"
+
+            self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="black")
             self.canvas.create_text((x1 + x2) // 2, y1 + 12, text=str(value), font=("Arial", 12, "bold"))
 
             distance = distances.get(value, float('inf'))
@@ -155,7 +156,12 @@ class Pseudocode_Frame(Frame):
         if not self.parent.current_step == -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
             if self.parent.selected_algorithm == "Dijkstra_List":
-                self.draw_list(pq, step["distances"])
+                if step["step_type"] == "Add Node to List":
+                    self.draw_list(pq, step["distances"],step["current_node"])
+                elif step["step_type"] == "Find Min in List":
+                    self.draw_list(pq, step["distances"],step["current_node"])
+                else:
+                    self.draw_list(pq, step["distances"])
                 return
         if not self.parent.current_step == -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
