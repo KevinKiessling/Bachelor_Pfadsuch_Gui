@@ -16,87 +16,100 @@ class Graph_Visualizer_Path:
         self.parent = parent
         self.selected_nodes = selected_nodes
         self.start_node = start_node
+        self.path = {}
+
     def draw_path(self, path):
         self.gui_frame.canvas.delete("all")
         node_radius = 30
-        font_size = 16
+        font_size = 14
+        self.path = path.copy()
         already_drawn_edges = set()
-        distances = self.parent.steps_finished_algorithm[-1]["distances"]
+        color = "lightblue"
+        step = {}
+        if self.parent.current_step != -1:
+            step = self.parent.steps_finished_algorithm[self.parent.current_step]
+            print(step)
+        distances = step["distances"]
+
+        discovered_node_true_color = self.parent.color_discovered_true
+        discovered_node_false_color = self.parent.color_discovered_false
+        current_node_color = self.parent.color_default
+        d_v_color = self.parent.color_d_v
         start_node = None
         target_node = None
 
         if path:
             start_node = path[0][0]
             target_node = path[-1][1]
+        # Draw nodes
+        for node, (x, y) in self.node_positions.items():
 
-        for node, (x, y) in self.parent.node_positions.items():
-            if node == start_node:
-                color = self.parent.color_shortest_path
-            elif node == target_node:
-                color = self.parent.color_shortest_path
+            if step:
+                if any(node in edge for edge in self.path):
+                    color = self.parent.color_shortest_path
+                else:
+                    color = "light grey"
+
+            # Knoten werte
+            distance_text = distances.get(node, 0)
+            distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
+
+            distance_length = len(distance_text)
+            node_length = len(node)
+            padding = max(0, distance_length - node_length)
+
+            if distances.get(node, float('inf')) >= 9999:
+                font_size = 12
+                left_padding = (padding + 2) // 2
+                right_padding = padding // 2
             else:
-                color = "light grey"
+                font_size = 14
+                left_padding = (padding + 1) // 2
+                right_padding = padding // 2
 
-            if self.parent.steps_finished_algorithm:
+            node_text = f"{' ' * left_padding}{node}{' ' * right_padding}"
+            display_text = f"{node_text}\n{distance_text}"
+            # Flag to display "start" on start node
+            show_start = True
 
-                distance_text = distances.get(node, float('inf'))
-                distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
+            # change node display text
+            if step:
+                # Show distances and node Name when finished
+                if step["step_type"] == "Algorithm Finished":
+                    show_start = True
 
-                distance_length = len(distance_text)
+            if not step:
+                display_text = f"{node_text}"
 
-                node_length = len(node)
-                padding = max(0, distance_length - node_length)
-
-                if distances.get(node, float('inf')) >= 9999:
-                    font_size = 12
-                    left_padding = (padding + 2) // 2
-                    right_padding = padding // 2
-                else:
-                    font_size = 14
-                    left_padding = (padding + 1) // 2  #
-                    right_padding = padding // 2
-
-                node_text = f"{' ' * left_padding}{node}{' ' * right_padding}"
-                display_text = f"{node_text}\n{distance_text}"
-
-            if node in self.parent.selected_nodes:
+            if node in self.selected_nodes:
                 self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
-                                                  fill="green")
-
-                self.gui_frame.canvas.create_text(
-                    x, y, text=display_text, fill="black", font=("Arial", font_size), anchor="center"
-                )
-                if node == self.parent.start_node:
+                                                  fill="light green")
+                self.gui_frame.canvas.create_text(x, y, text=display_text, fill="black", font=("Arial", font_size),
+                                                  anchor="center")
+                if show_start and node == self.start_node:
                     self.gui_frame.canvas.create_text(x, y, text="Start", fill="black", font=("Arial", font_size))
-                else:
-                    self.gui_frame.canvas.create_text(
-                        x, y, text=display_text, fill="black", font=("Arial", font_size), anchor="center"
-                    )
             else:
                 self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
                                                   fill=color)
-
-                if node == self.parent.start_node:
+                if show_start and node == self.start_node:
                     self.gui_frame.canvas.create_text(x, y, text="Start", fill="black", font=("Arial", font_size))
                 else:
                     self.gui_frame.canvas.create_text(x, y, text=display_text, fill="black", font=("Arial", font_size))
 
-        # Zeichne alle Kanten, dabei wird zwischen 2 Varianten unterschieden, Direkt oder Bidirekt
-        for node, edges in self.parent.graph.items():
+        # Draw edges
+        for node, edges in self.graph.items():
             for neighbor, weight in edges.items():
-
-                if (node, neighbor) in already_drawn_edges or (neighbor, node) in already_drawn_edges:
+                if (node, neighbor) in already_drawn_edges:
                     continue
 
                 edge_color = "light grey"
-
                 if (node, neighbor) in path:
                     edge_color = self.parent.color_shortest_path
 
-                if neighbor in self.parent.node_positions:
 
-                    x1, y1 = self.parent.node_positions[node]
-                    x2, y2 = self.parent.node_positions[neighbor]
+                if neighbor in self.node_positions:
+                    x1, y1 = self.node_positions[node]
+                    x2, y2 = self.node_positions[neighbor]
 
                     dx = x2 - x1
                     dy = y2 - y1
@@ -111,119 +124,116 @@ class Graph_Visualizer_Path:
                         x1_no_node_clip, y1_no_node_clip, x2_no_node_clip, y2_no_node_clip = x1, y1, x2, y2
 
                     middle_space = 0.12
+                    self.draw_directed_edge(
+                        x1_no_node_clip, y1_no_node_clip, x2_no_node_clip, y2_no_node_clip,
+                        dx, dy, distance, middle_space, edge_color, weight,
+                        already_drawn_edges, node, neighbor
+                    )
 
-                    segment_dx = dx / distance * middle_space * distance
-                    segment_dy = dy / distance * middle_space * distance
+    def draw_directed_edge(self, x1, y1, x2, y2, dx, dy, distance, middle_space, edge_color, weight,
+                           already_drawn_edges, node, neighbor):
+        step = {}
+        if self.parent.current_step != -1:
+            step = self.parent.steps_finished_algorithm[self.parent.current_step]
+        weight_color = "light grey"  # Default weight color
 
-                    is_bidirectional = neighbor in self.graph and node in self.graph[neighbor]
+        if step:
+            if (node, neighbor) in self.path:
+                weight_color = self.parent.color_shortest_path
 
-                    if is_bidirectional:
-                        forward_colour = "light grey"
-                        reverse_colour = "light grey"
+            # Add any other step types with different weight colors as needed
+        weight_text = str(weight)
+        text_width = len(weight_text) * 8
 
-                        if (node, neighbor) in path:
-                            forward_colour = self.parent.path_color
-                        if (neighbor, node) in path:
-                            reverse_colour = self.parent.path_color
+        middle_space += text_width / distance * 1.5
 
-                        offset = 13
+        segment_dx = dx / distance * middle_space * distance
+        segment_dy = dy / distance * middle_space * distance
 
-                        perp_dx = -dy / distance * offset
-                        perp_dy = dx / distance * offset
+        middle_x = (x1 + x2) / 2
+        middle_y = (y1 + y2) / 2
 
-                        weight_text_forward = str(weight)
-                        weight_text_reverse = str(self.graph[neighbor][node])
-                        text_width_forward = len(weight_text_forward) * 6
-                        text_width_reverse = len(weight_text_reverse) * 6
+        available_space = distance * middle_space
+        if text_width > available_space:
+            extra_space = (text_width - available_space) / 2
+            middle_x -= extra_space
 
-                        max_text_width = max(text_width_forward, text_width_reverse)
+        self.gui_frame.canvas.create_line(x1, y1, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
+                                          width=4, tags="edge", fill=edge_color, smooth=True, splinesteps=500)
+        self.gui_frame.canvas.create_line(middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2, y2,
+                                          width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5),
+                                          fill=edge_color, smooth=True, splinesteps=500)
+        self.gui_frame.canvas.create_text(middle_x, middle_y, text=weight_text, fill=weight_color, font=("Arial", 14),
+                                          tags="weight")
+        already_drawn_edges.add((node, neighbor))
 
-                        middle_space_expanded = middle_space + max_text_width / distance * 1.5
+    def draw_bidirectional_edge(self, x1, y1, x2, y2, dx, dy, distance, middle_space, node, neighbor, weight,
+                                visited_edges, current_node, neighbor_list, already_drawn_edges):
+        forward_colour = "black"
+        reverse_colour = "black"
+        step = {}
+        if self.parent.current_step != -1:
+            step = self.parent.steps_finished_algorithm[self.parent.current_step]
 
-                        segment_dx_expanded = dx / distance * middle_space_expanded * distance
-                        segment_dy_expanded = dy / distance * middle_space_expanded * distance
+        # change edge color depending on state
+        if step:
+            if step["step_type"] == "Algorithm Finished":
+                color = "light blue"
 
-                        x1_offset = x1_no_node_clip + perp_dx
-                        y1_offset = y1_no_node_clip + perp_dy
-                        x2_offset = x2_no_node_clip + perp_dx
-                        y2_offset = y2_no_node_clip + perp_dy
-                        middle_x_forward = (x1_offset + x2_offset) / 2 + segment_dx_expanded / 2
-                        middle_y_forward = (y1_offset + y2_offset) / 2 + segment_dy_expanded / 2
 
-                        self.gui_frame.canvas.create_line(
-                            x1_offset, y1_offset, middle_x_forward - segment_dx_expanded / 2,
-                                                  middle_y_forward - segment_dy_expanded / 2,
-                            width=4, tags="edge", fill=forward_colour, smooth=True, splinesteps=500
-                        )
-                        self.gui_frame.canvas.create_line(
-                            middle_x_forward + segment_dx_expanded / 2, middle_y_forward + segment_dy_expanded / 2,
-                            x2_offset, y2_offset,
-                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=forward_colour,
-                            smooth=True, splinesteps=500
-                        )
+        offset = 13
 
-                        self.gui_frame.canvas.create_text(
-                            middle_x_forward, middle_y_forward,
-                            text=weight_text_forward, fill="black", font=("Arial", 13), tags="weight"
-                        )
-                        # Rückwärtskante
-                        x1_offset = x1_no_node_clip - perp_dx
-                        y1_offset = y1_no_node_clip - perp_dy
-                        x2_offset = x2_no_node_clip - perp_dx
-                        y2_offset = y2_no_node_clip - perp_dy
-                        middle_x_reverse = (x1_offset + x2_offset) / 2 - segment_dx_expanded / 2
-                        middle_y_reverse = (y1_offset + y2_offset) / 2 - segment_dy_expanded / 2
+        perp_dx = -dy / distance * offset
+        perp_dy = dx / distance * offset
 
-                        self.gui_frame.canvas.create_line(
-                            x2_offset, y2_offset, middle_x_reverse + segment_dx_expanded / 2,
-                                                  middle_y_reverse + segment_dy_expanded / 2,
-                            width=4, tags="edge", fill=reverse_colour, smooth=True, splinesteps=500
-                        )
-                        self.gui_frame.canvas.create_line(
-                            middle_x_reverse - segment_dx_expanded / 2, middle_y_reverse - segment_dy_expanded / 2,
-                            x1_offset, y1_offset,
-                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=reverse_colour,
-                            smooth=True, splinesteps=500
-                        )
+        weight_text_forward = str(weight)
+        weight_text_reverse = str(self.graph[neighbor][node])
+        text_width_forward = len(weight_text_forward) * 6
+        text_width_reverse = len(weight_text_reverse) * 6
 
-                        self.gui_frame.canvas.create_text(
-                            middle_x_reverse, middle_y_reverse,
-                            text=weight_text_reverse, font=("Arial", 13), tags="weight"
-                        )
+        max_text_width = max(text_width_forward, text_width_reverse)
 
-                    else:
-                        weight_text = str(weight)
-                        text_width = len(weight_text) * 8
-                        middle_space += text_width / distance * 1.5
+        middle_space_expanded = middle_space + max_text_width / distance * 1.5
 
-                        segment_dx = dx / distance * middle_space * distance
-                        segment_dy = dy / distance * middle_space * distance
+        segment_dx_expanded = dx / distance * middle_space_expanded * distance
+        segment_dy_expanded = dy / distance * middle_space_expanded * distance
 
-                        middle_x = (x1_no_node_clip + x2_no_node_clip) / 2
-                        middle_y = (y1_no_node_clip + y2_no_node_clip) / 2
+        # Forward edge
+        x1_offset = x1 + perp_dx
+        y1_offset = y1 + perp_dy
+        x2_offset = x2 + perp_dx
+        y2_offset = y2 + perp_dy
+        middle_x_forward = (x1_offset + x2_offset) / 2 + segment_dx_expanded / 2
+        middle_y_forward = (y1_offset + y2_offset) / 2 + segment_dy_expanded / 2
 
-                        available_space = distance * middle_space
-                        if text_width > available_space:
-                            extra_space = (text_width - available_space) / 2
-                            middle_x -= extra_space
+        self.gui_frame.canvas.create_line(x1_offset, y1_offset, middle_x_forward - segment_dx_expanded / 2,
+                                          middle_y_forward - segment_dy_expanded / 2,
+                                          width=4, tags="edge", fill=forward_colour, smooth=True, splinesteps=500)
+        self.gui_frame.canvas.create_line(middle_x_forward + segment_dx_expanded / 2,
+                                          middle_y_forward + segment_dy_expanded / 2,
+                                          x2_offset, y2_offset, width=4, tags="edge", arrow="last",
+                                          arrowshape=(10, 12, 5), fill=forward_colour, smooth=True, splinesteps=500)
+        self.gui_frame.canvas.create_text(middle_x_forward, middle_y_forward, text=weight_text_forward, fill="black",
+                                          font=("Arial", 13), tags="weight")
 
-                        self.gui_frame.canvas.create_line(
-                            x1_no_node_clip, y1_no_node_clip, middle_x - segment_dx / 2, middle_y - segment_dy / 2,
-                            width=4, tags="edge", fill=edge_color, smooth=True, splinesteps=500
-                        )
-                        self.gui_frame.canvas.create_line(
-                            middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2_no_node_clip, y2_no_node_clip,
-                            width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5), fill=edge_color, smooth=True,
-                            splinesteps=500
-                        )
+        # Reverse edge
+        x1_offset = x1 - perp_dx
+        y1_offset = y1 - perp_dy
+        x2_offset = x2 - perp_dx
+        y2_offset = y2 - perp_dy
+        middle_x_reverse = (x1_offset + x2_offset) / 2 - segment_dx_expanded / 2
+        middle_y_reverse = (y1_offset + y2_offset) / 2 - segment_dy_expanded / 2
 
-                        self.gui_frame.canvas.create_text(
-                            middle_x, middle_y,
-                            text=weight_text,
-                            fill="black",
-                            font=("Arial", 14),
-                            tags="weight"
-                        )
+        self.gui_frame.canvas.create_line(x2_offset, y2_offset, middle_x_reverse + segment_dx_expanded / 2,
+                                          middle_y_reverse + segment_dy_expanded / 2,
+                                          width=4, tags="edge", fill=reverse_colour, smooth=True, splinesteps=500)
+        self.gui_frame.canvas.create_line(middle_x_reverse - segment_dx_expanded / 2,
+                                          middle_y_reverse - segment_dy_expanded / 2,
+                                          x1_offset, y1_offset, width=4, tags="edge", arrow="last",
+                                          arrowshape=(10, 12, 5), fill=reverse_colour, smooth=True, splinesteps=500)
+        self.gui_frame.canvas.create_text(middle_x_reverse, middle_y_reverse, text=weight_text_reverse,
+                                          font=("Arial", 13),
+                                          tags="weight")
 
-                    # Speichere Kanten die bereits gezeichnet wurden, damit bidirektionale Kanten nicht 4x gezeichnet werden
-                    already_drawn_edges.add((node, neighbor))
+        already_drawn_edges.add((node, neighbor))
+        already_drawn_edges.add((neighbor, node))

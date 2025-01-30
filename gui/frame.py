@@ -467,11 +467,11 @@ class My_Frame(Frame):
         # COLOR TAB
         default_colors = {
             "color_heap": "#d2cd6f",
-            "color_d_v": "violet",
+            "color_d_v": "#559cec",
             "color_discovered_true": "orange",
             "color_discovered_false": "#00ff40",
-            "color_edge_highlight": "#4ecdf8",
-            "color_shortest_path": "light blue"
+            "color_edge_highlight": "#53e2ee",
+            "color_shortest_path": "#ff4297"
         }
 
         color_tab = Frame(notebook)
