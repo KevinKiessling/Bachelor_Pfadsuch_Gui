@@ -41,11 +41,29 @@ class Graph_Visualizer_Dijkstra_List:
                 # wenn alg. durchgelaufen, dann sind alle Knoten hellblau
                 if step["step_type"] == "Algorithm Finished":
                     color = "light blue"
+                if step["step_type"] == "Initialize List":
+                    color = "light grey"
                 # wenn Knoten während initialisierung gewählt wird, dann ist dieser Knoten gelb. Rest ist grau
                 if step["step_type"] == "Pick Node":
                     color = "light grey"
                     if node == current_node:
                         color = current_node_color
+                if step["step_type"] == "Pick Node_1":
+                    color = "light grey"
+                    if node == current_node:
+                        color = current_node_color
+                if step["step_type"] == "Pick Node_2":
+                    color = "light grey"
+                    if node == current_node:
+                        color = current_node_color
+                if step["step_type"] == "Pick Node_3":
+                    color = "light grey"
+                    if node == current_node:
+                        color = current_node_color
+                if step["step_type"] == "Add Node to List":
+                    color = "light grey"
+                    if node == current_node:
+                        color = self.parent.color_heap
                 #  NEEDS WORK!! Aktueller Knoten gelb, sonst grau
                 if step["step_type"] == "Initialize Node Distance":
                     color = "light grey"
@@ -61,6 +79,14 @@ class Graph_Visualizer_Dijkstra_List:
                     color = "light grey"
                     if node == current_node:
                         color = self.parent.color_heap
+                if step["step_type"] == "Find Min in List":
+                    color = "light grey"
+                    if node == current_node:
+                        color = self.parent.color_heap
+                if step["step_type"] == "Remove min from List":
+                    color = "light grey"
+                    if node == current_node:
+                        color = current_node_color
                 # Knoten im Heap  sind blau, aus Heap entfernter Knoten ist gelb, rest grau
                 if step["step_type"] == "Heap Pop":
                     color = "light grey"
@@ -78,6 +104,14 @@ class Graph_Visualizer_Dijkstra_List:
                         color = discovered_node_true_color
                     if not visited[node]:
                         color = discovered_node_false_color'''
+                    color = "light grey"
+                    if node == current_node:
+                        if visited.get(current_node):
+                            # print(visited.get(current_node))
+                            color = discovered_node_true_color
+                        elif not visited.get(current_node):
+                            color = discovered_node_false_color
+                if step["step_type"] == "Visit Node u ":
                     color = "light grey"
                     if node == current_node:
                         if visited.get(current_node):
@@ -197,6 +231,21 @@ class Graph_Visualizer_Dijkstra_List:
                 if step["step_type"] == "Pick Node":
                     show_start = False
                     display_text = f"{node_text}"
+                if step["step_type"] == "Pick Node_1":
+                    show_start = False
+                    display_text = f"{node_text}"
+                if step["step_type"] == "Pick Node_2":
+                    show_start = False
+                    display_text = f"{node_text}"
+                if step["step_type"] == "Pick Node_3":
+                    show_start = False
+                    display_text = f"{node_text}"
+                if step["step_type"] == "Initialize List":
+                    show_start = False
+                    display_text = f"{node_text}"
+                if step["step_type"] == "Add Node to List":
+                    show_start = False
+                    display_text = f"{node_text}"
                 # Zeige Distanzen, kein Start
                 if step["step_type"] == "Initialize Node Distance":
                     show_start = False
@@ -216,10 +265,15 @@ class Graph_Visualizer_Dijkstra_List:
                 if step["step_type"] == "Visit Node":
                     show_start = False
                     display_text = f"{node_text}"
-
+                if step["step_type"] == "Find Min in List":
+                    show_start = False
+                if step["step_type"] == "Remove min from List":
+                    show_start = False
                 if step["step_type"] == "Compare Distance":
                     show_start = False
                 if step["step_type"] == "Highlight Edge":
+                    show_start = False
+                if step["step_type"] == "Initialize List":
                     show_start = False
                 if step["step_type"] == "Begin Outer Loop":
                     show_start = False
@@ -237,6 +291,8 @@ class Graph_Visualizer_Dijkstra_List:
                 if step["step_type"] == "Find Position in Heap":
                     show_start = False
                 if step["step_type"] == "Remove from Heap":
+                    show_start = False
+                if step["step_type"] == "Visit Node u ":
                     show_start = False
             if not step:
                 display_text = f"{node_text}"
@@ -270,7 +326,8 @@ class Graph_Visualizer_Dijkstra_List:
                         "Pick Node", "Initialize Node Distance", "Initialize Visited",
                         "Set Start Node Distance", "Push Start Node to Priority Queue",
                         "Heap Pop", "Visit Node", "Begin Outer Loop",
-                        "Push to Heap", "Skip Visited Node", "Priority Queue Empty", "Check if visited"
+                        "Push to Heap", "Skip Visited Node", "Priority Queue Empty", "Check if visited","Pick Node_1","Pick Node_2","Pick Node_3",
+                        "Initialize List", "Add Node to List", "Find Min in List", "Remove min from List", "Visit Node u "
                     }:
                         edge_color = "light grey"
                     elif step["step_type"] == "Compare Distance":
@@ -338,9 +395,25 @@ class Graph_Visualizer_Dijkstra_List:
                 weight_color = "black"
             elif step["step_type"] == "Pick Node":
                 weight_color = "light grey"
+            elif step["step_type"] == "Pick Node_1":
+                weight_color = "light grey"
+            elif step["step_type"] == "Pick Node_2":
+                weight_color = "light grey"
+            elif step["step_type"] == "Pick Node_3":
+                weight_color = "light grey"
+            elif step["step_type"] == "Initialize List":
+                weight_color = "light grey"
             elif step["step_type"] == "Initialize Node Distance":
                 weight_color = "light grey"
             elif step["step_type"] == "Set Start Node Distance":
+                weight_color = "light grey"
+            elif step["step_type"] == "Add Node to List":
+                weight_color = "light grey"
+            elif step["step_type"] == "Find Min in List":
+                weight_color = "light grey"
+            elif step["step_type"] == "Visit Node u ":
+                weight_color = "light grey"
+            elif step["step_type"] == "Remove min from List":
                 weight_color = "light grey"
             elif step["step_type"] == "Initialize Visited":
                 weight_color = "light grey"
