@@ -718,6 +718,7 @@ class My_Frame(Frame):
         clicked_node = self.get_node_at_position(x, y)
 
         if clicked_node:
+
             self.parent.selected_nodes.append(clicked_node)
 
             if len(self.parent.selected_nodes) == 1:
@@ -870,13 +871,13 @@ class My_Frame(Frame):
             if self.parent.debug:
                 print(f"Updating existing edge {node1} -> {node2} with weight {weight}")
             self.parent.graph[node1][node2] = weight
-            self.operation_history.append(("update_edge", (node1, node2, weight)))
+            #self.operation_history.append(("update_edge", (node1, node2, weight)))
         elif node1 in self.parent.graph[node2]:
             if self.parent.debug:
                 print(f"Replacing edge {node2} -> {node1} with {node1} -> {node2}")
             del self.parent.graph[node2][node1]
             self.parent.graph[node1][node2] = weight
-            self.operation_history.append(("replace_edge", (node2, node1, node1, node2, weight)))
+            self.operation_history.append(("add_edge", (node1, node2, weight)))
         else:
             self.parent.graph[node1][node2] = weight
             self.operation_history.append(("add_edge", (node1, node2, weight)))
