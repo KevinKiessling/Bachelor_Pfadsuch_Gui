@@ -120,8 +120,8 @@ class My_Frame(Frame):
                                             command=self.toggle_dijk_PQ)
 
         self.help = Menu(self.menu_bar, tearoff=0)
-        self.menu_bar.add_cascade(label="Todos", menu=self.help)
-        self.help.add_command(label="Todos", command=self.open_tutorial)
+        self.menu_bar.add_cascade(label="Hilfe", menu=self.help)
+        self.help.add_command(label="Tutorial", command=self.open_tutorial)
 
     def on_press(self, event):
         x, y = event.x, event.y
@@ -251,26 +251,128 @@ class My_Frame(Frame):
             self.parent.draw_graph_path(path)
            # messagebox.showinfo("Path Drawn", f"Path to {end_node} has been drawn!")
 
+    from tkinter import Toplevel, Label, Button, Checkbutton, BooleanVar
+
+    from tkinter import Toplevel, Button, Checkbutton, BooleanVar, Text, Frame, Scrollbar
+
+    from tkinter import Toplevel, Button, Checkbutton, BooleanVar, Text, Frame, Scrollbar
+
+    from tkinter import Toplevel, Button, Checkbutton, BooleanVar, Text, Frame, Scrollbar
+
     def open_tutorial(self):
         if self.parent.debug:
-            print("Öffne Tutorial, todo")
+            print("Opening tutorial window")
+
         tutorial_window = Toplevel(self)
-        tutorial_window.title("Todos")
+        tutorial_window.title("Tutorial")
         tutorial_window.geometry("700x600")
         tutorial_window.transient(self.parent)
 
-        tutorial_text = Label(tutorial_window, text="TodoList\n"
-                                                    "Beim 1. starten der App soll ein Hilfe fenster aufgehen, was alles erklärt, -> config var ums später nichtmehr zu callen\n"
-
-                                                    "Evtl dragable nodes(Nicht sicher wie machbar das mit tkinter canvas ist)\n"
-                                                    "Disjktra mit Liste\n"
-                                                    "Das Hilfe Fenster in die Topbar statt dem hier\n"
-                                                    "Vllt. das beim Erstellen einer Kante diese vorher simuliert wird(auch hier nicht sicher wie gut das in tkinter machbar ist)\n", justify="left")
-        tutorial_text.pack(pady=10, padx=10)
+        self.dont_show_again_var = BooleanVar()
+        self.dont_show_again_var.set(self.parent.has_seen_tutorial)
 
 
-        cancel_button = Button(tutorial_window, text="Okay", command=tutorial_window.destroy)
+        frame = Frame(tutorial_window)
+        frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+
+        text_frame = Frame(frame)
+        text_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+
+        tutorial_text = Text(text_frame, wrap="word", width=80, height=20, padx=10, pady=10, bg="#f0f0f0",
+                             state="disabled")
+        tutorial_text.pack(side="left", fill="both", expand=True)
+
+
+        scrollbar = Scrollbar(text_frame, command=tutorial_text.yview)
+        scrollbar.pack(side="right", fill="y")
+
+
+        tutorial_text.config(yscrollcommand=scrollbar.set)
+
+
+        text_content = """
+        Tutorial Übersicht:
+
+        1. **Knotenerstellung** (Linksklick):
+           - Klicken Sie auf den Canvas, um einen neuen Knoten zu erstellen. Der Knoten wird an der Position des Mauszeigers erzeugt.
+
+        --------------------------------------------------------------------
+
+        2. **Kantenerstellung** (Rechtsklick):
+           - Klicken Sie zuerst mit der rechten Maustaste auf einen Knoten, um ihn als Startpunkt auszuwählen.
+           - Klicken Sie mit der rechten Maustaste auf einen anderen Knoten, um eine Kante zwischen den beiden Knoten zu erstellen.
+           - Ein Dialogfenster erscheint, um das Gewicht der Kante festzulegen. Falls zufälliger Kantengewichts Modus aktiviert ist,
+             wird die Kante direkt mit einem Zufallsgewicht erstellt.
+
+        --------------------------------------------------------------------
+
+        3. **Knoten/Kantenlöschung** (Mittelklick):
+           - Klicken Sie mit der mittleren Maustaste (Mausrad) oder STRG + Linksklick auf einen Knoten oder eine Kante, um diesen/diese von dem Canvas zu löschen.
+       
+        --------------------------------------------------------------------
+       
+        4. **Algorithmen**
+            - Es sind 3 Varianten des Dijkstra Algorithmus implementiert, welche Schritt für Schritt durchlaufen werden können
+       
+        --------------------------------------------------------------------
+       
+        5. **Start der Algorithmen**
+            - Entweder über die Buttons oben oder per Pfeiltaste rechts oder oben (Vorspulen)
+       
+        --------------------------------------------------------------------
+       
+        6. **Startknoten**(Doppel Linksklick)
+            - Auswahl des Startknoten durch doppel Linksklick auf einen Knoten auf dem Canvas
+            - Falls kein Startknoten gewählt wurde, wird beim Start nach einem Startknoten gefragt
+       
+        --------------------------------------------------------------------
+       
+        7. **Import/Export**
+            - Es bestelt die möglichkeit einen Graph als .Json Datei zu importieren bzw. zu exportieren
+        
+        --------------------------------------------------------------------
+        
+        8. **Knotenlegende**
+            - Buchstabe auf Knoten ist der Name des Knoten
+            - Zahl unter dem Knoten ist die Distanz vom Startknoten zu diesem Knoten
+            
+        **Zusätzliche Funktionen:**
+        - Knoten können gezogen und verschoben werden. 
+        - Das Tutorial-Fenster wird einmal beim Start der App angezeigt. Später können Sie es bei Bedarf über die oberen Leiste aufrufen.
+
+        --------------------------------------------------------------------
+    
+        Drücken Sie "Okay", um das Tutorial zu schließen.
+        """
+
+
+        tutorial_text.config(state="normal")
+        tutorial_text.insert("1.0", text_content)
+        tutorial_text.config(state="disabled")
+
+
+        dont_show_again_check = Checkbutton(
+            tutorial_window,
+            text="Tutorial beim Start nicht zeigen",
+            variable=self.dont_show_again_var
+        )
+        dont_show_again_check.pack(pady=10)
+
+        def close_tutorial():
+            if self.dont_show_again_var.get():
+                self.parent.has_seen_tutorial = True
+            else:
+                self.parent.has_seen_tutorial = False
+
+            self.parent.save_config()
+            tutorial_window.destroy()
+
+
+        cancel_button = Button(tutorial_window, text="Okay", command=close_tutorial)
         cancel_button.pack(pady=10)
+
 
 
     def undo_last_operation(self, event=None):

@@ -12,14 +12,12 @@ Benötigte Pip Imports:
 korrekten von networkx zu vergleichen, wird später entfernt
 
 
-Aktueller Stand 27.1:
-- Graph erstellung refactored, Heap Visualisierung als Baum, komplett colourisation umgeschrieben
-- Pseudocode für Liste und normal Dijkstra an Vorlesung angepasst
+Aktueller Stand 31.1:
+- Knoten sind nun draggable via linksclick, Kantenerstellung wird simuliert
+- 
 - 
 
 
 Nächste Schritte:
-Liste und Normal Dijkstra auch klein stufiger machen.
-- Pseudocode highlighting für die beiden anderen Algorithmen und die Farben mit Parent Class linken, da grade die Farben 
-noch hardcoded sind bis auf die Heap Farbe
-- Liste ähnlich wie der heap darstellen.
+- Bidirektional Kanten wiederbringen
+- 

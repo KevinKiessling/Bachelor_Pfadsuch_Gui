@@ -23,7 +23,7 @@ class PfadsuchApp(Tk):
         self.darkmode = False
         self.steps_finished_algorithm = []
         self.shortest_paths = {}
-
+        self.has_seen_tutorial = True
 
         self.graph = {}
         self.start_node = ''
@@ -64,6 +64,9 @@ class PfadsuchApp(Tk):
         self.load_config()
         self.load_default_graph()
         self.code_frame.update_font_size()
+        #opens Tutorial window
+        if not self.has_seen_tutorial:
+            self.gui_frame.open_tutorial()
         self.protocol("WM_DELETE_WINDOW", self.on_close)
 
     def global_focus_control(self, event):
@@ -97,6 +100,7 @@ class PfadsuchApp(Tk):
                 self.color_edge_highlight = config.get("color_edge_highlight", self.color_edge_highlight)
                 self.color_shortest_path = config.get("color_shortest_path", self.color_shortest_path)
                 self.font_size = config.get("font_size", self.font_size)
+                self.has_seen_tutorial = config.get("has_seen_tutorial", self.has_seen_tutorial)
 
             except json.JSONDecodeError as e:
                 if self.debug:
@@ -132,6 +136,7 @@ class PfadsuchApp(Tk):
             "color_discovered_false": self.color_discovered_false,
             "color_edge_highlight": self.color_edge_highlight,
             "color_shortest_path": self.color_shortest_path,
+            "has_seen_tutorial": self.has_seen_tutorial
         }
         with open(self.CONFIG_FILE, "w") as f:
             json.dump(config, f, indent=4)
