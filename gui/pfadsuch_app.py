@@ -264,6 +264,7 @@ class PfadsuchApp(Tk):
 
     #Setzt den Algorithmus komplett zurück, aber behält den Graph geladen
     def reset(self):
+        self.selected_nodes = []
         self.fast_forward_paused = True
         if self.debug:
             print("resetting without clear")
@@ -272,7 +273,7 @@ class PfadsuchApp(Tk):
         self.start_node = ""
         self.update_gui()
         self.code_frame.clear_highlights_and_Canvas()
-
+        self.gui_frame.canvas.bind("<ButtonPress-1>", self.gui_frame.on_press)
         self.code_frame.clear_table()
         #TO DO CLEAR TABLE HIGHLIGHT
         #self.code_frame.clear_hightlight()
@@ -297,6 +298,7 @@ class PfadsuchApp(Tk):
     def clear_graph(self):
         if self.debug:
             print("clearing everything")
+        self.gui_frame.canvas.bind("<ButtonPress-1>", self.gui_frame.on_press)
         self.graph = {}
         self.steps_finished_algorithm = []
         self.current_step = -1

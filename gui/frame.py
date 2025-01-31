@@ -711,73 +711,22 @@ class My_Frame(Frame):
         self.parent.reset()
         self.update_avai_ids()
 
-    # hilfs funktion damit löschen von knoten nicht der erstellen verhindert, da sonst duplikate erstellt werden, was alles breaked
 
-
-    #Kante hinzufügen in 2 schritten, 1. Markieren und speichern des Ausgangsknoten, 2. aufruf speichert den zielknoten und zieht kante
     def add_edge(self, event):
 
         x, y = event.x, event.y
         clicked_node = self.get_node_at_position(x, y)
 
-        if clicked_node:# falls knoten existiert
-            if len(self.parent.selected_nodes) == 2:
-                self.parent.selected_nodes = []
-                self.parent.reset()
-
+        if clicked_node:
             self.parent.selected_nodes.append(clicked_node)
-            if self.parent.debug:
-                print(f"Startknoten gewählt : {clicked_node}")
 
-            if len(self.parent.selected_nodes) == 2:
-                node1, node2 = self.parent.selected_nodes
+            if len(self.parent.selected_nodes) == 1:
+                self.start_edge_simulation(clicked_node)
 
-                # Open a dialog to ask for weight
-                if self.parent.random_edge_mode:
-                    if self.parent.debug:
-                        print("random mode")
-                    weight = random.randint(0, self.parent.max_edge_weight)
-                else:
-                    if self.parent.debug:
-                        print("input mode")
-
-                    weight = None
-                    while weight is None or not (0 <= weight <= 99999):
-                        weight = tkinter.simpledialog.askinteger(
-                            "Kantengewicht Eingeben",
-                            "Kantengewicht Eingeben (Maximales Gewicht < 100000)"
-                        )
-                        if weight is None:
-                            self.parent.selected_nodes.clear()
-                            return
-                        if not (0 <= weight <= 99999):
-                            tkinter.messagebox.showerror(
-                                "Ungültiges Gewicht",
-                                "Das Kantengewicht muss zwischen 0 und 99999 liegen."
-                            )
-
-                if node1 != node2 and weight is not None:
-
-                    if node2 in self.parent.graph[node1]:
-                        if self.parent.debug:
-                            print(f"Kante von {node1} zu {node2} existiert bereits. Gewicht aktualisieren.")
-                        self.parent.graph[node1][node2] = weight
-                        self.operation_history.append(("update_edge", (node1, node2, weight)))
-                    elif node1 in self.parent.graph[node2]:
-                        if self.parent.debug:
-                            print(f"Kante von {node2} zu {node1} existiert. Richtung ersetzen.")
-                        del self.parent.graph[node2][node1]
-                        self.parent.graph[node1][node2] = weight
-                        self.operation_history.append(("replace_edge", (node2, node1, node1, node2, weight)))
-                    else:
-                        self.parent.graph[node1][node2] = weight
-                        self.operation_history.append(("add_edge", (node1, node2, weight)))
-                        if self.parent.debug:
-                            print(f"Kante von {node1} zu {node2} mit Gewicht {weight} hinzugefügt.")
-                    self.parent.selected_nodes.clear()
-            self.parent.update_gui()
-            self.parent.reset()
+            elif len(self.parent.selected_nodes) == 2:
+                self.finalize_edge(self.parent.selected_nodes[0], self.parent.selected_nodes[1])
             return
+
         clicked_edge = self.get_edge_at_coordinates(x, y)
         if clicked_edge:
             start, end = clicked_edge
@@ -803,15 +752,111 @@ class My_Frame(Frame):
                         "Das Kantengewicht muss zwischen 0 und 99999 liegen. Bitte erneut eingeben."
                     )
 
-            # Gewicht aktualisieren
+
             if self.parent.debug:
                 print(f"updating edge weight from {start} -> {end} to {new_weight}")
             self.parent.graph[start][end] = new_weight
             self.parent.update_gui()
             self.parent.reset()
 
+    def start_edge_simulation(self, start_node):
 
-    # Hilfsfunktion die einen Knoten returned der in einem Radius von 30px zu click coordinaten ist. Wird benötigt für die Erstellung von Kanten
+        cx, cy = self.parent.node_positions[start_node]
+        mx, my = self.canvas.winfo_pointerx(), self.canvas.winfo_pointery()
+
+
+        dx, dy = mx - cx, my - cy
+        length = math.sqrt(dx ** 2 + dy ** 2)
+
+        if length > 0:
+
+            start_x = cx + (dx / length) * 30
+            start_y = cy + (dy / length) * 30
+        else:
+
+            start_x, start_y = cx, cy
+
+        self.simulated_edge = self.canvas.create_line(start_x, start_y, start_x, start_y, dash=(8, 4), fill='gray', arrow="last", arrowshape=(10, 12, 5))
+        self.canvas.bind("<Motion>", self.update_edge_simulation)
+        self.canvas.bind("<Button-1>", self.cancel_edge)
+
+    def update_edge_simulation(self, event):
+
+        if hasattr(self, "simulated_edge") and self.parent.selected_nodes:
+            try:
+                cx, cy = self.parent.node_positions[self.parent.selected_nodes[0]]
+                mx, my = event.x, event.y
+
+
+                dx, dy = mx - cx, my - cy
+                length = math.sqrt(dx ** 2 + dy ** 2)
+
+                if length > 0:
+
+                    start_x = cx + (dx / length) * 30
+                    start_y = cy + (dy / length) * 30
+                else:
+                    start_x, start_y = cx, cy
+
+
+                self.canvas.coords(self.simulated_edge, start_x, start_y, mx, my)
+            except (KeyError, IndexError):
+
+                self.cancel_edge()
+
+    def finalize_edge(self, node1, node2):
+
+        if hasattr(self, "simulated_edge"):
+            self.canvas.delete(self.simulated_edge)
+            del self.simulated_edge
+            self.canvas.unbind("<Motion>")
+
+        if node1 == node2:
+            self.parent.selected_nodes.clear()
+            self.parent.reset()
+            return
+
+        weight = self.ask_for_edge_weight()
+        if weight is not None:
+            self.add_or_update_edge(node1, node2, weight)
+        self.canvas.bind("<ButtonPress-1>", self.on_press)
+        self.parent.selected_nodes.clear()
+        self.parent.update_gui()
+        self.parent.reset()
+
+    def cancel_edge(self, event=None):
+
+        if hasattr(self, "simulated_edge"):
+            self.canvas.delete(self.simulated_edge)
+            del self.simulated_edge
+            self.canvas.bind("<ButtonPress-1>", self.on_press)
+
+        self.parent.selected_nodes.clear()
+        self.parent.reset()
+    def ask_for_edge_weight(self):
+
+        if self.parent.random_edge_mode:
+            if self.parent.debug:
+                print("Zufallsmodus -> zufälliges Gewicht.")
+            return random.randint(0, self.parent.max_edge_weight)
+
+        weight = None
+        while weight is None or not (0 <= weight <= 99999):
+            weight = tkinter.simpledialog.askinteger(
+                "Kantengewicht Eingeben",
+                "Kantengewicht Eingeben (Maximales Gewicht < 100000)"
+            )
+            if weight is None:
+                self.parent.selected_nodes.clear()
+                self.parent.reset()
+                return None
+            if not (0 <= weight <= 99999):
+                tkinter.messagebox.showerror(
+                    "Ungültiges Gewicht",
+                    "Das Kantengewicht muss zwischen 0 und 99999 liegen."
+                )
+        return weight
+     # Hilfsfunktion die einen Knoten returned der in einem Radius von 30px zu click coordinaten ist. Wird benötigt für die Erstellung von Kanten
     def get_node_at_position(self, x, y):
 
         for node, (nx, ny) in self.parent.node_positions.items():
@@ -819,6 +864,24 @@ class My_Frame(Frame):
                 return node
         return None
 
+    def add_or_update_edge(self, node1, node2, weight):
+        """Adds or updates an edge in the graph."""
+        if node2 in self.parent.graph[node1]:
+            if self.parent.debug:
+                print(f"Updating existing edge {node1} -> {node2} with weight {weight}")
+            self.parent.graph[node1][node2] = weight
+            self.operation_history.append(("update_edge", (node1, node2, weight)))
+        elif node1 in self.parent.graph[node2]:
+            if self.parent.debug:
+                print(f"Replacing edge {node2} -> {node1} with {node1} -> {node2}")
+            del self.parent.graph[node2][node1]
+            self.parent.graph[node1][node2] = weight
+            self.operation_history.append(("replace_edge", (node2, node1, node1, node2, weight)))
+        else:
+            self.parent.graph[node1][node2] = weight
+            self.operation_history.append(("add_edge", (node1, node2, weight)))
+            if self.parent.debug:
+                print(f"Added edge {node1} -> {node2} with weight {weight}")
     # hilfsfunktion die naheste kante zu 2 koordinaten findet, wird benötigt um Kanten zu löschen
     def get_edge_at_coordinates(self, x, y):
         nearest_edge = None
