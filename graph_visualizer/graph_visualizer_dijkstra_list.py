@@ -1,7 +1,7 @@
 import json
 from tkinter import *
 from tkinter import messagebox
-from gui.frame import *
+from gui.Canvas_Frame import *
 from gui.pseudocode_frame import *
 from algorithmen.dijkstra_list import *
 from algorithmen.dijkstra_Priority_queue_lazy import *
