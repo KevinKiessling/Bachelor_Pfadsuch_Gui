@@ -64,6 +64,7 @@ class PfadsuchApp(Tk):
         self.load_config()
         self.load_default_graph()
         self.code_frame.update_font_size()
+        self.code_frame.set_step("Warte auf Starten eines Algorithmus")
         #opens Tutorial window
         if not self.has_seen_tutorial:
             self.gui_frame.open_tutorial()
@@ -143,8 +144,12 @@ class PfadsuchApp(Tk):
         #self.update_gui()
         self.code_frame.update_font_size()
     def start_algorithm(self):
+        self.gui_frame.shortest_paths_button.config(state=DISABLED)
+        self.gui_frame.prev_button.config(state=DISABLED)
         if self.current_step:
+
             self.steps_finished_algorithm = []
+            self.shortest_paths = {}
             self.code_frame.clear_highlights_and_Canvas()
             self.current_step = -1
             self.code_frame.clear_table()
@@ -190,7 +195,12 @@ class PfadsuchApp(Tk):
         self.selected_nodes = []
         if self.debug:
             print(f" Knoten {node} als Startknoten gesetzt")
+        self.selected_nodes = []
+        self.steps_finished_algorithm = []
+        self.current_step = -1
         self.update_gui()
+        self.code_frame.clear_highlights_and_Canvas()
+        self.code_frame.clear_table()
 
     def next_step(self):
         if self.debug:
@@ -283,7 +293,7 @@ class PfadsuchApp(Tk):
         #TO DO CLEAR TABLE HIGHLIGHT
         #self.code_frame.clear_hightlight()
 
-        self.code_frame.set_step("")
+        self.code_frame.set_step("Warte auf starten eines Algorithmus")
         self.shortest_paths = {}
         if not self.shortest_paths:
             self.gui_frame.shortest_paths_button.config(state=DISABLED)
@@ -318,14 +328,16 @@ class PfadsuchApp(Tk):
 
     # Updated die Gui
     def update_gui(self):
-
+        print(self.current_step)
         self.graph_draw_lazy = Graph_Visualizer_Dijkstra_lazy(self.gui_frame, self.node_positions, self.graph, self.selected_nodes, self.start_node, self)
         self.graph_draw_normal = Graph_Visualizer_Dijkstra(self.gui_frame, self.node_positions, self.graph, self.selected_nodes, self.start_node, self)
         self.graph_draw_list = Graph_Visualizer_Dijkstra_List(self.gui_frame, self.node_positions, self.graph,
                                                            self.selected_nodes, self.start_node, self)
         self.gui_frame.canvas.delete("all")
         self.gui_frame.prev_button.config(state=DISABLED)
+        self.gui_frame.shortest_paths_button.config(state=DISABLED)
         if self.current_step == -1:
+            self.code_frame.set_step("Warte auf Starten eines Algorithmus")
             if self.selected_algorithm == "Dijkstra_PQ_lazy":
                 self.graph_draw_lazy.draw_graph_dijkstra_lazy(None, None, {node: 0 for node in self.graph}, set(), set())
             if self.selected_algorithm == "Dijkstra_PQ":

@@ -832,7 +832,7 @@ class Pseudocode_Frame(Frame):
                 self.highlight_specific_ranges([("10.26", "10.30")], colors.get("current_node")) # d[u]
                 self.highlight_specific_ranges([("10.19", "10.23")], colors.get("d_v")) # d[v]
             elif step_type == "Initialize List":
-                print("test")
+
                 self.highlight_specific_ranges([("5.15", "5.26")], colors.get("Heap"))
 
             elif step_type == "Add Node to List":

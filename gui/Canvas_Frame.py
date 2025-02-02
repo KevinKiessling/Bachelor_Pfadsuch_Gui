@@ -11,6 +11,9 @@ from tkinter import ttk
 from tkinter import colorchooser
 from tkinter import Tk, Canvas, Frame, Scrollbar, Button
 from tkinter import StringVar, OptionMenu
+from tkinter import Toplevel, Label, Button, Checkbutton, BooleanVar
+from tkinter import Toplevel, Button, Checkbutton, BooleanVar, Text, Frame, Scrollbar
+
 import copy
 class Canvas_Frame(Frame):
     def __init__(self, parent):
@@ -245,19 +248,11 @@ class Canvas_Frame(Frame):
     def on_button_click(self, end_node, path_window):
 
         path = self.parent.shortest_paths.get(end_node, [])
-        if not path:
+        if not path or self.parent.current_step ==-1:
             messagebox.showwarning("Path Not Found", f"No path to {end_node} exists.")
         else:
             self.parent.draw_graph_path(path)
            # messagebox.showinfo("Path Drawn", f"Path to {end_node} has been drawn!")
-
-    from tkinter import Toplevel, Label, Button, Checkbutton, BooleanVar
-
-    from tkinter import Toplevel, Button, Checkbutton, BooleanVar, Text, Frame, Scrollbar
-
-    from tkinter import Toplevel, Button, Checkbutton, BooleanVar, Text, Frame, Scrollbar
-
-    from tkinter import Toplevel, Button, Checkbutton, BooleanVar, Text, Frame, Scrollbar
 
     def open_tutorial(self):
         if self.parent.debug:

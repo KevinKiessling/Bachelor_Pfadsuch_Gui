@@ -29,7 +29,11 @@ class Graph_Visualizer_Path:
         if self.parent.current_step != -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
             print(step)
-        distances = step["distances"]
+
+            distances = step["distances"]
+        else:
+            self.parent.update_gui()
+            return
 
         discovered_node_true_color = self.parent.color_discovered_true
         discovered_node_false_color = self.parent.color_discovered_false
