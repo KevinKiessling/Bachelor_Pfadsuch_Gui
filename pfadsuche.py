@@ -4,7 +4,7 @@
 Ausführen der Gui via : " python pfadsuche.py  "
 
 '''
-from gui.pfadsuch_app import PfadsuchApp
+from gui.Main_Frame import PfadsuchApp
 import tkinter as tk
 
 
