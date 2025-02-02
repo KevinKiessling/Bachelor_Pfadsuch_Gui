@@ -58,7 +58,7 @@ class PfadsuchApp(Tk):
         self.bind_all("<FocusIn>", self.global_focus_control)
 
         self.code_frame = Pseudocode_Frame(self)
-        self.gui_frame = My_Frame(self)
+        self.gui_frame = Canvas_Frame(self)
 
 
         self.load_config()

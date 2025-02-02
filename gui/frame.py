@@ -12,7 +12,7 @@ from tkinter import colorchooser
 from tkinter import Tk, Canvas, Frame, Scrollbar, Button
 from tkinter import StringVar, OptionMenu
 import copy
-class My_Frame(Frame):
+class Canvas_Frame(Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.shortest_paths_window = None
@@ -671,7 +671,7 @@ class My_Frame(Frame):
         color_heap_button.config(bg=self.parent.color_heap)
 
         color_d_v_button_frame = Frame(color_tab)
-        color_d_v_button = create_color_button(color_d_v_button_frame, "D-V Farbe", 'color_d_v')
+        color_d_v_button = create_color_button(color_d_v_button_frame, "d[v] Farbe", 'color_d_v')
         color_d_v_button_frame.pack(pady=5)
         color_d_v_button.config(bg=self.parent.color_d_v)
 
