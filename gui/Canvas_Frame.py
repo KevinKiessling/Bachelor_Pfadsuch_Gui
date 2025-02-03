@@ -248,10 +248,14 @@ class Canvas_Frame(Frame):
     def on_button_click(self, end_node, path_window):
 
         path = self.parent.shortest_paths.get(end_node, [])
-        if not path or self.parent.current_step ==-1:
-            messagebox.showwarning("Path Not Found", f"No path to {end_node} exists.")
-        else:
+
+        if self.parent.current_step != -1 and self.parent.current_step >= len(self.parent.steps_finished_algorithm) - 1:
             self.parent.draw_graph_path(path)
+
+        else:
+            messagebox.showwarning("Path Not Found",
+                                   f"No path to {end_node} exists or Algorithm not in State Algorithmus abgeschlossen.")
+
            # messagebox.showinfo("Path Drawn", f"Path to {end_node} has been drawn!")
 
     def open_tutorial(self):

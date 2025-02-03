@@ -328,7 +328,7 @@ class PfadsuchApp(Tk):
 
     # Updated die Gui
     def update_gui(self):
-        print(self.current_step)
+
         self.graph_draw_lazy = Graph_Visualizer_Dijkstra_lazy(self.gui_frame, self.node_positions, self.graph, self.selected_nodes, self.start_node, self)
         self.graph_draw_normal = Graph_Visualizer_Dijkstra(self.gui_frame, self.node_positions, self.graph, self.selected_nodes, self.start_node, self)
         self.graph_draw_list = Graph_Visualizer_Dijkstra_List(self.gui_frame, self.node_positions, self.graph,
