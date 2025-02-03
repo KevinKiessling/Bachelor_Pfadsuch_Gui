@@ -2,7 +2,7 @@ import json
 from tkinter import *
 from tkinter import messagebox
 from gui.Canvas_Frame import *
-from gui.pseudocode_frame import *
+from gui.Pseudocode_Frame import *
 from algorithmen.dijkstra_list import *
 from algorithmen.dijkstra_Priority_queue_lazy import *
 from algorithmen.dijkstra_Priority_queue import *
@@ -64,7 +64,7 @@ class PfadsuchApp(Tk):
         self.load_config()
         self.load_default_graph()
         self.code_frame.update_font_size()
-        self.code_frame.set_step("Warte auf Starten eines Algorithmus")
+        self.code_frame.set_step("Warte auf starten eines Algorithmus")
         #opens Tutorial window
         if not self.has_seen_tutorial:
             self.gui_frame.open_tutorial()

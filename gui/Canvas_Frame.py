@@ -105,8 +105,8 @@ class Canvas_Frame(Frame):
 
         # Graph optionen Menu
         self.graph_menu = Menu(self.menu_bar, tearoff=0)
-        self.menu_bar.add_cascade(label="Graph Funktionen", menu=self.graph_menu)
-        self.graph_menu.add_command(label="Lade Default Graph", command=parent.load_default_graph)
+        self.menu_bar.add_cascade(label="Graph-Funktionen", menu=self.graph_menu)
+        self.graph_menu.add_command(label="Lade Standard Graph", command=parent.load_default_graph)
         self.graph_menu.add_command(label="Lösche Graph", command=parent.clear_graph)
         self.graph_menu.add_command(label="Importiere Graph", command=self.import_graph)
         self.graph_menu.add_command(label="Exportiere Graph", command=self.export_graph)
@@ -117,14 +117,14 @@ class Canvas_Frame(Frame):
         self.dijk_L = BooleanVar(value=False)
         self.dijk_PQ_lazy = BooleanVar(value=True)
         self.dijk_PQ = BooleanVar(value=False)
-        self.algorithm_menu.add_checkbutton(label="Dijkstra als Liste", variable=self.dijk_L , command=self.toggle_dijk_L)
-        self.algorithm_menu.add_checkbutton(label="Dijkstra als Priority Queue(Lazy Deletion)", variable=self.dijk_PQ_lazy, command=self.toggle_dijk_PQ_lazy)
-        self.algorithm_menu.add_checkbutton(label="Dijkstra als Priority Queue", variable=self.dijk_PQ,
+        self.algorithm_menu.add_checkbutton(label="Dijkstra mit Liste", variable=self.dijk_L , command=self.toggle_dijk_L)
+        self.algorithm_menu.add_checkbutton(label="Dijkstra mit Priority Queue", variable=self.dijk_PQ,
                                             command=self.toggle_dijk_PQ)
-
-        self.help = Menu(self.menu_bar, tearoff=0)
+        self.algorithm_menu.add_checkbutton(label="Dijkstra mit Priority Queue(Lazy Deletion)",
+                                            variable=self.dijk_PQ_lazy, command=self.toggle_dijk_PQ_lazy)
+        '''self.help = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Hilfe", menu=self.help)
-        self.help.add_command(label="Tutorial", command=self.open_tutorial)
+        self.help.add_command(label="Tutorial", command=self.open_tutorial)'''
 
     def on_press(self, event):
         x, y = event.x, event.y
@@ -544,7 +544,7 @@ class Canvas_Frame(Frame):
 
         save_cur_a_d_button = Button(
             general_tab_frame,
-            text="Aktuellen Graphen als Default Speichern",
+            text="Aktuellen Graphen als Standard Speichern",
             command=lambda: save_default_graph_to_parent()
         )
         save_cur_a_d_button.pack(anchor="w", pady=10, padx=10)
