@@ -264,6 +264,7 @@ class PfadsuchApp(Tk):
             self.node_positions = copy.deepcopy(self.default_graph_pos)
             self.selected_nodes = []
 
+
         else:
             if self.debug:
                 print("Loading backup default graph")
@@ -276,10 +277,10 @@ class PfadsuchApp(Tk):
 
             self.selected_nodes = []
         self.gui_frame.update_avai_ids()
-
+        self.gui_frame.reset_original_data()
         self.gui_frame.operation_history = []
         self.reset()
-        self.gui_frame.update_original_positions()
+
 
     #Setzt den Algorithmus komplett zurück, aber behält den Graph geladen
     def reset(self):
@@ -332,7 +333,7 @@ class PfadsuchApp(Tk):
         self.code_frame.clear_highlights_and_Canvas()
         self.gui_frame.operation_history = []
         self.gui_frame.reset_node_ids()
-        self.gui_frame.update_original_positions()
+        self.gui_frame.reset_original_data()
         self.update_gui()
         self.code_frame.priority_queue = {}
 

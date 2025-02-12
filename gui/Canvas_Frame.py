@@ -132,14 +132,33 @@ class Canvas_Frame(Frame):
         if event.widget == self.canvas_frame:
             self.scale_node_positions(event.width, event.height)
 
+
+
+
+
+    def reset_original_data(self):
+        self.canvas.update_idletasks()
+        canvas_width = self.canvas.winfo_width()
+        canvas_height = self.canvas.winfo_height()
+
+        if canvas_width > 1 and canvas_height > 1:
+            self.original_width = canvas_width
+            self.original_height = canvas_height
+            self.original_positions = self.parent.node_positions.copy()
+            self.original_radius = self.parent.node_rad
+
     def scale_node_positions(self, new_width, new_height):
+        if new_width <= 1 or new_height <= 1:
+            return
 
         if not hasattr(self, "original_width") or not hasattr(self, "original_height"):
-            self.original_width = new_width
-            self.original_height = new_height
-            self.original_positions = self.parent.node_positions.copy()
-            self.original_radius = 30
+            self.reset_original_data()
             return
+
+        if self.original_width <= 1 or self.original_height <= 1:
+            self.reset_original_data()
+            if self.original_width <= 1 or self.original_height <= 1:
+                return
 
         scale_x = new_width / self.original_width
         scale_y = new_height / self.original_height
@@ -158,20 +177,11 @@ class Canvas_Frame(Frame):
 
         scale_factor = (scale_x + scale_y) / 2
         new_radius = self.original_radius * scale_factor
-
         self.parent.node_rad = new_radius
-
-        self.original_width = new_width
-        self.original_height = new_height
-        self.original_positions = self.parent.node_positions.copy()
-        self.original_radius = new_radius
 
         self.parent.update_gui()
 
-    def update_original_positions(self):
-        """Updates the original node positions after any modification."""
-        self.original_positions = self.parent.node_positions.copy()
-        self.scaling_applied = False
+
     def on_press(self, event):
         x, y = event.x, event.y
         clicked_node = self.get_node_at_position(x, y)
@@ -196,7 +206,7 @@ class Canvas_Frame(Frame):
         if self.dragging_node is not None:
 
             self.parent.node_positions[self.dragging_node] = (event.x, event.y)
-            self.update_original_positions()
+            self.reset_original_data()
             self.parent.reset()
 
     def on_release(self, event):
@@ -500,9 +510,8 @@ class Canvas_Frame(Frame):
         self.parent.selected_nodes = []
         if self.parent.debug:
             print(f"Knoten {node} gelöscht")
-        self.update_original_positions()
         self.parent.reset()
-
+        self.reset_original_data()
         self.update_avai_ids()
 
     #Öffnet Einstellungsmenu, welches den Debug mode, random mode und Animationspeed einstellen lässt und in der Config.json speichert.
@@ -856,9 +865,8 @@ class Canvas_Frame(Frame):
         self.operation_history.append(("add_node", new_node))
         if self.parent.debug:
             print(f"Knoten {new_node} hinzugefügt an Position ({x}, {y})")
-
+        self.reset_original_data()
         self.parent.selected_nodes = []
-        self.update_original_positions()
         self.parent.reset()
         self.update_avai_ids()
 
@@ -973,7 +981,7 @@ class Canvas_Frame(Frame):
             self.add_or_update_edge(node1, node2, weight)
         self.canvas.bind("<ButtonPress-1>", self.on_press)
         self.parent.selected_nodes.clear()
-        self.update_original_positions()
+
         self.parent.update_gui()
         self.parent.reset()
 
