@@ -129,52 +129,43 @@ class Canvas_Frame(Frame):
         self.original_positions = self.parent.node_positions.copy()
 
     def resize_canvas(self, event):
-        if event.widget == self.canvas_frame:  # Track only canvas_frame size changes
+        if event.widget == self.canvas_frame:
             self.scale_node_positions(event.width, event.height)
 
     def scale_node_positions(self, new_width, new_height):
-        # Store the initial dimensions if it's the first resize
-        if not hasattr(self, "original_width") or not hasattr(self, "original_height"):
-            self.original_width = new_width  # Store initial canvas size
-            self.original_height = new_height
-            self.original_positions = self.parent.node_positions.copy()  # Store initial positions
-            self.original_radius = 30  # Default node radius at 1000x1000 canvas
-            return  # Skip first call to avoid resetting everything to (0,0)
 
-        # Calculate scaling factors based on the new dimensions
+        if not hasattr(self, "original_width") or not hasattr(self, "original_height"):
+            self.original_width = new_width
+            self.original_height = new_height
+            self.original_positions = self.parent.node_positions.copy()
+            self.original_radius = 30
+            return
+
         scale_x = new_width / self.original_width
         scale_y = new_height / self.original_height
 
-        # Skip if the window size has not changed
         if new_width == self.original_width and new_height == self.original_height:
-            return  # No resizing has occurred, so no need to apply scaling
+            return
 
-        # Apply scaling to node positions
         for node, (orig_x, orig_y) in self.original_positions.items():
             new_x = orig_x * scale_x
             new_y = orig_y * scale_y
 
-            # Ensure nodes are within the canvas bounds
-            new_x = min(max(new_x, 0), new_width)  # Clamp x between 0 and canvas width
-            new_y = min(max(new_y, 0), new_height)  # Clamp y between 0 and canvas height
+            new_x = min(max(new_x, 0), new_width)
+            new_y = min(max(new_y, 0), new_height)
 
-            # Update the node position
             self.parent.node_positions[node] = (new_x, new_y)
 
-        # Calculate the average scale factor for the radius (based on both width and height)
-        scale_factor = (scale_x + scale_y) / 2  # Average scaling factor for both dimensions
-        new_radius = self.original_radius * scale_factor  # Calculate new node radius
+        scale_factor = (scale_x + scale_y) / 2
+        new_radius = self.original_radius * scale_factor
 
-        # Store the updated radius
-        self.parent.node_rad = new_radius  # Update the node radius in parent
+        self.parent.node_rad = new_radius
 
-        # After applying the scaling, update the original dimensions and node positions
         self.original_width = new_width
         self.original_height = new_height
-        self.original_positions = self.parent.node_positions.copy()  # Update positions
-        self.original_radius = new_radius  # Update the stored original radius
+        self.original_positions = self.parent.node_positions.copy()
+        self.original_radius = new_radius
 
-        # Refresh the GUI to reflect changes
         self.parent.update_gui()
 
     def update_original_positions(self):
