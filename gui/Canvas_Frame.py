@@ -82,6 +82,7 @@ class Canvas_Frame(Frame):
         self.canvas.bind("<B1-Motion>", self.on_drag)
         self.canvas.bind("<ButtonRelease-1>", self.on_release)
         self.canvas.bind("<Double-1>", self.on_double_click)
+        self.canvas_frame.bind("<Configure>", self.resize_canvas)
 
         self.focus_set()
         self.bind("<Right>", self.go_to_next_step)
@@ -125,7 +126,61 @@ class Canvas_Frame(Frame):
         '''self.help = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Hilfe", menu=self.help)
         self.help.add_command(label="Tutorial", command=self.open_tutorial)'''
+        self.original_positions = self.parent.node_positions.copy()
 
+    def resize_canvas(self, event):
+        if event.widget == self.canvas_frame:  # Track only canvas_frame size changes
+            self.scale_node_positions(event.width, event.height)
+
+    def scale_node_positions(self, new_width, new_height):
+        # Store the initial dimensions if it's the first resize
+        if not hasattr(self, "original_width") or not hasattr(self, "original_height"):
+            self.original_width = new_width  # Store initial canvas size
+            self.original_height = new_height
+            self.original_positions = self.parent.node_positions.copy()  # Store initial positions
+            self.original_radius = 30  # Default node radius at 1000x1000 canvas
+            return  # Skip first call to avoid resetting everything to (0,0)
+
+        # Calculate scaling factors based on the new dimensions
+        scale_x = new_width / self.original_width
+        scale_y = new_height / self.original_height
+
+        # Skip if the window size has not changed
+        if new_width == self.original_width and new_height == self.original_height:
+            return  # No resizing has occurred, so no need to apply scaling
+
+        # Apply scaling to node positions
+        for node, (orig_x, orig_y) in self.original_positions.items():
+            new_x = orig_x * scale_x
+            new_y = orig_y * scale_y
+
+            # Ensure nodes are within the canvas bounds
+            new_x = min(max(new_x, 0), new_width)  # Clamp x between 0 and canvas width
+            new_y = min(max(new_y, 0), new_height)  # Clamp y between 0 and canvas height
+
+            # Update the node position
+            self.parent.node_positions[node] = (new_x, new_y)
+
+        # Calculate the average scale factor for the radius (based on both width and height)
+        scale_factor = (scale_x + scale_y) / 2  # Average scaling factor for both dimensions
+        new_radius = self.original_radius * scale_factor  # Calculate new node radius
+
+        # Store the updated radius
+        self.parent.node_rad = new_radius  # Update the node radius in parent
+
+        # After applying the scaling, update the original dimensions and node positions
+        self.original_width = new_width
+        self.original_height = new_height
+        self.original_positions = self.parent.node_positions.copy()  # Update positions
+        self.original_radius = new_radius  # Update the stored original radius
+
+        # Refresh the GUI to reflect changes
+        self.parent.update_gui()
+
+    def update_original_positions(self):
+        """Updates the original node positions after any modification."""
+        self.original_positions = self.parent.node_positions.copy()
+        self.scaling_applied = False
     def on_press(self, event):
         x, y = event.x, event.y
         clicked_node = self.get_node_at_position(x, y)
@@ -150,6 +205,7 @@ class Canvas_Frame(Frame):
         if self.dragging_node is not None:
 
             self.parent.node_positions[self.dragging_node] = (event.x, event.y)
+            self.update_original_positions()
             self.parent.reset()
 
     def on_release(self, event):
@@ -453,7 +509,9 @@ class Canvas_Frame(Frame):
         self.parent.selected_nodes = []
         if self.parent.debug:
             print(f"Knoten {node} gelöscht")
+        self.update_original_positions()
         self.parent.reset()
+
         self.update_avai_ids()
 
     #Öffnet Einstellungsmenu, welches den Debug mode, random mode und Animationspeed einstellen lässt und in der Config.json speichert.
@@ -568,7 +626,7 @@ class Canvas_Frame(Frame):
         speed_var.trace_add("write", update_speed_label)
 
         Label(general_tab_frame, text="Font Größe:").pack(pady=10)
-        font_var = IntVar(value=self.parent.font_size)
+        font_var = IntVar(value=self.parent.font_size_pseudocode)
         font_slider = ttk.Scale(
             general_tab_frame, from_=8, to=25, orient="horizontal", length=300, variable=font_var
         )
@@ -589,7 +647,7 @@ class Canvas_Frame(Frame):
             #self.parent.debug = debug_var.get()
             self.parent.random_edge_mode = random_mode_var.get()
             self.parent.animation_speed = speed_var.get()
-            self.parent.font_size = font_var.get()
+            self.parent.font_size_pseudocode = font_var.get()
             max_edge_weight = max_weight_var.get()
 
             if max_edge_weight < 0 or max_edge_weight >= 100000:
@@ -793,7 +851,7 @@ class Canvas_Frame(Frame):
             self.parent.set_starting_node(clicked_node)
             return
 
-        min_dis = 60
+        min_dis = self.parent.node_rad * 2
         for node, (c_x, c_y) in self.parent.node_positions.items():
             if math.hypot(c_x - x, c_y - y) < min_dis:
                 if self.parent.debug:
@@ -809,6 +867,7 @@ class Canvas_Frame(Frame):
             print(f"Knoten {new_node} hinzugefügt an Position ({x}, {y})")
 
         self.parent.selected_nodes = []
+        self.update_original_positions()
         self.parent.reset()
         self.update_avai_ids()
 
@@ -923,6 +982,7 @@ class Canvas_Frame(Frame):
             self.add_or_update_edge(node1, node2, weight)
         self.canvas.bind("<ButtonPress-1>", self.on_press)
         self.parent.selected_nodes.clear()
+        self.update_original_positions()
         self.parent.update_gui()
         self.parent.reset()
 
@@ -962,7 +1022,7 @@ class Canvas_Frame(Frame):
     def get_node_at_position(self, x, y):
 
         for node, (nx, ny) in self.parent.node_positions.items():
-            if math.hypot(nx - x, ny - y) <= 30:
+            if math.hypot(nx - x, ny - y) <= self.parent.node_rad:
                 return node
         return None
 

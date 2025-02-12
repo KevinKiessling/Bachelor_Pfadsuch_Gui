@@ -31,8 +31,9 @@ class PfadsuchApp(Tk):
         self.default_graph = {}
         self.current_step = -1
         self.max_edge_weight = 100
-        self.font_size = 18
-
+        self.font_size_pseudocode = 18
+        self.font_size_node_weight = 14
+        self.node_rad = 30
         self.fast_forward_paused = False
         self.node_positions = {}
         self.selected_nodes = []
@@ -100,7 +101,7 @@ class PfadsuchApp(Tk):
                 self.color_discovered_false = config.get("color_discovered_false", self.color_discovered_false)
                 self.color_edge_highlight = config.get("color_edge_highlight", self.color_edge_highlight)
                 self.color_shortest_path = config.get("color_shortest_path", self.color_shortest_path)
-                self.font_size = config.get("font_size", self.font_size)
+                self.font_size_pseudocode = config.get("font_size", self.font_size_pseudocode)
                 self.has_seen_tutorial = config.get("has_seen_tutorial", self.has_seen_tutorial)
 
             except json.JSONDecodeError as e:
@@ -201,6 +202,7 @@ class PfadsuchApp(Tk):
         self.update_gui()
         self.code_frame.clear_highlights_and_Canvas()
         self.code_frame.clear_table()
+        self.code_frame.priority_queue = {}
 
     def next_step(self):
         if self.debug:
@@ -274,8 +276,10 @@ class PfadsuchApp(Tk):
 
             self.selected_nodes = []
         self.gui_frame.update_avai_ids()
+
         self.gui_frame.operation_history = []
         self.reset()
+        self.gui_frame.update_original_positions()
 
     #Setzt den Algorithmus komplett zurück, aber behält den Graph geladen
     def reset(self):
@@ -286,13 +290,17 @@ class PfadsuchApp(Tk):
         self.steps_finished_algorithm = []
         self.current_step = -1
         self.start_node = ""
+        self.code_frame.priority_queue = {}
+        #self.gui_frame.update_original_positions()
         self.update_gui()
         self.code_frame.clear_highlights_and_Canvas()
         self.gui_frame.canvas.bind("<ButtonPress-1>", self.gui_frame.on_press)
+
         self.code_frame.clear_table()
+
         #TO DO CLEAR TABLE HIGHLIGHT
         #self.code_frame.clear_hightlight()
-
+        self.code_frame.canvas.delete("all")
         self.code_frame.set_step("Warte auf starten eines Algorithmus")
         self.shortest_paths = {}
         if not self.shortest_paths:
@@ -324,7 +332,9 @@ class PfadsuchApp(Tk):
         self.code_frame.clear_highlights_and_Canvas()
         self.gui_frame.operation_history = []
         self.gui_frame.reset_node_ids()
+        self.gui_frame.update_original_positions()
         self.update_gui()
+        self.code_frame.priority_queue = {}
 
     # Updated die Gui
     def update_gui(self):
@@ -335,7 +345,10 @@ class PfadsuchApp(Tk):
         self.gui_frame.canvas.delete("all")
         self.gui_frame.prev_button.config(state=DISABLED)
         self.gui_frame.shortest_paths_button.config(state=DISABLED)
+
         if self.current_step == -1:
+            print(self.current_step)
+
             self.code_frame.set_step("Warte auf Starten eines Algorithmus")
             if self.selected_algorithm == "Dijkstra_PQ_lazy":
                 self.graph_draw_lazy.draw_graph_dijkstra_lazy(None, None, {node: 0 for node in self.graph}, set(), set())
@@ -344,6 +357,7 @@ class PfadsuchApp(Tk):
             if self.selected_algorithm == "Dijkstra_List":
                 self.graph_draw_list.draw_graph_dijkstra_list(None, None, {node: 0 for node in self.graph}, set(), set())
             if self.steps_finished_algorithm:
+                print("should be empty")
                 self.code_frame.highlight_step("Starting Algorithm")
                 #self.code_frame.highlight_lines_with_dimming([2])
                 if self.selected_algorithm == "Dijkstra_PQ_lazy":
@@ -356,6 +370,8 @@ class PfadsuchApp(Tk):
 
         self.gui_frame.prev_button.config(state=NORMAL)
         step = self.steps_finished_algorithm[self.current_step]
+        print(step)
+
         current_node = step["current_node"]
         neighbor = step["neighbor"]
         distances = step["distances"].copy()

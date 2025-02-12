@@ -22,7 +22,7 @@ class Graph_Visualizer_Dijkstra_lazy:
 
     def draw_graph_dijkstra_lazy(self, current_node, neighbor_list, distances, visited, visited_edges):
         self.gui_frame.canvas.delete("all")
-        node_radius = 30
+        node_radius = self.parent.node_rad
         font_size = 14
         already_drawn_edges = set()
         color = "lightblue"
