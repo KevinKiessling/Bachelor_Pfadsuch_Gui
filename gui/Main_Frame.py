@@ -53,7 +53,7 @@ class PfadsuchApp(Tk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=2)
+        self.grid_columnconfigure(1, weight=1)
 
 
         self.bind_all("<FocusIn>", self.global_focus_control)
@@ -276,11 +276,53 @@ class PfadsuchApp(Tk):
                                    "K": [756, 453], "L": [831, 723], "M": [956, 364]}
 
             self.selected_nodes = []
+        self.gui_frame.after(100, self._scale_and_update_graph)
+
+    def _scale_and_update_graph(self):
+
+        canvas_width = self.gui_frame.canvas.winfo_width()
+        canvas_height = self.gui_frame.canvas.winfo_height()
+        if self.debug:
+            print(f"Canvas dimensions: width={canvas_width}, height={canvas_height}")
+
+
+        scaled_positions = self.scale_and_translate_positions(self.node_positions, canvas_width, canvas_height)
+        self.node_positions = scaled_positions
+
+
         self.gui_frame.update_avai_ids()
         self.gui_frame.reset_original_data()
         self.gui_frame.operation_history = []
         self.reset()
 
+    def scale_and_translate_positions(self, node_positions, canvas_width, canvas_height):
+
+        x_coords = [x for x, y in node_positions.values()]
+        y_coords = [y for x, y in node_positions.values()]
+        min_x, max_x = min(x_coords), max(x_coords)
+        min_y, max_y = min(y_coords), max(y_coords)
+
+
+        graph_width = max_x - min_x
+        graph_height = max_y - min_y
+
+
+        scale_x = canvas_width / graph_width if graph_width != 0 else 1
+        scale_y = canvas_height / graph_height if graph_height != 0 else 1
+        scale_factor = min(scale_x, scale_y) * 0.9
+
+
+        offset_x = (canvas_width - (graph_width * scale_factor)) / 2 - min_x * scale_factor
+        offset_y = (canvas_height - (graph_height * scale_factor)) / 2 - min_y * scale_factor
+
+
+        scaled_positions = {}
+        for node, (x, y) in node_positions.items():
+            scaled_x = x * scale_factor + offset_x
+            scaled_y = y * scale_factor + offset_y
+            scaled_positions[node] = (scaled_x, scaled_y)
+
+        return scaled_positions
 
     #Setzt den Algorithmus komplett zurück, aber behält den Graph geladen
     def reset(self):

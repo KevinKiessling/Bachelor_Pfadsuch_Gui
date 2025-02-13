@@ -484,7 +484,7 @@ class Graph_Visualizer_Dijkstra_lazy:
         self.gui_frame.canvas.create_line(middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2, y2,
                                           width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5),
                                           fill=edge_color, smooth=True, splinesteps=500)
-        self.gui_frame.canvas.create_text(middle_x, middle_y, text=weight_text, fill=weight_color, font=("Arial", 14),
+        self.gui_frame.canvas.create_text(middle_x, middle_y, text=weight_text, fill=weight_color, font=("Arial", self.parent.font_size_node_weight),
                                           tags="weight")
         already_drawn_edges.add((node, neighbor))
 

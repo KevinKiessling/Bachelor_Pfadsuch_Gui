@@ -160,11 +160,13 @@ class Canvas_Frame(Frame):
             if self.original_width <= 1 or self.original_height <= 1:
                 return
 
+
         scale_x = new_width / self.original_width
         scale_y = new_height / self.original_height
 
         if new_width == self.original_width and new_height == self.original_height:
             return
+
 
         for node, (orig_x, orig_y) in self.original_positions.items():
             new_x = orig_x * scale_x
@@ -175,9 +177,21 @@ class Canvas_Frame(Frame):
 
             self.parent.node_positions[node] = (new_x, new_y)
 
+
         scale_factor = (scale_x + scale_y) / 2
+
+
         new_radius = self.original_radius * scale_factor
         self.parent.node_rad = new_radius
+
+
+        original_font_size = 14
+        new_font_size = original_font_size * scale_factor
+
+
+        new_font_size = max(12, min(new_font_size, 25))
+        self.parent.font_size_node_weight = int(new_font_size)
+        print(self.parent.font_size_node_weight)
 
         self.parent.update_gui()
 
