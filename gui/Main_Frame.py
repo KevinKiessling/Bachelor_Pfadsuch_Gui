@@ -50,6 +50,7 @@ class PfadsuchApp(Tk):
 
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
         self.geometry('1850x1100')
+        self.minsize(800, 600)
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
