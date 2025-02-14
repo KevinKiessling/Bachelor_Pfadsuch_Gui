@@ -10,11 +10,12 @@ from algorithmen.dijkstra_Priority_queue import *
 import math
 
 class Graph_Visualizer_Dijkstra:
-    def __init__(self, gui_frame, node_positions, graph, start_node, parent):
+    def __init__(self, gui_frame, node_positions, graph,selected_nodes, start_node, parent):
         self.gui_frame = gui_frame
         self.node_positions = node_positions
         self.graph = graph
         self.parent = parent
+        self.selected_nodes = selected_nodes
         self.start_node = start_node
 
 
@@ -271,12 +272,20 @@ class Graph_Visualizer_Dijkstra:
             if not step:
                 display_text = f"{node_text}"
 
-            self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
-                                              fill=color)
-            if show_start and node == self.start_node:
-                self.gui_frame.canvas.create_text(x, y, text="Start", fill=dis_color, font=("Arial", font_size))
+            if node in self.selected_nodes:
+                self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
+                                                  fill="light green")
+                self.gui_frame.canvas.create_text(x, y, text=display_text, fill=dis_color, font=("Arial", font_size),
+                                                  anchor="center")
+                if show_start and node == self.start_node:
+                    self.gui_frame.canvas.create_text(x, y, text="Start", fill=dis_color, font=("Arial", font_size))
             else:
-                self.gui_frame.canvas.create_text(x, y, text=display_text, fill=dis_color, font=("Arial", font_size))
+                self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
+                                                  fill=color)
+                if show_start and node == self.start_node:
+                    self.gui_frame.canvas.create_text(x, y, text="Start", fill=dis_color, font=("Arial", font_size))
+                else:
+                    self.gui_frame.canvas.create_text(x, y, text=display_text, fill=dis_color, font=("Arial", font_size))
 
         # Draw edges
         for node, edges in self.graph.items():

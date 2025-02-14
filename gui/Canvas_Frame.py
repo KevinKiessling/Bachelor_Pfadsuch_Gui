@@ -576,13 +576,13 @@ class Canvas_Frame(Frame):
         general_tab_frame.bind("<Leave>", lambda e: settings_window.unbind_all("<MouseWheel>"))
 
 
-        '''debug_var = BooleanVar(value=self.parent.debug)
+        debug_var = BooleanVar(value=self.parent.debug)
         debug_checkbox = Checkbutton(
             general_tab_frame,
             text="Debug Mode",
             variable=debug_var
         )
-        debug_checkbox.pack(anchor="w", pady=10, padx=10)'''
+        debug_checkbox.pack(anchor="w", pady=10, padx=10)
 
         random_mode_var = BooleanVar(value=self.parent.random_edge_mode)
         random_checkbox_frame = Frame(general_tab_frame)
@@ -658,7 +658,7 @@ class Canvas_Frame(Frame):
         settings_window.grid_columnconfigure(0, weight=1)
 
         def apply_settings():
-            #self.parent.debug = debug_var.get()
+            self.parent.debug = debug_var.get()
             self.parent.random_edge_mode = random_mode_var.get()
             self.parent.animation_speed = speed_var.get()
             self.parent.font_size_pseudocode = font_var.get()

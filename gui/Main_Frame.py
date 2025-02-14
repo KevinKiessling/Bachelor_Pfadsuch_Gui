@@ -89,7 +89,7 @@ class PfadsuchApp(Tk):
                     config = json.load(f)
 
 
-                #self.debug = config.get("debug", self.debug)
+                self.debug = config.get("debug", self.debug)
                 self.random_edge_mode = config.get("random_edge_mode", self.random_edge_mode)
                 self.animation_speed = config.get("animation_speed", self.animation_speed)
                 self.default_graph = config.get("default_graph", self.default_graph)
@@ -127,7 +127,7 @@ class PfadsuchApp(Tk):
     #speichert config datei als json
     def save_config(self):
         config = {
-            #"debug": self.debug,
+            "debug": self.debug,
             "random_edge_mode": self.random_edge_mode,
             "animation_speed": self.animation_speed,
             "default_graph_pos": self.default_graph_pos,
@@ -383,9 +383,10 @@ class PfadsuchApp(Tk):
     # Updated die Gui
     def update_gui(self):
 
-        self.graph_draw_lazy = Graph_Visualizer_Dijkstra_lazy(self.gui_frame, self.node_positions, self.graph,  self.start_node, self)
-        self.graph_draw_normal = Graph_Visualizer_Dijkstra(self.gui_frame, self.node_positions, self.graph,  self.start_node, self)
-        self.graph_draw_list = Graph_Visualizer_Dijkstra_List(self.gui_frame, self.node_positions, self.graph, self.start_node, self)
+        self.graph_draw_lazy = Graph_Visualizer_Dijkstra_lazy(self.gui_frame, self.node_positions, self.graph, self.selected_nodes, self.start_node, self)
+        self.graph_draw_normal = Graph_Visualizer_Dijkstra(self.gui_frame, self.node_positions, self.graph, self.selected_nodes, self.start_node, self)
+        self.graph_draw_list = Graph_Visualizer_Dijkstra_List(self.gui_frame, self.node_positions, self.graph,
+                                                           self.selected_nodes, self.start_node, self)
         self.gui_frame.canvas.delete("all")
         self.gui_frame.prev_button.config(state=DISABLED)
         self.gui_frame.shortest_paths_button.config(state=DISABLED)
@@ -453,7 +454,7 @@ class PfadsuchApp(Tk):
 
     #Zeichnet den übergebenen Pfad, need rework still
     def draw_graph_path(self,path):
-        self.graph_draw_path = Graph_Visualizer_Path(self.gui_frame, self.node_positions, self.graph, self.start_node, self)
+        self.graph_draw_path = Graph_Visualizer_Path(self.gui_frame, self.node_positions, self.graph, self.selected_nodes, self.start_node, self)
         self.graph_draw_path.draw_path(path)
 
     #Function um berechnete Distanzen mit networkx Ergebniss zu vergleichen
