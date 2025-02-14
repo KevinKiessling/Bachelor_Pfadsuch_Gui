@@ -33,6 +33,9 @@ class PfadsuchApp(Tk):
         self.max_edge_weight = 100
         self.font_size = 18
         self.node_rad = 30
+        self.font_size_edge_weight = 14
+        self.font_size_node_label = 14
+
         self.fast_forward_paused = False
         self.node_positions = {}
         self.selected_nodes = []
@@ -69,6 +72,8 @@ class PfadsuchApp(Tk):
             self.gui_frame.open_tutorial()
         self.protocol("WM_DELETE_WINDOW", self.on_close)
         self.node_rad_original = self.node_rad
+        self.font_size_edge_weight_original = self.font_size_edge_weight
+        self.font_size_node_label_original = self.font_size_node_label
 
     def global_focus_control(self, event):
         if event.widget in self.code_frame.winfo_children():
@@ -295,6 +300,8 @@ class PfadsuchApp(Tk):
         average_scale = (scale_x + scale_y) / 2
         new_radius = self.node_rad * average_scale
         self.node_rad = new_radius
+        self.font_size_edge_weight = int(self.font_size_edge_weight_original * average_scale)
+        self.font_size_node_label = int(self.font_size_node_label_original * average_scale)
 
     #Setzt den Algorithmus komplett zurück, aber behält den Graph geladen
     def reset(self):

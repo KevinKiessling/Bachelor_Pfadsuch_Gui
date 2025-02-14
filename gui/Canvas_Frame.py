@@ -130,7 +130,9 @@ class Canvas_Frame(Frame):
         self.initial_height = 1000
         self.canvas_width = self.initial_width
         self.canvas_height = self.initial_height
-        self.node_rad_original = self.parent.node_rad
+        '''self.node_rad_original = self.parent.node_rad
+        self.font_size_edge_weight_original = self.parent.font_size_edge_weight
+        self.font_size_node_label_original = self.parent.font_size_node_label'''
 
     def resize_canvas(self, event):
 
@@ -165,6 +167,9 @@ class Canvas_Frame(Frame):
         average_scale = (scale_x + scale_y) / 2
 
         self.parent.node_rad = self.parent.node_rad_original * average_scale
+        self.parent.font_size_edge_weight = int(self.parent.font_size_edge_weight_original * average_scale)
+        self.parent.font_size_node_label = int(self.parent.font_size_node_label_original * average_scale)
+
 
     def on_press(self, event):
         x, y = event.x, event.y
