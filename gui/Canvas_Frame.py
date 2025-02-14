@@ -193,8 +193,11 @@ class Canvas_Frame(Frame):
                 print("Kein Knoten unter Doppelklick gefunden!")
     def on_drag(self, event):
         if self.dragging_node is not None:
+            # Clamp x and y within canvas bounds
+            x = max(self.parent.node_rad, min(event.x, self.canvas_width - self.parent.node_rad))
+            y = max(self.parent.node_rad, min(event.y, self.canvas_height - self.parent.node_rad))
 
-            self.parent.node_positions[self.dragging_node] = (event.x, event.y)
+            self.parent.node_positions[self.dragging_node] = (x, y)
             self.parent.reset()
 
     def on_release(self, event):
