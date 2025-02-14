@@ -32,7 +32,7 @@ class PfadsuchApp(Tk):
         self.current_step = -1
         self.max_edge_weight = 100
         self.font_size = 18
-
+        self.node_rad = 30
         self.fast_forward_paused = False
         self.node_positions = {}
         self.selected_nodes = []
@@ -55,21 +55,20 @@ class PfadsuchApp(Tk):
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=2)
 
-
         self.bind_all("<FocusIn>", self.global_focus_control)
 
         self.code_frame = Pseudocode_Frame(self)
         self.gui_frame = Canvas_Frame(self)
 
-
         self.load_config()
         self.load_default_graph()
         self.code_frame.update_font_size()
         self.code_frame.set_step("Warte auf starten eines Algorithmus")
-        #opens Tutorial window
+
         if not self.has_seen_tutorial:
             self.gui_frame.open_tutorial()
         self.protocol("WM_DELETE_WINDOW", self.on_close)
+        self.node_rad_original = self.node_rad
 
     def global_focus_control(self, event):
         if event.widget in self.code_frame.winfo_children():
@@ -262,22 +261,40 @@ class PfadsuchApp(Tk):
         if self.default_graph:
             self.graph = copy.deepcopy(self.default_graph)
             self.node_positions = copy.deepcopy(self.default_graph_pos)
-            self.selected_nodes = []
-
         else:
-            if self.debug:
-                print("Loading backup default graph")
-            self.graph = {"A": {"E": 1, "B": 2, "K": 5, "I": 5}, "B": {"C": 6}, "C": {"M": 2}, "D": {"C": 2},
-                          "E": {"G": 10, "D": 1}, "F": {"D": 9}, "G": {"F": 4, "H": 16}, "H": {"J": 4},
-                          "I": {"H": 12, "G": 4}, "J": {}, "K": {"L": 4, "M": 12}, "L": {"J": 42}, "M": {}}
-            self.node_positions = {"A": [412, 433], "B": [549, 278], "C": [786, 222], "D": [455, 96], "E": [291, 248],
-                                   "F": [73, 102], "G": [48, 488], "H": [112, 815], "I": [426, 678], "J": [657, 949],
-                                   "K": [756, 453], "L": [831, 723], "M": [956, 364]}
+            self.graph = {
+                "A": {"E": 1, "B": 2, "K": 5, "I": 5}, "B": {"C": 6}, "C": {"M": 2}, "D": {"C": 2},
+                "E": {"G": 10, "D": 1}, "F": {"D": 9}, "G": {"F": 4, "H": 16}, "H": {"J": 4},
+                "I": {"H": 12, "G": 4}, "J": {}, "K": {"L": 4, "M": 12}, "L": {"J": 42}, "M": {}
+            }
+            self.node_positions = {
+                "A": [412, 433], "B": [549, 278], "C": [786, 222], "D": [455, 96], "E": [291, 248],
+                "F": [73, 102], "G": [48, 488], "H": [112, 815], "I": [426, 678], "J": [657, 949],
+                "K": [756, 453], "L": [831, 723], "M": [956, 364]
+            }
 
-            self.selected_nodes = []
+        self.selected_nodes = []
+        self.scale_loaded_graph()
         self.gui_frame.update_avai_ids()
         self.gui_frame.operation_history = []
         self.reset()
+
+    def scale_loaded_graph(self):
+
+        scale_x = self.gui_frame.canvas_width / 1000
+        scale_y = self.gui_frame.canvas_height / 1000
+
+        for node, (x, y) in self.node_positions.items():
+            new_x = x * scale_x
+            new_y = y * scale_y
+            self.node_positions[node] = (new_x, new_y)
+
+    def reset_node_size(self):
+        scale_x = self.gui_frame.canvas_width / 1000
+        scale_y = self.gui_frame.canvas_height / 1000
+        average_scale = (scale_x + scale_y) / 2
+        new_radius = self.node_rad * average_scale
+        self.node_rad = new_radius
 
     #Setzt den Algorithmus komplett zurück, aber behält den Graph geladen
     def reset(self):

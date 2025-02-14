@@ -125,6 +125,46 @@ class Canvas_Frame(Frame):
         '''self.help = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Hilfe", menu=self.help)
         self.help.add_command(label="Tutorial", command=self.open_tutorial)'''
+        self.canvas_frame.bind("<Configure>", self.resize_canvas)
+        self.initial_width = 1000
+        self.initial_height = 1000
+        self.canvas_width = self.initial_width
+        self.canvas_height = self.initial_height
+        self.node_rad_original = self.parent.node_rad
+
+    def resize_canvas(self, event):
+
+        new_width = event.width
+        new_height = event.height
+
+        if new_width == self.canvas_width and new_height == self.canvas_height:
+            return
+
+        scale_x = new_width / self.canvas_width
+        scale_y = new_height / self.canvas_height
+
+        self.scale_node_positions(scale_x, scale_y)
+
+        self.scale_node_size_absolute(new_width, new_height)
+
+        self.canvas_width = new_width
+        self.canvas_height = new_height
+        self.parent.update_gui()
+
+    def scale_node_positions(self, scale_x, scale_y):
+
+        for node, (x, y) in self.parent.node_positions.items():
+            new_x = x * scale_x
+            new_y = y * scale_y
+            self.parent.node_positions[node] = (new_x, new_y)
+
+    def scale_node_size_absolute(self, new_width, new_height):
+
+        scale_x = new_width / self.initial_width
+        scale_y = new_height / self.initial_height
+        average_scale = (scale_x + scale_y) / 2
+
+        self.parent.node_rad = self.parent.node_rad_original * average_scale
 
     def on_press(self, event):
         x, y = event.x, event.y
