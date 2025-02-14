@@ -24,8 +24,7 @@ class Graph_Visualizer_Dijkstra_lazy:
         self.gui_frame.canvas.delete("all")
         node_radius = self.parent.node_rad
         font_size = self.parent.font_size_node_label
-        print(node_radius)
-        print(font_size)
+
         already_drawn_edges = set()
         color = "lightblue"
         step = {}

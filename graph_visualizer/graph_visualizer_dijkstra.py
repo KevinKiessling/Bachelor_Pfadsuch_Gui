@@ -21,8 +21,8 @@ class Graph_Visualizer_Dijkstra:
 
     def draw_graph_dijkstra(self, current_node, neighbor_list, distances, visited, visited_edges):
         self.gui_frame.canvas.delete("all")
-        node_radius = 30
-        font_size = 14
+        node_radius = self.parent.node_rad
+        font_size = self.parent.font_size_node_label
         already_drawn_edges = set()
         color = "lightblue"
         step = {}
@@ -205,11 +205,11 @@ class Graph_Visualizer_Dijkstra:
             padding = max(0, distance_length - node_length)
 
             if distances.get(node, float('inf')) >= 9999:
-                font_size = 12
+               # font_size = 12
                 left_padding = (padding + 2) // 2
                 right_padding = padding // 2
             else:
-                font_size = 14
+                #font_size = 14
                 left_padding = (padding + 1) // 2
                 right_padding = padding // 2
 
@@ -466,7 +466,7 @@ class Graph_Visualizer_Dijkstra:
         self.gui_frame.canvas.create_line(middle_x + segment_dx / 2, middle_y + segment_dy / 2, x2, y2,
                                           width=4, tags="edge", arrow="last", arrowshape=(10, 12, 5),
                                           fill=edge_color, smooth=True, splinesteps=500)
-        self.gui_frame.canvas.create_text(middle_x, middle_y, text=weight_text, fill=weight_color, font=("Arial", 14),
+        self.gui_frame.canvas.create_text(middle_x, middle_y, text=weight_text, fill=weight_color, font=("Arial", self.parent.font_size_edge_weight),
                                           tags="weight")
         already_drawn_edges.add((node, neighbor))
 
