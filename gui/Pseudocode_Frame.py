@@ -894,10 +894,10 @@ class Pseudocode_Frame(Frame):
         self.canvas.delete("all")
 
         def draw_node(x, y, text, is_highlighted=False):
-            radius = 35
+            radius = self.parent.node_rad
             color = self.parent.color_heap if is_highlighted else "lightgrey"
             self.canvas.create_oval(x - radius, y - radius, x + radius, y + radius, fill=color)
-            self.canvas.create_text(x, y, text=text, font=("Arial", 12), fill="black")
+            self.canvas.create_text(x, y, text=text, font=("Arial", self.parent.font_size_node_label), fill="black")
             return x, y
 
         def draw_tree(index, x, y, dx, highlight_node, highlight_distance):
@@ -919,13 +919,13 @@ class Pseudocode_Frame(Frame):
             right_child_idx = 2 * index + 2
 
             if left_child_idx < len(priority_queue):
-                left_x, left_y = x - dx, y + 70
-                self.canvas.create_line(x, y + 35, left_x, left_y - 35)
+                left_x, left_y = x - dx, y + (self.parent.node_rad*2)
+                self.canvas.create_line(x, y + self.parent.node_rad, left_x, left_y - self.parent.node_rad)
                 draw_tree(left_child_idx, left_x, left_y, dx // 2, highlight_node, highlight_distance)
 
             if right_child_idx < len(priority_queue):
-                right_x, right_y = x + dx, y + 70
-                self.canvas.create_line(x, y + 35, right_x, right_y - 35)
+                right_x, right_y = x + dx, y + (self.parent.node_rad*2)
+                self.canvas.create_line(x, y + self.parent.node_rad, right_x, right_y - self.parent.node_rad)
                 draw_tree(right_child_idx, right_x, right_y, dx // 2, highlight_node, highlight_distance)
 
         width = self.canvas.winfo_width()
