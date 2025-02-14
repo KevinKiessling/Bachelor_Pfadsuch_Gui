@@ -49,6 +49,7 @@ class PfadsuchApp(Tk):
 
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
         self.geometry('1850x1100')
+        self.minsize(800, 600)
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
@@ -201,6 +202,7 @@ class PfadsuchApp(Tk):
         self.update_gui()
         self.code_frame.clear_highlights_and_Canvas()
         self.code_frame.clear_table()
+        self.code_frame.priority_queue = {}
 
     def next_step(self):
         if self.debug:
@@ -286,11 +288,13 @@ class PfadsuchApp(Tk):
         self.steps_finished_algorithm = []
         self.current_step = -1
         self.start_node = ""
+        self.code_frame.priority_queue = {}
         self.update_gui()
         self.code_frame.clear_highlights_and_Canvas()
         self.gui_frame.canvas.bind("<ButtonPress-1>", self.gui_frame.on_press)
         self.code_frame.clear_table()
         #TO DO CLEAR TABLE HIGHLIGHT
+        self.code_frame.canvas.delete("all")
         #self.code_frame.clear_hightlight()
 
         self.code_frame.set_step("Warte auf starten eines Algorithmus")
@@ -324,6 +328,7 @@ class PfadsuchApp(Tk):
         self.code_frame.clear_highlights_and_Canvas()
         self.gui_frame.operation_history = []
         self.gui_frame.reset_node_ids()
+        self.code_frame.priority_queue = {}
         self.update_gui()
 
     # Updated die Gui
