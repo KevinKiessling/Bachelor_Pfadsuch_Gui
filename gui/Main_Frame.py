@@ -369,9 +369,9 @@ class PfadsuchApp(Tk):
             if self.selected_algorithm == "Dijkstra_PQ_lazy":
                 self.graph_draw_lazy.draw_graph_dijkstra_lazy(None, None, {node: None for node in self.graph}, set(), set())
             if self.selected_algorithm == "Dijkstra_PQ":
-                self.graph_draw_normal.draw_graph_dijkstra(None, None, {node: 0 for node in self.graph}, set(), set())
+                self.graph_draw_normal.draw_graph_dijkstra(None, None, {node: None for node in self.graph}, set(), set())
             if self.selected_algorithm == "Dijkstra_List":
-                self.graph_draw_list.draw_graph_dijkstra_list(None, None, {node: 0 for node in self.graph}, set(), set())
+                self.graph_draw_list.draw_graph_dijkstra_list(None, None, {node: None for node in self.graph}, set(), set())
             if self.steps_finished_algorithm:
                 self.code_frame.highlight_step("Starting Algorithm")
                 #self.code_frame.highlight_lines_with_dimming([2])

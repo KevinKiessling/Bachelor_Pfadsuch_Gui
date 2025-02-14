@@ -219,108 +219,52 @@ class Graph_Visualizer_Dijkstra_List:
 
 
             # Knoten werte
-            distance_text = distances.get(node, 0)
-            distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
+            distance_text = distances.get(node, None)
+            if distance_text is None:
+                distance_text = "--"
+            elif distance_text == float('inf'):
+                distance_text = "∞"
+            else:
+                distance_text = f"{distance_text}"
 
             distance_length = len(distance_text)
             node_length = len(node)
             padding = max(0, distance_length - node_length)
 
-            if distances.get(node, float('inf')) >= 9999:
-                #font_size = 12
+            distance_value = distances.get(node, float('inf'))
+            if distance_value is None:
+                distance_value = float('inf')
+
+            if distance_value >= 9999:
                 left_padding = (padding + 2) // 2
                 right_padding = padding // 2
             else:
-                #font_size = 14
                 left_padding = (padding + 1) // 2
                 right_padding = padding // 2
 
             node_text = f"{' ' * left_padding}{node}{' ' * right_padding}"
             display_text = f"{node_text}\n{distance_text}"
             # Flag to display "start" on start node
-            show_start = True
-
-            # change node display text
-            if step:
-                # Show distances and node Name when finished
-                if step["step_type"] == "Algorithm Finished":
-                    show_start = True
-                # Zeige nur node Name+ distanz, kein Start
-                if step["step_type"] == "Pick Node":
-                    show_start = False
-                    display_text = f"{node_text}"
-                if step["step_type"] == "Pick Node_1":
-                    show_start = False
-                    display_text = f"{node_text}"
-                if step["step_type"] == "Pick Node_2":
-                    show_start = False
-                    display_text = f"{node_text}"
-                if step["step_type"] == "Pick Node_3":
-                    show_start = False
-                    display_text = f"{node_text}"
-                if step["step_type"] == "Initialize List":
-                    show_start = False
-                    display_text = f"{node_text}"
-                if step["step_type"] == "Add Node to List":
-                    show_start = False
-                    display_text = f"{node_text}"
-                # Zeige Distanzen, kein Start
-                if step["step_type"] == "Initialize Node Distance":
-                    show_start = False
-                #  Zeige Distanzen, kein Start
-                if step["step_type"] == "Set Start Node Distance":
-                    show_start = False
-                #  Zeige Distanzen, kein Start
-                if step["step_type"] == "Push Start Node to Priority Queue":
-                    show_start = False
-                # only show node name
-                if step["step_type"] == "Initialize Visited":
-                    show_start = False
-                    display_text = f"{node_text}"
-
-                if step["step_type"] == "Heap Pop":
-                    show_start = False
-                if step["step_type"] == "Visit Node":
-                    show_start = False
-                    display_text = f"{node_text}"
-                if step["step_type"] == "Find Min in List":
-                    show_start = False
-                if step["step_type"] == "Remove min from List":
-                    show_start = False
-                if step["step_type"] == "Compare Distance":
-                    show_start = False
-                if step["step_type"] == "Highlight Edge":
-                    show_start = False
-                if step["step_type"] == "Initialize List":
-                    show_start = False
-                if step["step_type"] == "Begin Outer Loop":
-                    show_start = False
-                if step["step_type"] == "Begin Inner Loop":
-                    show_start = False
-                if step["step_type"] == "Update Distance":
-                    show_start = False
-                if step["step_type"] == "Push to Heap":
-                    show_start = False
-                if step["step_type"] == "Skip Visited Neighbor":
-                    show_start = False
-                    display_text = f"{node_text}"
-                if step["step_type"] == "Priority Queue Empty":
-                    show_start = False
-                if step["step_type"] == "Find Position in Heap":
-                    show_start = False
-                if step["step_type"] == "Remove from Heap":
-                    show_start = False
-                if step["step_type"] == "Visit Node u ":
-                    show_start = False
-            if not step:
-                display_text = f"{node_text}"
 
             self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
                                               fill=color)
-            if show_start and node == self.start_node:
-                self.gui_frame.canvas.create_text(x, y, text="Start", fill=dis_color, font=("Arial", font_size))
-            else:
-                self.gui_frame.canvas.create_text(x, y, text=display_text, fill=dis_color, font=("Arial", font_size))
+            if node == self.parent.start_node:
+
+                if color == "yellow":
+                    self.gui_frame.canvas.create_oval(
+                        x - node_radius - 5, y - node_radius - 5, x + node_radius + 5, y + node_radius + 5,
+                        outline="light grey",
+                        width=3,
+                        dash=(3, 3)  # Dashed line pattern
+                    )
+                else:
+                    self.gui_frame.canvas.create_oval(
+                        x - node_radius - 5, y - node_radius - 5, x + node_radius + 5, y + node_radius + 5,
+                        outline=color,
+                        width=3,
+                        dash=(3, 3)  # Dashed line pattern
+                    )
+            self.gui_frame.canvas.create_text(x, y, text=display_text, fill=dis_color, font=("Arial", font_size))
 
         # Draw edges
         for node, edges in self.graph.items():

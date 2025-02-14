@@ -56,42 +56,52 @@ class Graph_Visualizer_Path:
                     color = "light grey"
 
             # Knoten werte
-            distance_text = distances.get(node, 0)
-            distance_text = f"{distance_text if distance_text < float('inf') else '∞'}"
+            distance_text = distances.get(node, None)
+            if distance_text is None:
+                distance_text = "--"
+            elif distance_text == float('inf'):
+                distance_text = "∞"
+            else:
+                distance_text = f"{distance_text}"
 
             distance_length = len(distance_text)
             node_length = len(node)
             padding = max(0, distance_length - node_length)
 
-            if distances.get(node, float('inf')) >= 9999:
-                #font_size = 12
+            distance_value = distances.get(node, float('inf'))
+            if distance_value is None:
+                distance_value = float('inf')
+
+            if distance_value >= 9999:
                 left_padding = (padding + 2) // 2
                 right_padding = padding // 2
             else:
-                #font_size = 14
                 left_padding = (padding + 1) // 2
                 right_padding = padding // 2
 
             node_text = f"{' ' * left_padding}{node}{' ' * right_padding}"
             display_text = f"{node_text}\n{distance_text}"
             # Flag to display "start" on start node
-            show_start = True
-
-            # change node display text
-            if step:
-                # Show distances and node Name when finished
-                if step["step_type"] == "Algorithm Finished":
-                    show_start = True
-
-            if not step:
-                display_text = f"{node_text}"
 
             self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
                                               fill=color)
-            if show_start and node == self.start_node:
-                self.gui_frame.canvas.create_text(x, y, text="Start", fill="black", font=("Arial", font_size))
-            else:
-                self.gui_frame.canvas.create_text(x, y, text=display_text, fill=dis_color, font=("Arial", font_size))
+            if node == self.parent.start_node:
+
+                if color == "yellow":
+                    self.gui_frame.canvas.create_oval(
+                        x - node_radius - 5, y - node_radius - 5, x + node_radius + 5, y + node_radius + 5,
+                        outline="light grey",
+                        width=3,
+                        dash=(3, 3)  # Dashed line pattern
+                    )
+                else:
+                    self.gui_frame.canvas.create_oval(
+                        x - node_radius - 5, y - node_radius - 5, x + node_radius + 5, y + node_radius + 5,
+                        outline=color,
+                        width=3,
+                        dash=(3, 3)  # Dashed line pattern
+                    )
+            self.gui_frame.canvas.create_text(x, y, text=display_text, fill=dis_color, font=("Arial", font_size))
 
         # Draw edges
         for node, edges in self.graph.items():
