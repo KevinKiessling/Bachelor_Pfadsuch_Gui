@@ -1072,9 +1072,15 @@ class Canvas_Frame(Frame):
         if not filepath:
             return
         try:
+            scale_x = 1000 / self.parent.gui_frame.canvas_width
+            scale_y = 1000 / self.parent.gui_frame.canvas_height
+
+            node_positions_upscaled = {
+                node: (x * scale_x, y * scale_y) for node, (x, y) in self.parent.node_positions.items()
+            }
             data = {
                 "graph": self.parent.graph,
-                "node_position": self.parent.node_positions
+                "node_position": node_positions_upscaled
             }
             with open(filepath, 'w') as file:
                 json.dump(data, file, indent=4)
@@ -1102,6 +1108,7 @@ class Canvas_Frame(Frame):
                 self.parent.node_positions = {node: tuple(pos) for node, pos in data["node_position"].items()}
                 if self.parent.debug:
                     print(f" Graph von {filepath} wurde erfolgreich importiert")
+                self.parent.scale_loaded_graph()
                 self.update_avai_ids()
                 self.operation_history = []
                 self.parent.reset()
