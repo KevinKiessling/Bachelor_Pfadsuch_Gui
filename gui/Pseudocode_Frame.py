@@ -887,7 +887,6 @@ class Pseudocode_Frame(Frame):
         if not priority_queue:
             return
 
-
         num_levels = math.floor(math.log2(len(priority_queue))) + 1
 
         canvas_width = self.canvas.winfo_width()
@@ -896,14 +895,13 @@ class Pseudocode_Frame(Frame):
         if canvas_width <= 1 or canvas_height <= 1:
             return
 
-
         nodes_on_widest_level = 2 ** (num_levels - 1)
-
 
         node_size_x = canvas_width / (nodes_on_widest_level * 2)
         node_size_y = canvas_height / (num_levels * 3)
 
-        node_size = min(node_size_x, node_size_y)
+
+        node_size = min(min(node_size_x, node_size_y), 35)
 
         self.node_size_pq = node_size
         self.font_size_pq = max(1, int(node_size // 2))
