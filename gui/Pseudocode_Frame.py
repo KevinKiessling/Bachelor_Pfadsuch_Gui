@@ -96,9 +96,6 @@ class Pseudocode_Frame(Frame):
         self.node_size_pq_original = self.node_size_pq
         self.font_size_pq_original = self.font_size_pq
 
-        self.canvas_width_pq = 255
-        self.canvas_height_pq = 255
-
         self.canvas.bind("<Configure>", self.on_resize)
 
         self.pcode = ""
