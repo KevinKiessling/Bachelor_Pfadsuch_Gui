@@ -87,19 +87,17 @@ class Pseudocode_Frame(Frame):
         self.canvas_frame.pack_forget()
 
 
-        '''Remove table for now
-        self.table_frame = Frame(self.main_frame, bd=1, relief="solid")
-        self.table = ttk.Treeview(self.table_frame, columns=("Knoten", "Distance"), show="headings", height=10)
-        self.table.heading("Knoten", text="Knoten")
-        self.table.heading("Distance", text="Distance")
-        self.table.pack(expand=True, fill="both")
-        self.table_frame.pack_forget()  '''
-
-
         self.current_view = "canvas"
-        #self.draw_priority_queue(self.priority_queue)
         self.canvas_frame.pack(expand=True, fill="both", padx=10, pady=10)
 
+        self.node_size_pq = 30
+        self.font_size_pq = 14
+
+        self.node_size_pq_original = self.node_size_pq
+        self.font_size_pq_original = self.font_size_pq
+
+        self.canvas_width_pq = 255
+        self.canvas_height_pq = 255
 
         self.canvas.bind("<Configure>", self.on_resize)
 
@@ -876,89 +874,81 @@ class Pseudocode_Frame(Frame):
             self.pseudocode_display.tag_config(f"highlight_{start}-{end}", background=color)
             self.highlighted_tags.append(tag_name)
 
-    '''remove tableview
-    def populate_table(self, priority_queue):
-        # Clear the table first
-        for row in self.table.get_children():
-            self.table.delete(row)
-        # Populate the table with current data
-        for item in priority_queue:
-            if item[0] == self.highlight_node:
-                self.table.insert("", "end", values=item, tags="highlight")
-            else:
-                self.table.insert("", "end", values=item)
-        self.table.tag_configure("highlight", background="yellow")'''
 
-    #draws priority queue as a Tree, with optional parameters, that are used to highlight a node
+
+
+    def on_resize(self, event=None):
+
+        self.draw_priority_queue(self.priority_queue)
+
     def draw_priority_queue(self, priority_queue, highlight_node=None, highlight_distance=None):
         self.canvas.delete("all")
 
-        def draw_node(x, y, text, is_highlighted=False):
-            radius = self.parent.node_rad
-            color = self.parent.color_heap if is_highlighted else "lightgrey"
-            self.canvas.create_oval(x - radius, y - radius, x + radius, y + radius, fill=color)
-            self.canvas.create_text(x, y, text=text, font=("Arial", self.parent.font_size_node_label), fill="black")
-            return x, y
+        if not priority_queue:
+            return
 
-        def draw_tree(index, x, y, dx, highlight_node, highlight_distance):
+
+        num_levels = math.floor(math.log2(len(priority_queue))) + 1
+
+        canvas_width = self.canvas.winfo_width()
+        canvas_height = self.canvas.winfo_height()
+
+        if canvas_width <= 1 or canvas_height <= 1:
+            return
+
+
+        nodes_on_widest_level = 2 ** (num_levels - 1)
+
+
+        node_size_x = canvas_width / (nodes_on_widest_level * 2)
+        node_size_y = canvas_height / (num_levels * 3)
+
+        node_size = min(node_size_x, node_size_y)
+
+        self.node_size_pq = node_size
+        self.font_size_pq = max(1, int(node_size // 2))
+
+        horizontal_spacing = canvas_width / (2 ** num_levels)
+        vertical_spacing = canvas_height / (num_levels + 1)
+
+        def draw_node(x, y, text, is_highlighted=False):
+            color = self.parent.color_heap if is_highlighted else "lightgrey"
+            self.canvas.create_oval(
+                x - node_size, y - node_size, x + node_size, y + node_size, fill=color
+            )
+            self.canvas.create_text(x, y, text=text, font=("Arial", self.font_size_pq), fill="black")
+
+        def draw_tree(index, x, y, dx):
             if index >= len(priority_queue):
                 return
 
             node = priority_queue[index]
-
-
             is_highlighted = (
-                    (highlight_node is not None and node[1] == highlight_node) and
-                    (highlight_distance is not None and node[0] == highlight_distance)
+                    (highlight_node is not None and node[1] == highlight_node)
+                    and (highlight_distance is not None and node[0] == highlight_distance)
             )
 
-
-            x, y = draw_node(x, y, f"{node[1]}, {node[0]}", is_highlighted)
+            draw_node(x, y, f"{node[1]}, {node[0]}", is_highlighted)
 
             left_child_idx = 2 * index + 1
             right_child_idx = 2 * index + 2
 
             if left_child_idx < len(priority_queue):
-                left_x, left_y = x - dx, y + (self.parent.node_rad*2)
-                self.canvas.create_line(x, y + self.parent.node_rad, left_x, left_y - self.parent.node_rad)
-                draw_tree(left_child_idx, left_x, left_y, dx // 2, highlight_node, highlight_distance)
+                left_x, left_y = x - dx, y + vertical_spacing
+                self.canvas.create_line(x, y + node_size, left_x, left_y - node_size)
+                draw_tree(left_child_idx, left_x, left_y, dx / 2)
 
             if right_child_idx < len(priority_queue):
-                right_x, right_y = x + dx, y + (self.parent.node_rad*2)
-                self.canvas.create_line(x, y + self.parent.node_rad, right_x, right_y - self.parent.node_rad)
-                draw_tree(right_child_idx, right_x, right_y, dx // 2, highlight_node, highlight_distance)
+                right_x, right_y = x + dx, y + vertical_spacing
+                self.canvas.create_line(x, y + node_size, right_x, right_y - node_size)
+                draw_tree(right_child_idx, right_x, right_y, dx / 2)
 
-        width = self.canvas.winfo_width()
-        if width > 0:
-            draw_tree(0, width // 2, 50, width // 4, highlight_node, highlight_distance)
+        root_x = canvas_width // 2
+        root_y = vertical_spacing
 
-        #self.populate_table(priority_queue)
+        initial_dx = canvas_width / 4
 
-    def on_resize(self, event):
-        if self.current_view == "canvas":
-            if self.parent.selected_algorithm == "Dijkstra_PQ_lazy" or self.parent.selected_algorithm == "Dijkstra_PQ":
-                self.draw_priority_queue(self.priority_queue)
-            else:
-                if self.parent.current_step == -1:
-                    return
-                else:
-
-                    step = self.parent.steps_finished_algorithm[self.parent.current_step]
-                    list_var = step["list"]
-                    self.draw_list(list_var, step["distances"])
-
-    ''' removed tableview
-    def toggle_view(self):
-        if self.current_view == "canvas":
-            self.canvas_frame.pack_forget()  # Hide the canvas frame
-            self.table_frame.pack(expand=True, fill="both", padx=10, pady=10)  # Show the table frame
-            self.toggle_button.config(text="Switch to Tree")
-            self.current_view = "table"
-        else:
-            self.table_frame.pack_forget()  # Hide the table frame
-            self.canvas_frame.pack(expand=True, fill="both", padx=10, pady=10)  # Show the canvas frame
-            self.toggle_button.config(text="Switch to Table")
-            self.current_view = "canvas"'''
+        draw_tree(0, root_x, root_y, initial_dx)
 
     def setup_frames(self):
         self.canvas_frame.pack_propagate(False)
