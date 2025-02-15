@@ -879,7 +879,16 @@ class Pseudocode_Frame(Frame):
 
     def on_resize(self, event=None):
 
-        self.draw_priority_queue(self.priority_queue)
+        if self.parent.selected_algorithm == "Dijkstra_PQ_lazy" or self.parent.selected_algorithm == "Dijkstra_PQ":
+            self.draw_priority_queue(self.priority_queue)
+        else:
+            if self.parent.current_step == -1:
+                return
+            else:
+
+                step = self.parent.steps_finished_algorithm[self.parent.current_step]
+                list_var = step["list"]
+                self.draw_list(list_var, step["distances"])
 
     def draw_priority_queue(self, priority_queue, highlight_node=None, highlight_distance=None):
         self.canvas.delete("all")
