@@ -654,6 +654,9 @@ class Pseudocode_Frame(Frame):
         highlight_color = colors.get(step_type, "yellow")
 
         if self.parent.selected_algorithm == "Dijkstra_PQ_lazy":
+            if step_type == "Starting Algorithm":
+                self.highlight_specific_ranges([("1.2", "1.42")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("2.4", "2.52")], colors.get("show_edge"))
             if step_type == "Pick Node":
                 self.highlight_specific_ranges([("3.13", "3.18")], colors.get("current_node"))
                 self.highlight_specific_ranges([("3.5", "3.12")], colors.get("show_edge"))
@@ -725,6 +728,9 @@ class Pseudocode_Frame(Frame):
                 self.highlight_specific_ranges([("10.12", "10.14")], colors.get("show_edge"))
 
         if self.parent.selected_algorithm == "Dijkstra_PQ":
+            if step_type == "Starting Algorithm":
+                self.highlight_specific_ranges([("1.2", "1.42")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("2.4", "2.52")], colors.get("show_edge"))
             if step_type == "Pick Node":
                 self.highlight_specific_ranges([("3.13", "3.18")], colors.get("current_node"))
                 self.highlight_specific_ranges([("3.5", "3.12")], colors.get("show_edge"))
@@ -808,6 +814,9 @@ class Pseudocode_Frame(Frame):
 
 
         if self.parent.selected_algorithm == "Dijkstra_List":
+            if step_type == "Starting Algorithm":
+                self.highlight_specific_ranges([("1.2", "1.42")], colors.get("show_edge"))
+                self.highlight_specific_ranges([("2.4", "2.52")], colors.get("show_edge"))
             if step_type == "Pick Node_1":
                 self.highlight_specific_ranges([("3.13", "3.18")], colors.get("current_node"))
                 self.highlight_specific_ranges([("3.5", "3.12")], colors.get("show_edge"))

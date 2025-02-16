@@ -149,16 +149,12 @@ class PfadsuchApp(Tk):
         #self.update_gui()
         self.code_frame.update_font_size()
     def start_algorithm(self):
-        self.gui_frame.shortest_paths_button.config(state=DISABLED)
-        self.gui_frame.prev_button.config(state=DISABLED)
         if self.current_step:
-
             self.steps_finished_algorithm = []
             self.shortest_paths = {}
             self.code_frame.clear_highlights_and_Canvas()
             self.current_step = -1
             self.code_frame.clear_table()
-           # self.code_frame.clear_hightlight()
 
         if self.start_node is None or self.start_node == '':
             start_node = tkinter.simpledialog.askstring("Startknoten wählen", "Bitte Startknoten auswählen")
@@ -191,7 +187,9 @@ class PfadsuchApp(Tk):
                 self.graph, self.start_node)
             self.code_frame.highlight_step("Starting Algorithm")
             self.code_frame.set_step(f"Starte Dijkstra mit Liste")
-
+        self.gui_frame.disable_canvas_interactions()
+        self.gui_frame.shortest_paths_button.config(state=DISABLED)
+        self.gui_frame.prev_button.config(state=DISABLED)
         self.test_dijkstra_algorithm(self.start_node)
 
 
@@ -209,6 +207,7 @@ class PfadsuchApp(Tk):
         self.code_frame.priority_queue = {}
 
     def next_step(self):
+
         if self.debug:
             print("next step")
         if self.steps_finished_algorithm == []:
@@ -317,9 +316,10 @@ class PfadsuchApp(Tk):
         self.code_frame.clear_highlights_and_Canvas()
         self.gui_frame.canvas.bind("<ButtonPress-1>", self.gui_frame.on_press)
         self.code_frame.clear_table()
-        #TO DO CLEAR TABLE HIGHLIGHT
+
         self.code_frame.canvas.delete("all")
-        #self.code_frame.clear_hightlight()
+        self.gui_frame.enable_canvas_interactions()
+
 
         self.code_frame.set_step("Warte auf starten eines Algorithmus")
         self.shortest_paths = {}
@@ -328,12 +328,10 @@ class PfadsuchApp(Tk):
             self.gui_frame.prev_button.config(state=DISABLED)
         if self.selected_algorithm in {"Dijkstra_PQ_lazy", "Dijkstra_PQ"}:
             self.code_frame.priority_queue_label.config(text="Heap")
-            #self.code_frame.priority_queue_table.heading("Node", text="Knoten")
-            #self.code_frame.priority_queue_table.heading("Priority", text="Priorität")
+
         elif self.selected_algorithm == "Dijkstra_List":
             self.code_frame.priority_queue_label.config(text="Liste")
-            #self.code_frame.priority_queue_table.heading("Node", text="Knoten")
-            #self.code_frame.priority_queue_table.heading("Priority", text="Distanz")
+
 
 
 
@@ -374,7 +372,7 @@ class PfadsuchApp(Tk):
                 self.graph_draw_list.draw_graph_dijkstra_list(None, None, {node: None for node in self.graph}, set(), set())
             if self.steps_finished_algorithm:
                 self.code_frame.highlight_step("Starting Algorithm")
-                #self.code_frame.highlight_lines_with_dimming([2])
+                print("init")
                 if self.selected_algorithm == "Dijkstra_PQ_lazy":
                     self.code_frame.set_step("Starte Dijkstra mit Priority Queue (mit Lazy Deletion)")
                 if self.selected_algorithm == "Dijkstra_PQ":

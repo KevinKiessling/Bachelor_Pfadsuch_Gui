@@ -82,14 +82,26 @@ class Canvas_Frame(Frame):
 
 
         #self.canvas.bind("<Button-1>", self.add_node)
-        self.canvas.bind("<Button-3>", self.add_edge)
+        '''self.canvas.bind("<Button-3>", self.add_edge)
         self.canvas.bind("<Button-2>", self.remove_clicked_element)
         self.canvas.bind("<Control-Button-1>", self.remove_clicked_element)
 
         self.canvas.bind("<ButtonPress-1>", self.on_press)
         self.canvas.bind("<B1-Motion>", self.on_drag)
         self.canvas.bind("<ButtonRelease-1>", self.on_release)
-        self.canvas.bind("<Double-1>", self.on_double_click)
+        self.canvas.bind("<Double-1>", self.on_double_click)'''
+
+        self.canvas_bindings = [
+            ("<Button-3>", self.add_edge),
+            ("<Button-2>", self.remove_clicked_element),
+            ("<Control-Button-1>", self.remove_clicked_element),
+            ("<ButtonPress-1>", self.on_press),
+            ("<B1-Motion>", self.on_drag),
+            ("<ButtonRelease-1>", self.on_release),
+            ("<Double-1>", self.on_double_click),
+        ]
+        for event, callback in self.canvas_bindings:
+            self.canvas.bind(event, callback)
 
         self.focus_set()
         self.bind("<Right>", self.go_to_next_step)
@@ -138,16 +150,21 @@ class Canvas_Frame(Frame):
         self.initial_height = 1000
         self.canvas_width = self.initial_width
         self.canvas_height = self.initial_height
-        '''self.node_rad_original = self.parent.node_rad
-        self.font_size_edge_weight_original = self.parent.font_size_edge_weight
-        self.font_size_node_label_original = self.parent.font_size_node_label'''
+
     def disable_canvas_interactions(self):
-        print("disabling graph interactions while algorithm is running")
+        print("Disabling graph interactions while algorithm is running")
+
+        for event, _ in self.canvas_bindings:
+            self.canvas.unbind(event)
     def enable_canvas_interactions(self):
-        print("reenabling graph interactions")
+        print("Re-enabling graph interactions")
+        # Rebind all canvas events
+        for event, callback in self.canvas_bindings:
+            self.canvas.bind(event, callback)
 
     def cancel_button_method(self):
         self.parent.reset()
+        self.enable_canvas_interactions()
     def resize_canvas(self, event):
 
         new_width = event.width
@@ -776,10 +793,12 @@ class Canvas_Frame(Frame):
     def start_alg (self, event):
         if self.parent.debug:
             print("Beginne Algorithmus")
+
         self.parent.start_algorithm()
     def go_to_next_step(self, event):
         if self.parent.debug:
             print("1 Schritt vor")
+
         self.parent.next_step()
     def go_step_back(self, event):
         if self.parent.debug:
@@ -790,11 +809,13 @@ class Canvas_Frame(Frame):
         if self.parent.debug:
             print("Vorspulen aktiviert")
         self.parent.fast_forward_paused = False
+
         self.parent.fast_forward()
     def go_fast_forward(self, event):
         if self.parent.debug:
             print("Vorspulen aktiviert")
         self.parent.fast_forward_paused = False
+
         self.parent.fast_forward()
     def pause_fast_forward(self, event):
         if self.parent.debug:
