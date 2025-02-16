@@ -39,11 +39,12 @@ class Canvas_Frame(Frame):
         self.fast_forward_icon = PhotoImage(file="Icons/fast-forward.png")  # Replace with your icon path
         self.start_icon = PhotoImage(file="Icons/play.png")  # Replace with your icon path
         self.shortest_paths_icon = PhotoImage(file="icons/path.png")  # Replace with your icon path
-
+        self.cancel_icon = PhotoImage(file="icons/cancel.png")
         self.button_frame = Frame(self)
-        self.button_frame.grid(row=0, column=0, columnspan=6, pady=5, sticky="ew")
+        self.button_frame.grid(row=0, column=0, columnspan=7, pady=5, sticky="ew")
+        #padding left/right
         self.button_frame.grid_columnconfigure(0, weight=1)  #
-        self.button_frame.grid_columnconfigure(7, weight=1)
+        self.button_frame.grid_columnconfigure(8, weight=1)
 
         self.prev_button = Button(self.button_frame, image=self.prev_icon, command=parent.prev_step)
         self.prev_button.grid(row=0, column=1, padx=5)
@@ -66,7 +67,9 @@ class Canvas_Frame(Frame):
             self.button_frame, image=self.shortest_paths_icon, command=self.open_shortest_paths, state=DISABLED, width=20
         )
         self.shortest_paths_button.grid(row=0, column=6, padx=5)
-
+        self.cancel_button = Button(self.button_frame, image=self.cancel_icon,
+                                          command=self.cancel_button_method)
+        self.cancel_button.grid(row=0, column=7, padx=5)
 
         self.canvas_frame = Frame(self, bd=2, relief="solid")
         self.canvas_frame.grid(row=1, column=0, padx=10, pady=5, columnspan=6, sticky="nsew")
@@ -138,7 +141,13 @@ class Canvas_Frame(Frame):
         '''self.node_rad_original = self.parent.node_rad
         self.font_size_edge_weight_original = self.parent.font_size_edge_weight
         self.font_size_node_label_original = self.parent.font_size_node_label'''
+    def disable_canvas_interactions(self):
+        print("disabling graph interactions while algorithm is running")
+    def enable_canvas_interactions(self):
+        print("reenabling graph interactions")
 
+    def cancel_button_method(self):
+        self.parent.reset()
     def resize_canvas(self, event):
 
         new_width = event.width
