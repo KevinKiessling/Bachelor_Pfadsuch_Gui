@@ -56,7 +56,7 @@ class PfadsuchApp(Tk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(1, weight=2)
+        self.grid_columnconfigure(1, weight=1)
 
         self.bind_all("<FocusIn>", self.global_focus_control)
 

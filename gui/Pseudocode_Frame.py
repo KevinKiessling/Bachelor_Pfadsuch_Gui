@@ -43,7 +43,8 @@ class Pseudocode_Frame(Frame):
 
         self.pseudocode_display_frame.grid_columnconfigure(0, weight=1)
         self.pseudocode_display_frame.grid_rowconfigure(0, weight=1)
-
+        self.pseudocode_display_frame.grid_propagate(False)
+        self.pseudocode_display_frame.config(width=800, height=400)
         self.distance_table_label = Label(self, text="Aktuelle Distanzen", font=("Arial", 12))
         self.distance_table_label.grid(row=2, column=0, pady=5, sticky="ew", padx=10)
 
