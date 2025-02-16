@@ -227,29 +227,10 @@ class Graph_Visualizer_Dijkstra_List:
             else:
                 distance_text = f"{distance_text}"
 
-            distance_length = len(distance_text)
-            node_length = len(node)
-            padding = max(0, distance_length - node_length)
-
-            distance_value = distances.get(node, float('inf'))
-            if distance_value is None:
-                distance_value = float('inf')
-
-            if distance_value >= 9999:
-                left_padding = (padding + 2) // 2
-                right_padding = padding // 2
-            else:
-                left_padding = (padding + 1) // 2
-                right_padding = padding // 2
-
-            node_text = f"{' ' * left_padding}{node}{' ' * right_padding}"
-            display_text = f"{node_text}\n{distance_text}"
-            # Flag to display "start" on start node
-
             self.gui_frame.canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
                                               fill=color)
-            if node == self.parent.start_node:
 
+            if node == self.parent.start_node:
                 if color == "yellow":
                     self.gui_frame.canvas.create_oval(
                         x - node_radius - 5, y - node_radius - 5, x + node_radius + 5, y + node_radius + 5,
@@ -264,7 +245,18 @@ class Graph_Visualizer_Dijkstra_List:
                         width=3,
                         dash=(3, 3)  # Dashed line pattern
                     )
-            self.gui_frame.canvas.create_text(x, y, text=display_text, fill=dis_color, font=("Arial", font_size))
+
+            distance_font_size = font_size
+            if len(distance_text) >= 5:
+                distance_font_size = font_size - (len(distance_text) - 4) * 2
+
+            vertical_offset = node_radius * 0.4
+
+            self.gui_frame.canvas.create_text(x, y - vertical_offset, text=node, fill=dis_color,
+                                              font=("Arial", font_size), anchor="center")
+
+            self.gui_frame.canvas.create_text(x, y + vertical_offset, text=distance_text, fill=dis_color,
+                                              font=("Arial", distance_font_size), anchor="center")
 
         # Draw edges
         for node, edges in self.graph.items():
