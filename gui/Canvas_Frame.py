@@ -152,19 +152,21 @@ class Canvas_Frame(Frame):
         self.canvas_height = self.initial_height
 
     def disable_canvas_interactions(self):
-        print("Disabling graph interactions while algorithm is running")
+        if self.parent.debug:
+            print("Disabling graph interactions while algorithm is running")
 
         for event, _ in self.canvas_bindings:
             self.canvas.unbind(event)
     def enable_canvas_interactions(self):
-        print("Re-enabling graph interactions")
+        if self.parent.debug:
+            print("Re-enabling graph interactions")
         # Rebind all canvas events
         for event, callback in self.canvas_bindings:
             self.canvas.bind(event, callback)
 
     def cancel_button_method(self):
         self.parent.reset()
-        self.enable_canvas_interactions()
+
         self.close_shortest_path_window()
     def close_shortest_path_window(self):
         if hasattr(self, "shortest_paths_window") and self.shortest_paths_window is not None:
