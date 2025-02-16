@@ -12,7 +12,7 @@ from tkinter import colorchooser
 from tkinter import Tk, Canvas, Frame, Scrollbar, Button
 from tkinter import StringVar, OptionMenu
 from tkinter import Toplevel, Label, Button, Checkbutton, BooleanVar
-from tkinter import Toplevel, Button, Checkbutton, BooleanVar, Text, Frame, Scrollbar
+from tkinter import Toplevel, Button, Checkbutton, BooleanVar, Text, Frame, Scrollbar, PhotoImage, LEFT
 
 import copy
 class Canvas_Frame(Frame):
@@ -33,32 +33,37 @@ class Canvas_Frame(Frame):
         self.grid_columnconfigure(5, weight=1)
         self.grid_rowconfigure(0, weight=0)
         self.grid_rowconfigure(1, weight=1)
-
+        self.prev_icon = PhotoImage(file="Icons/arrow-left.png")  # Replace with your icon path
+        self.next_icon = PhotoImage(file="Icons/arrow-right.png")  # Replace with your icon path
+        self.pause_icon = PhotoImage(file="Icons/pause.png")  # Replace with your icon path
+        self.fast_forward_icon = PhotoImage(file="Icons/fast-forward.png")  # Replace with your icon path
+        self.start_icon = PhotoImage(file="Icons/play.png")  # Replace with your icon path
+        self.shortest_paths_icon = PhotoImage(file="icons/path.png")  # Replace with your icon path
 
         self.button_frame = Frame(self)
         self.button_frame.grid(row=0, column=0, columnspan=6, pady=5, sticky="ew")
         self.button_frame.grid_columnconfigure(0, weight=1)  #
         self.button_frame.grid_columnconfigure(7, weight=1)
 
-        self.prev_button = Button(self.button_frame, text="1 Schritt zurück", command=parent.prev_step)
+        self.prev_button = Button(self.button_frame, image=self.prev_icon, command=parent.prev_step)
         self.prev_button.grid(row=0, column=1, padx=5)
 
-        self.next_button = Button(self.button_frame, text="1 Schritt vor", command=parent.next_step)
+        self.next_button = Button(self.button_frame, image=self.next_icon, command=parent.next_step)
         self.next_button.grid(row=0, column=2, padx=5)
 
-        self.pause_button = Button(self.button_frame, text="Pausieren", command=parent.pause)
+        self.pause_button = Button(self.button_frame, image=self.pause_icon, command=parent.pause)
         self.pause_button.grid(row=0, column=3, padx=5)
 
-        self.fast_forward_button = Button(self.button_frame, text="Vorspulen", command=self.go_forward_button)
+        self.fast_forward_button = Button(self.button_frame, image=self.fast_forward_icon, command=self.go_forward_button)
         self.fast_forward_button.grid(row=0, column=4, padx=5)
 
         self.starting_button = Button(
-            self.button_frame, text="Algorithmus Starten", command=parent.start_algorithm, width=20
+            self.button_frame, image=self.start_icon, command=parent.start_algorithm, width=20
         )
         self.starting_button.grid(row=0, column=5, padx=5)
 
         self.shortest_paths_button = Button(
-            self.button_frame, text="Kürzeste Pfade", command=self.open_shortest_paths, state=DISABLED, width=20
+            self.button_frame, image=self.shortest_paths_icon, command=self.open_shortest_paths, state=DISABLED, width=20
         )
         self.shortest_paths_button.grid(row=0, column=6, padx=5)
 
