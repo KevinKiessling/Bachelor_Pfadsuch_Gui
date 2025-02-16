@@ -125,26 +125,48 @@ class Pseudocode_Frame(Frame):
         if num_elements == 0:
             return
 
-        element_width = max(70, width // num_elements - 5)
-        element_height = 45
-        padding = 5
-        cols = max(1, width // (element_width + padding))  # Ensure cols is at least 1
+        cols = max(1, int(width // 70))
         rows = (num_elements + cols - 1) // cols
+
+        element_width = width // cols
+        element_height = height // rows
 
         for i, value in enumerate(list_data):
             row, col = divmod(i, cols)
-            x1 = col * (element_width + padding)
-            y1 = row * (element_height + padding)
-            x2, y2 = x1 + element_width, y1 + element_height
+            x1 = col * element_width
+            y1 = row * element_height
+            x2 = x1 + element_width
+            y2 = y1 + element_height
 
             color = self.parent.color_heap if value == highlight_node else "light grey"
 
             self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="black")
-            self.canvas.create_text((x1 + x2) // 2, y1 + 12, text=str(value), font=("Arial", 12, "bold"))
+
+            center_x = (x1 + x2) // 2
+            center_y = (y1 + y2) // 2
 
             distance = distances.get(value, float('inf'))
-            distance_text = f"d[{value}] = {distance if distance != float('inf') else '∞'}"
-            self.canvas.create_text((x1 + x2) // 2, y1 + 32, text=distance_text, font=("Arial", 10))
+            distance_text = str(distance) if distance != float('inf') else '∞'
+
+            text = f"{value}\nd[{value}] = {distance_text}"
+
+            font_size_height = element_height // 3
+            font_size_width = element_width // 6
+
+            font_size = max(6, min(font_size_height, font_size_width))
+
+            if width < 400:
+                font_size = max(4, font_size // 2)
+
+            text_center_y = center_y
+            self.canvas.create_text(
+                center_x,
+                text_center_y,
+                text=text,
+                font=("Arial", font_size),
+                justify="center",
+                width=element_width - 4,
+            )
 
     # draws heap with highlighting
     def update_priority_queue(self, pq):
