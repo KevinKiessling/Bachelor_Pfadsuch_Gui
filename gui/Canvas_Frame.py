@@ -165,6 +165,12 @@ class Canvas_Frame(Frame):
     def cancel_button_method(self):
         self.parent.reset()
         self.enable_canvas_interactions()
+        self.close_shortest_path_window()
+    def close_shortest_path_window(self):
+        if hasattr(self, "shortest_paths_window") and self.shortest_paths_window is not None:
+            if self.shortest_paths_window.winfo_exists():
+                self.shortest_paths_window.destroy()
+            self.shortest_paths_window = None
     def resize_canvas(self, event):
 
         new_width = event.width

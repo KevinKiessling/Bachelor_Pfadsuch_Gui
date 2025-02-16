@@ -316,6 +316,7 @@ class PfadsuchApp(Tk):
         self.code_frame.clear_highlights_and_Canvas()
         self.gui_frame.canvas.bind("<ButtonPress-1>", self.gui_frame.on_press)
         self.code_frame.clear_table()
+        self.gui_frame.close_shortest_path_window()
 
         self.code_frame.canvas.delete("all")
         self.gui_frame.enable_canvas_interactions()
