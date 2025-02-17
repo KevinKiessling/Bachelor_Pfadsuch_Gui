@@ -142,9 +142,9 @@ class Canvas_Frame(Frame):
                                             command=self.toggle_dijk_PQ)
         self.algorithm_menu.add_checkbutton(label="Dijkstra mit Priority Queue(Lazy Deletion)",
                                             variable=self.dijk_PQ_lazy, command=self.toggle_dijk_PQ_lazy)
-        '''self.help = Menu(self.menu_bar, tearoff=0)
+        self.help = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Hilfe", menu=self.help)
-        self.help.add_command(label="Tutorial", command=self.open_tutorial)'''
+        self.help.add_command(label="Tutorial", command=self.open_tutorial)
         self.canvas_frame.bind("<Configure>", self.resize_canvas)
         self.initial_width = 1000
         self.initial_height = 1000
@@ -346,118 +346,180 @@ class Canvas_Frame(Frame):
            # messagebox.showinfo("Path Drawn", f"Path to {end_node} has been drawn!")
 
     def open_tutorial(self):
-        if self.parent.debug:
-            print("Opening tutorial window")
 
-        tutorial_window = Toplevel(self)
+        tutorial_window = Toplevel(self.parent)
         tutorial_window.title("Tutorial")
-        tutorial_window.geometry("700x600")
-        tutorial_window.transient(self.parent)
+        tutorial_window.geometry("850x650")
 
-        self.dont_show_again_var = BooleanVar()
-        self.dont_show_again_var.set(self.parent.has_seen_tutorial)
+        custom_font = ("Arial", 12)
 
-
-        frame = Frame(tutorial_window)
-        frame.pack(fill="both", expand=True, padx=10, pady=10)
+        notebook = ttk.Notebook(tutorial_window)
+        notebook.pack(fill="both", expand=True)
 
 
-        text_frame = Frame(frame)
-        text_frame.pack(fill="both", expand=True, padx=10, pady=10)
+        self._add_welcome_tab(notebook, custom_font)
+        self._add_node_management_tab(notebook, custom_font)
+        self._add_button_explanations_tab(notebook, custom_font)
+        self._add_other_features_tab(notebook, custom_font)
 
+    def _add_welcome_tab(self, notebook, custom_font):
 
-        tutorial_text = Text(text_frame, wrap="word", width=80, height=20, padx=10, pady=10, bg="#f0f0f0",
-                             state="disabled")
-        tutorial_text.pack(side="left", fill="both", expand=True)
+        welcome_tab = ttk.Frame(notebook)
+        notebook.add(welcome_tab, text="Willkommen")
 
-
-        scrollbar = Scrollbar(text_frame, command=tutorial_text.yview)
-        scrollbar.pack(side="right", fill="y")
-
-
-        tutorial_text.config(yscrollcommand=scrollbar.set)
-
-
-        text_content = """
-        Tutorial Übersicht:
-
-        1. **Knotenerstellung** (Linksklick):
-           - Klicken Sie auf den Canvas, um einen neuen Knoten zu erstellen. Der Knoten wird an der Position des Mauszeigers erzeugt.
-
-        --------------------------------------------------------------------
-
-        2. **Kantenerstellung** (Rechtsklick):
-           - Klicken Sie zuerst mit der rechten Maustaste auf einen Knoten, um ihn als Startpunkt auszuwählen.
-           - Klicken Sie mit der rechten Maustaste auf einen anderen Knoten, um eine Kante zwischen den beiden Knoten zu erstellen.
-           - Ein Dialogfenster erscheint, um das Gewicht der Kante festzulegen. Falls zufälliger Kantengewichts Modus aktiviert ist,
-             wird die Kante direkt mit einem Zufallsgewicht erstellt.
-
-        --------------------------------------------------------------------
-
-        3. **Knoten/Kantenlöschung** (Mittelklick):
-           - Klicken Sie mit der mittleren Maustaste (Mausrad) oder STRG + Linksklick auf einen Knoten oder eine Kante, um diesen/diese von dem Canvas zu löschen.
-       
-        --------------------------------------------------------------------
-       
-        4. **Algorithmen**
-            - Es sind 3 Varianten des Dijkstra Algorithmus implementiert, welche Schritt für Schritt durchlaufen werden können
-       
-        --------------------------------------------------------------------
-       
-        5. **Start der Algorithmen**
-            - Entweder über die Buttons oben oder per Pfeiltaste rechts oder oben (Vorspulen)
-       
-        --------------------------------------------------------------------
-       
-        6. **Startknoten**(Doppel Linksklick)
-            - Auswahl des Startknoten durch doppel Linksklick auf einen Knoten auf dem Canvas
-            - Falls kein Startknoten gewählt wurde, wird beim Start nach einem Startknoten gefragt
-       
-        --------------------------------------------------------------------
-       
-        7. **Import/Export**
-            - Es bestelt die möglichkeit einen Graph als .Json Datei zu importieren bzw. zu exportieren
-        
-        --------------------------------------------------------------------
-        
-        8. **Knotenlegende**
-            - Buchstabe auf Knoten ist der Name des Knoten
-            - Zahl unter dem Knoten ist die Distanz vom Startknoten zu diesem Knoten
-            
-        **Zusätzliche Funktionen:**
-        - Knoten können gezogen und verschoben werden. 
-        - Das Tutorial-Fenster wird einmal beim Start der App angezeigt. Später können Sie es bei Bedarf über die oberen Leiste aufrufen.
-
-        --------------------------------------------------------------------
-    
-        Drücken Sie "Okay", um das Tutorial zu schließen.
+        welcome_text = """
+        Todo
         """
+        Label(welcome_tab, text=welcome_text, justify="left", wraplength=750, font=custom_font).pack(padx=20, pady=20)
+
+    def _add_node_management_tab(self, notebook, custom_font):
+
+        node_tab = ttk.Frame(notebook)
+        notebook.add(node_tab, text="Graphen Aufbau")
 
 
-        tutorial_text.config(state="normal")
-        tutorial_text.insert("1.0", text_content)
-        tutorial_text.config(state="disabled")
+        canvas_frame = Frame(node_tab)
+        canvas_frame.pack(fill="both", expand=True)
+
+        canvas = Canvas(canvas_frame)
+        scrollbar = Scrollbar(canvas_frame, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        scrollbar.pack(side="right", fill="y")
+        canvas.pack(side="left", fill="both", expand=True)
+
+        content_frame = Frame(canvas)
+        canvas.create_window((0, 0), window=content_frame, anchor="nw")
 
 
-        dont_show_again_check = Checkbutton(
-            tutorial_window,
-            text="Tutorial beim Start nicht zeigen",
-            variable=self.dont_show_again_var
-        )
-        dont_show_again_check.pack(pady=10)
+        def on_content_configure(event):
+            canvas.configure(scrollregion=canvas.bbox("all"))
 
-        def close_tutorial():
-            if self.dont_show_again_var.get():
-                self.parent.has_seen_tutorial = True
-            else:
-                self.parent.has_seen_tutorial = False
-
-            self.parent.save_config()
-            tutorial_window.destroy()
+        content_frame.bind("<Configure>", on_content_configure)
 
 
-        cancel_button = Button(tutorial_window, text="Okay", command=close_tutorial)
-        cancel_button.pack(pady=10)
+        Label(content_frame, text="Knoten Struktur:", font=("Arial", 14, "bold")).pack(anchor="w", pady=(10, 0))
+
+        node_canvas = Canvas(content_frame, bg="white", height=200)
+        node_canvas.pack(fill="both", expand=True, pady=5)
+
+        def draw_single_node():
+            node_canvas.delete("all")
+            canvas_width = node_canvas.winfo_width()
+            canvas_height = node_canvas.winfo_height()
+
+            node_radius = 30
+            x, y = canvas_width // 2, canvas_height // 2
+
+
+            node_canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
+                                    fill="lightblue")
+            node_canvas.create_text(x, y - 12, text="A", font=("Arial", 14, "bold"))
+            node_canvas.create_text(x, y + 12, text="5", font=("Arial", 12))
+            node_canvas.create_text(x + node_radius + 60, y - 12, text="Knoten Name", anchor="w", font=("Arial", 10))
+            node_canvas.create_text(x + node_radius + 60, y + 12, text="Distanz vom Startknoten", anchor="w", font=("Arial", 10))
+
+        node_canvas.bind("<Configure>", lambda e: draw_single_node())
+
+        Label(content_frame,
+              text="Knotenerstellung:\n- Linksklick zum Erstellen eines Knotens.\n\nKnoten Löschen:\n- Mittelklick oder "
+                   "Strg + Linksklick, um einen Knoten zu löschen.\n\nKnoten Bewegen:\n- Linksklick+ gedrückt halten um "
+                   "Knoten zu verschieben.\n\nStartknoten Wählen:\n- Doppel Linksklick auf Knoten um diesen als Startknoten "
+                   "zu setzen",
+              justify="left", font=custom_font).pack(anchor="w", pady=(0, 15))
+
+
+        Label(content_frame, text="Kanten und Gewichte:", font=("Arial", 14, "bold")).pack(anchor="w", pady=(10, 0))
+
+        edge_canvas = Canvas(content_frame, bg="white", height=200)
+        edge_canvas.pack(fill="both", expand=True, pady=5)
+
+        def draw_edge_example():
+            edge_canvas.delete("all")
+            canvas_width = edge_canvas.winfo_width()
+            canvas_height = edge_canvas.winfo_height()
+
+            node_radius = 30
+            y = canvas_height // 2
+
+            x1 = canvas_width // 4
+            x2 = canvas_width * 3 // 4
+
+            middle_x, middle_y = (x1 + x2) / 2, y
+
+
+            line_start_x = x1 + node_radius
+            line_end_x = x2 - node_radius
+
+
+            edge_canvas.create_line(line_start_x, y, middle_x - 50, middle_y, width=4, fill="black", smooth=True,
+                                    splinesteps=500)
+            edge_canvas.create_line(middle_x + 50, middle_y, line_end_x, y, width=4, arrow="last",
+                                    arrowshape=(10, 12, 5),
+                                    fill="black", smooth=True, splinesteps=500)
+            edge_canvas.create_text(middle_x, middle_y, text="7", fill="black", font=("Arial", 12))  # Edge weight
+
+            # Draw the nodes
+            for x, label, distance in [(x1, "A", "5"), (x2, "B", "∞")]:
+                edge_canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
+                                        fill="lightblue")
+                edge_canvas.create_text(x, y - 12, text=label, font=("Arial", 14, "bold"))
+                edge_canvas.create_text(x, y + 12, text=distance, font=("Arial", 12))
+
+        edge_canvas.bind("<Configure>", lambda e: draw_edge_example())
+
+        Label(content_frame,
+              text="Kanten:\n- Verbinden Sie zwei Knoten.\n- Gewicht in der Mitte = Kosten.\n- Pfeil = Richtung.",
+              justify="left", font=custom_font).pack(anchor="w", pady=(0, 15))
+
+
+        def _on_mousewheel(event):
+
+            canvas.yview_scroll(-1 * (event.delta // 120), "units")
+
+        def _bind_mousewheel(event):
+
+            canvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+        def _unbind_mousewheel(event):
+
+            canvas.unbind_all("<MouseWheel>")
+
+
+        canvas.bind("<Enter>", _bind_mousewheel)
+        canvas.bind("<Leave>", _unbind_mousewheel)
+
+
+        def on_resize(event):
+            canvas_width = event.width
+            canvas.itemconfig(canvas_frame_window, width=canvas_width)
+
+        canvas_frame_window = canvas.create_window((0, 0), window=content_frame, anchor="nw",
+                                                   width=canvas.winfo_width())
+        canvas.bind("<Configure>", on_resize)
+
+    def _add_button_explanations_tab(self, notebook, custom_font):
+
+        button_tab = ttk.Frame(notebook)
+        notebook.add(button_tab, text="Schaltflächen Erklärungen")
+
+        button_explanation_text = """
+        Wichtige Schaltflächen:
+        - todo
+        """
+        Label(button_tab, text=button_explanation_text, justify="left", wraplength=750, font=custom_font).pack(padx=20,
+                                                                                                               pady=20)
+
+    def _add_other_features_tab(self, notebook, custom_font):
+
+        features_tab = ttk.Frame(notebook)
+        notebook.add(features_tab, text="Weitere Funktionen")
+
+        features_text = """
+        Weitere Funktionen:
+        - todo
+        """
+        Label(features_tab, text=features_text, justify="left", wraplength=750, font=custom_font).pack(padx=20, pady=20)
 
 
 

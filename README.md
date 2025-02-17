@@ -8,7 +8,7 @@ Ausführen aus dem Directory von pfadsuche.py per "python pfadsuche.py"
 Python Version 3.13
 
 Benötigte Pip Imports:
-- pip install networkx     ->-> Wird aktuell nur für den TestCase genutzt um Dijkstra Ergebnisse mit confirmed 
+- pip install networkx     ->-> Wird aktuell nur für den TestCase genutzt um Dijkstra Ergebnisse mit confirmed
 korrekten von networkx zu vergleichen, wird später entfernt
 
 
