@@ -392,13 +392,25 @@ class Canvas_Frame(Frame):
         canvas.create_window((0, 0), window=content_frame, anchor="nw")
 
 
-        def on_content_configure(event):
+        def update_scrollregion(event=None):
             canvas.configure(scrollregion=canvas.bbox("all"))
 
-        content_frame.bind("<Configure>", on_content_configure)
+
+        content_frame.bind("<Configure>", update_scrollregion)
 
 
-        Label(content_frame, text="Knoten Struktur:", font=("Arial", 14, "bold")).pack(anchor="w", pady=(10, 0))
+        def update_wraplength(event=None):
+            new_width = content_frame.winfo_width() - 40
+            for label in content_frame.winfo_children():
+                if isinstance(label, Label):
+                    label.config(wraplength=new_width)
+            update_scrollregion()
+
+
+        content_frame.bind("<Configure>", update_wraplength)
+
+
+        Label(content_frame, text="Knoten", font=("Arial", 14, "bold")).pack(anchor="w", pady=(10, 0))
 
         node_canvas = Canvas(content_frame, bg="white", height=200)
         node_canvas.pack(fill="both", expand=True, pady=5)
@@ -417,16 +429,31 @@ class Canvas_Frame(Frame):
             node_canvas.create_text(x, y - 12, text="A", font=("Arial", 14, "bold"))
             node_canvas.create_text(x, y + 12, text="5", font=("Arial", 12))
             node_canvas.create_text(x + node_radius + 60, y - 12, text="Knoten Name", anchor="w", font=("Arial", 10))
-            node_canvas.create_text(x + node_radius + 60, y + 12, text="Distanz vom Startknoten", anchor="w", font=("Arial", 10))
+            node_canvas.create_text(x + node_radius + 60, y + 12, text="Distanz vom Startknoten", anchor="w",
+                                    font=("Arial", 10))
 
         node_canvas.bind("<Configure>", lambda e: draw_single_node())
 
+
+        Label(content_frame, text="Knotenerstellung:", font=("Arial", 12, "bold")).pack(anchor="w", pady=(5, 0))
         Label(content_frame,
-              text="Knotenerstellung:\n- Linksklick zum Erstellen eines Knotens.\n\nKnoten Löschen:\n- Mittelklick oder "
-                   "Strg + Linksklick, um einen Knoten zu löschen.\n\nKnoten Bewegen:\n- Linksklick+ gedrückt halten um "
-                   "Knoten zu verschieben.\n\nStartknoten Wählen:\n- Doppel Linksklick auf Knoten um diesen als Startknoten "
-                   "zu setzen",
-              justify="left", font=custom_font).pack(anchor="w", pady=(0, 15))
+              text="- Linksklick zum Erstellen eines Knotens.",
+              justify="left", font=custom_font, wraplength=400).pack(anchor="w", pady=(0, 5))
+
+        Label(content_frame, text="Knoten Löschen:", font=("Arial", 12, "bold")).pack(anchor="w", pady=(5, 0))
+        Label(content_frame,
+              text="- Mittelklick oder Strg + Linksklick, um einen Knoten zu löschen.",
+              justify="left", font=custom_font, wraplength=400).pack(anchor="w", pady=(0, 5))
+
+        Label(content_frame, text="Knoten Bewegen:", font=("Arial", 12, "bold")).pack(anchor="w", pady=(5, 0))
+        Label(content_frame,
+              text="- Linksklick gedrückt halten, um Knoten zu verschieben.",
+              justify="left", font=custom_font, wraplength=400).pack(anchor="w", pady=(0, 5))
+
+        Label(content_frame, text="Startknoten Wählen:", font=("Arial", 12, "bold")).pack(anchor="w", pady=(5, 0))
+        Label(content_frame,
+              text="- Doppel-Linksklick auf einen Knoten, um diesen als Startknoten zu setzen.",
+              justify="left", font=custom_font, wraplength=400).pack(anchor="w", pady=(0, 15))
 
 
         Label(content_frame, text="Kanten und Gewichte:", font=("Arial", 14, "bold")).pack(anchor="w", pady=(10, 0))
@@ -457,9 +484,9 @@ class Canvas_Frame(Frame):
             edge_canvas.create_line(middle_x + 50, middle_y, line_end_x, y, width=4, arrow="last",
                                     arrowshape=(10, 12, 5),
                                     fill="black", smooth=True, splinesteps=500)
-            edge_canvas.create_text(middle_x, middle_y, text="7", fill="black", font=("Arial", 12))  # Edge weight
+            edge_canvas.create_text(middle_x, middle_y, text="7", fill="black", font=("Arial", 12))
 
-            # Draw the nodes
+
             for x, label, distance in [(x1, "A", "5"), (x2, "B", "∞")]:
                 edge_canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
                                         fill="lightblue")
@@ -468,21 +495,32 @@ class Canvas_Frame(Frame):
 
         edge_canvas.bind("<Configure>", lambda e: draw_edge_example())
 
+
+        Label(content_frame, text="Kantenerstellung:", font=("Arial", 12, "bold")).pack(anchor="w", pady=(5, 0))
         Label(content_frame,
-              text="Kanten:\n- Verbinden Sie zwei Knoten.\n- Gewicht in der Mitte = Kosten.\n- Pfeil = Richtung.",
-              justify="left", font=custom_font).pack(anchor="w", pady=(0, 15))
+              text="- Rechtsklick auf einen Knoten startet die Kantenerstellung.\n"
+                   "- Rechtsklick auf einen anderen Knoten erstellt die Kante.",
+              justify="left", font=custom_font, wraplength=400).pack(anchor="w", pady=(0, 5))
+
+        Label(content_frame, text="Kantengewichte:", font=("Arial", 12, "bold")).pack(anchor="w", pady=(5, 0))
+        Label(content_frame,
+              text="- Während der Kantenerstellung wird der Nutzer nach einem Gewicht für die Kante gefragt.\n"
+                   "- Falls die zufällige Gewichte Option aktiviert ist, wird ein zufälliges Gewicht verwendet.",
+              justify="left", font=custom_font, wraplength=400).pack(anchor="w", pady=(0, 5))
+
+        Label(content_frame, text="Kantenrichtung:", font=("Arial", 12, "bold")).pack(anchor="w", pady=(5, 0))
+        Label(content_frame,
+              text="- Der Pfeil am Ende der Kante zeigt die Richtung der Kante an.",
+              justify="left", font=custom_font, wraplength=400).pack(anchor="w", pady=(0, 15))
 
 
         def _on_mousewheel(event):
-
             canvas.yview_scroll(-1 * (event.delta // 120), "units")
 
         def _bind_mousewheel(event):
-
             canvas.bind_all("<MouseWheel>", _on_mousewheel)
 
         def _unbind_mousewheel(event):
-
             canvas.unbind_all("<MouseWheel>")
 
 
@@ -493,6 +531,8 @@ class Canvas_Frame(Frame):
         def on_resize(event):
             canvas_width = event.width
             canvas.itemconfig(canvas_frame_window, width=canvas_width)
+            update_wraplength()
+            update_scrollregion()
 
         canvas_frame_window = canvas.create_window((0, 0), window=content_frame, anchor="nw",
                                                    width=canvas.winfo_width())
@@ -651,15 +691,6 @@ class Canvas_Frame(Frame):
 
         general_tab_frame.bind("<Enter>", lambda e: settings_window.bind_all("<MouseWheel>", on_mousewheel))
         general_tab_frame.bind("<Leave>", lambda e: settings_window.unbind_all("<MouseWheel>"))
-
-
-        '''debug_var = BooleanVar(value=self.parent.debug)
-        debug_checkbox = Checkbutton(
-            general_tab_frame,
-            text="Debug Mode",
-            variable=debug_var
-        )
-        debug_checkbox.pack(anchor="w", pady=10, padx=10)'''
 
         random_mode_var = BooleanVar(value=self.parent.random_edge_mode)
         random_checkbox_frame = Frame(general_tab_frame)
