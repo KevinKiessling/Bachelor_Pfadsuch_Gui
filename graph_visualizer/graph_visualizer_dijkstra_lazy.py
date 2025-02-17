@@ -3,9 +3,9 @@ from tkinter import *
 from tkinter import messagebox
 from gui.Canvas_Frame import *
 from gui.Pseudocode_Frame import *
-from algorithmen.dijkstra_list import *
-from algorithmen.dijkstra_Priority_queue_lazy import *
-from algorithmen.dijkstra_Priority_queue import *
+from algorithms.dijkstra_list import *
+from algorithms.dijkstra_Priority_queue_lazy import *
+from algorithms.dijkstra_Priority_queue import *
 
 import math
 

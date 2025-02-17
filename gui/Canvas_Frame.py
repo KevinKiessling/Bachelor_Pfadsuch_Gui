@@ -33,11 +33,11 @@ class Canvas_Frame(Frame):
         self.grid_columnconfigure(5, weight=1)
         self.grid_rowconfigure(0, weight=0)
         self.grid_rowconfigure(1, weight=1)
-        self.prev_icon = PhotoImage(file="Icons/arrow-left.png")  # Replace with your icon path
-        self.next_icon = PhotoImage(file="Icons/arrow-right.png")  # Replace with your icon path
-        self.pause_icon = PhotoImage(file="Icons/pause.png")  # Replace with your icon path
-        self.fast_forward_icon = PhotoImage(file="Icons/fast-forward.png")  # Replace with your icon path
-        self.start_icon = PhotoImage(file="Icons/play.png")  # Replace with your icon path
+        self.prev_icon = PhotoImage(file="icons/arrow-left.png")  # Replace with your icon path
+        self.next_icon = PhotoImage(file="icons/arrow-right.png")  # Replace with your icon path
+        self.pause_icon = PhotoImage(file="icons/pause.png")  # Replace with your icon path
+        self.fast_forward_icon = PhotoImage(file="icons/fast-forward.png")  # Replace with your icon path
+        self.start_icon = PhotoImage(file="icons/play.png")  # Replace with your icon path
         self.shortest_paths_icon = PhotoImage(file="icons/path.png")  # Replace with your icon path
         self.cancel_icon = PhotoImage(file="icons/cancel.png")
         self.button_frame = Frame(self)
