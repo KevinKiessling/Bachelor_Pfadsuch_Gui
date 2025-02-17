@@ -365,13 +365,96 @@ class Canvas_Frame(Frame):
     def _add_welcome_tab(self, notebook, custom_font):
 
         welcome_tab = ttk.Frame(notebook)
-        notebook.add(welcome_tab, text="Willkommen")
+        notebook.add(welcome_tab, text="Übersicht")
 
-        welcome_text = """
-        Todo
+
+        canvas_frame = Frame(welcome_tab)
+        canvas_frame.pack(fill="both", expand=True)
+
+        canvas = Canvas(canvas_frame)
+        scrollbar = Scrollbar(canvas_frame, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        scrollbar.pack(side="right", fill="y")
+        canvas.pack(side="left", fill="both", expand=True)
+
+        content_frame = Frame(canvas)
+        canvas.create_window((0, 0), window=content_frame, anchor="nw")
+
+
+        def update_scrollregion(event=None):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+
+        content_frame.bind("<Configure>", update_scrollregion)
+
+
+        def update_wraplength(event=None):
+            new_width = content_frame.winfo_width() - 40
+            for label in content_frame.winfo_children():
+                if isinstance(label, Label):
+                    label.config(wraplength=new_width)
+            update_scrollregion()
+
+
+        content_frame.bind("<Configure>", update_wraplength)
+
+
+        Label(content_frame, text="Eine GUI zur Visualisierung von Pfadsuchalgorithmen", font=("Arial", 16, "bold")).pack(pady=(10, 5))
+
+        intro_text = """
+        Diese Anwendung dient der Erstellung, Bearbeitung und Visualisierung von Graphen sowie der Demonstration von Pfadsuchalgorithmen.
         """
-        Label(welcome_tab, text=welcome_text, justify="left", wraplength=750, font=custom_font).pack(padx=20, pady=20)
+        Label(content_frame, text=intro_text, justify="left", wraplength=750, font=custom_font).pack(padx=20,
+                                                                                                     pady=(0, 10))
 
+
+        Label(content_frame, text="Funktionen:", font=("Arial", 14, "bold")).pack(anchor="w", pady=(5, 0))
+        Label(content_frame,
+              text="- Graphen erstellen und bearbeiten:\n"
+                   "  - Knoten und Kanten hinzufügen oder entfernen.\n"
+                   "  - Kantengewichte festlegen.\n"
+                   "  - Knoten per Drag-and-Drop verschieben.",
+              justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
+
+        Label(content_frame,
+              text="- Pfadsuchalgorithmen visualisieren:\n"
+                   "  - Dijkstra-Algorithmus mit Priority Queue.\n"
+                   "  - Dijkstra-Algorithmus mit Liste.\n"
+                   "  - Dijkstra-Algorithmus mit Priority Queue und Lazy Deletion.",
+              justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
+
+        Label(content_frame,
+              text="- Graphen speichern und laden:\n"
+                   "  - Graphen in einer Datei speichern.\n"
+                   "  - Gespeicherte Graphen zur weiteren Bearbeitung laden.",
+              justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 10))
+
+
+
+        def _on_mousewheel(event):
+            canvas.yview_scroll(-1 * (event.delta // 120), "units")
+
+        def _bind_mousewheel(event):
+            canvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+        def _unbind_mousewheel(event):
+            canvas.unbind_all("<MouseWheel>")
+
+
+        canvas.bind("<Enter>", _bind_mousewheel)
+        canvas.bind("<Leave>", _unbind_mousewheel)
+
+
+        def on_resize(event):
+            canvas_width = event.width
+            canvas.itemconfig(canvas_frame_window, width=canvas_width)
+            update_wraplength()
+            update_scrollregion()
+
+        canvas_frame_window = canvas.create_window((0, 0), window=content_frame, anchor="nw",
+                                                   width=canvas.winfo_width())
+        canvas.bind("<Configure>", on_resize)
     def _add_node_management_tab(self, notebook, custom_font):
 
         node_tab = ttk.Frame(notebook)
@@ -539,16 +622,109 @@ class Canvas_Frame(Frame):
         canvas.bind("<Configure>", on_resize)
 
     def _add_button_explanations_tab(self, notebook, custom_font):
-
         button_tab = ttk.Frame(notebook)
         notebook.add(button_tab, text="Schaltflächen Erklärungen")
 
-        button_explanation_text = """
-        Wichtige Schaltflächen:
-        - todo
-        """
-        Label(button_tab, text=button_explanation_text, justify="left", wraplength=750, font=custom_font).pack(padx=20,
-                                                                                                               pady=20)
+        canvas_frame = Frame(button_tab)
+        canvas_frame.pack(fill="both", expand=True)
+
+        canvas = Canvas(canvas_frame)
+        scrollbar = Scrollbar(canvas_frame, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        scrollbar.pack(side="right", fill="y")
+        canvas.pack(side="left", fill="both", expand=True)
+
+        content_frame = Frame(canvas)
+        canvas.create_window((0, 0), window=content_frame, anchor="nw")
+
+        def update_scrollregion(event=None):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+        content_frame.bind("<Configure>", update_scrollregion)
+
+        def update_wraplength(event=None):
+            new_width = content_frame.winfo_width() - 40
+            for label in content_frame.winfo_children():
+                if isinstance(label, Label):
+                    label.config(wraplength=new_width)
+            update_scrollregion()
+
+        content_frame.bind("<Configure>", update_wraplength)
+
+        Label(content_frame, text="Schaltflächen und ihre Funktionen:", font=("Arial", 14, "bold")).pack(anchor="w",
+                                                                                                         pady=(10, 0))
+
+
+        prev_button = Button(content_frame, image=self.prev_icon)
+        prev_button.pack(anchor="w", pady=(5, 0))
+        Label(content_frame,
+              text="- Geht einen Schritt im Algorithmus zurück.",
+              justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
+
+
+        next_button = Button(content_frame, image=self.next_icon)
+        next_button.pack(anchor="w", pady=(5, 0))
+        Label(content_frame,
+              text="- Geht einen Schritt im Algorithmus vorwärts.",
+              justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
+
+
+        pause_button = Button(content_frame, image=self.pause_icon)
+        pause_button.pack(anchor="w", pady=(5, 0))
+        Label(content_frame,
+              text="- Pausiert die Ausführung des Algorithmus.",
+              justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
+
+
+        fast_forward_button = Button(content_frame, image=self.fast_forward_icon)
+        fast_forward_button.pack(anchor="w", pady=(5, 0))
+        Label(content_frame,
+              text="- Startet die automatische Wiedergabe des Algorithmus.",
+              justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
+
+
+        start_button = Button(content_frame, image=self.start_icon)
+        start_button.pack(anchor="w", pady=(5, 0))
+        Label(content_frame,
+              text="- Startet den ausgewählten Algorithmus.",
+              justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
+
+
+        shortest_paths_button = Button(content_frame, image=self.shortest_paths_icon)
+        shortest_paths_button.pack(anchor="w", pady=(5, 0))
+        Label(content_frame,
+              text="- Zeigt die kürzesten Pfade an (verfügbar nach Abschluss des Algorithmus).",
+              justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
+
+
+        cancel_button = Button(content_frame, image=self.cancel_icon)
+        cancel_button.pack(anchor="w", pady=(5, 0))
+        Label(content_frame,
+              text="- Bricht die aktuelle Ausführung des Algorithmus ab.",
+              justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 15))
+
+        def _on_mousewheel(event):
+            canvas.yview_scroll(-1 * (event.delta // 120), "units")
+
+        def _bind_mousewheel(event):
+            canvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+        def _unbind_mousewheel(event):
+            canvas.unbind_all("<MouseWheel>")
+
+        canvas.bind("<Enter>", _bind_mousewheel)
+        canvas.bind("<Leave>", _unbind_mousewheel)
+
+        def on_resize(event):
+            canvas_width = event.width
+            canvas.itemconfig(canvas_frame_window, width=canvas_width)
+            update_wraplength()
+            update_scrollregion()
+
+        canvas_frame_window = canvas.create_window((0, 0), window=content_frame, anchor="nw",
+                                                   width=canvas.winfo_width())
+        canvas.bind("<Configure>", on_resize)
 
     def _add_other_features_tab(self, notebook, custom_font):
 
