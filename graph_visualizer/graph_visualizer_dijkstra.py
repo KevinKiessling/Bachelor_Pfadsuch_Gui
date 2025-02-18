@@ -265,15 +265,15 @@ class Graph_Visualizer_Dijkstra:
                         edge_color = "light grey"
                     elif step["step_type"] == "Compare Distance":
                         edge_color = "light grey"
-                        if node == current_node and neighbor == neighbor_list:
+                        if node == current_node and neighbor in neighbor_list:
                             edge_color = self.parent.color_edge_highlight
                     elif step["step_type"] == "Update Distance":
                         edge_color = "light grey"
-                        if node == current_node and neighbor == neighbor_list:
+                        if node == current_node and neighbor in neighbor_list:
                             edge_color = self.parent.color_edge_highlight
                     elif step["step_type"] == "Highlight Edge":
                         edge_color = "light grey"
-                        if node == current_node and neighbor == neighbor_list:
+                        if node == current_node and neighbor in neighbor_list:
                             edge_color = self.parent.color_edge_highlight
                     elif step["step_type"] == "Begin Inner Loop":
                         if (node, neighbor) in visited_edges and node == current_node:
@@ -286,7 +286,7 @@ class Graph_Visualizer_Dijkstra:
                             edge_color = "light grey"
                     elif step["step_type"] == "Skip Visited Neighbor":
                         edge_color = "light grey"
-                        if node == current_node and neighbor == neighbor_list:
+                        if node == current_node and neighbor in neighbor_list:
                             edge_color = self.parent.color_edge_highlight
                     elif step["step_type"] == "Find Position in Heap":
                         edge_color = "light grey"

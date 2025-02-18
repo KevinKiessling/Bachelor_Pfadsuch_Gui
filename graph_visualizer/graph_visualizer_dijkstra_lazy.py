@@ -312,7 +312,7 @@ class Graph_Visualizer_Dijkstra_lazy:
                             edge_color = "light grey"
                     elif step["step_type"] == "Skip Visited Neighbor":
                         edge_color = "light grey"
-                        if node == current_node and neighbor == neighbor_list:
+                        if node == current_node and neighbor in neighbor_list:
                             edge_color = self.parent.color_edge_highlight
 
                 if neighbor in self.node_positions:
