@@ -99,7 +99,7 @@ class Canvas_Frame(Frame):
         self.bind("<Down>", self.pause_fast_forward)
         self.bind("<Return>", self.start_alg)
         self.bind("<Control-z>", self.undo_last_operation)
-
+        self.bind("<Escape>", self.cancel_bind_method)
         # Menü Bar oben
         self.menu_bar = Menu(parent)
         parent.config(menu=self.menu_bar)
@@ -152,7 +152,9 @@ class Canvas_Frame(Frame):
         # Rebind all canvas events
         for event, callback in self.canvas_bindings:
             self.canvas.bind(event, callback)
-
+    def cancel_bind_method(self, event):
+        self.parent.reset()
+        self.close_shortest_path_window()
     def cancel_button_method(self):
         self.parent.reset()
         self.close_shortest_path_window()
