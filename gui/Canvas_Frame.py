@@ -52,7 +52,7 @@ class Canvas_Frame(Frame):
         self.next_button = Button(self.button_frame, image=self.next_icon, command=parent.next_step)
         self.next_button.grid(row=0, column=2, padx=5)
 
-        self.pause_button = Button(self.button_frame, image=self.pause_icon, command=parent.pause)
+        self.pause_button = Button(self.button_frame, image=self.pause_icon, command=parent.pause, state=DISABLED)
         self.pause_button.grid(row=0, column=3, padx=5)
 
         self.fast_forward_button = Button(self.button_frame, image=self.fast_forward_icon, command=self.go_forward_button)
@@ -155,7 +155,6 @@ class Canvas_Frame(Frame):
 
     def cancel_button_method(self):
         self.parent.reset()
-
         self.close_shortest_path_window()
     def close_shortest_path_window(self):
         if hasattr(self, "shortest_paths_window") and self.shortest_paths_window is not None:

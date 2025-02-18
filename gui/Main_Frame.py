@@ -250,6 +250,10 @@ class PfadsuchApp(Tk):
                 print("no algorithm loaded")
             return
         self.fast_forward_paused = True
+        if not self.fast_forward_paused:
+            self.gui_frame.pause_button.config(state=NORMAL)
+        else:
+            self.gui_frame.pause_button.config(state=DISABLED)
         if self.debug:
             print("fast forward stopped bei schritt : ", self.current_step)
 
@@ -372,6 +376,10 @@ class PfadsuchApp(Tk):
     # Updated die Gui
     def update_gui(self):
 
+        if not self.fast_forward_paused:
+            self.gui_frame.pause_button.config(state=NORMAL)
+        else:
+            self.gui_frame.pause_button.config(state=DISABLED)
         self.graph_draw_lazy = Graph_Visualizer_Dijkstra_lazy(self.gui_frame, self.node_positions, self.graph,  self.start_node, self)
         self.graph_draw_normal = Graph_Visualizer_Dijkstra(self.gui_frame, self.node_positions, self.graph,  self.start_node, self)
         self.graph_draw_list = Graph_Visualizer_Dijkstra_List(self.gui_frame, self.node_positions, self.graph, self.start_node, self)
@@ -390,7 +398,7 @@ class PfadsuchApp(Tk):
             if self.steps_finished_algorithm:
                 self.gui_frame.cancel_button.config(state=NORMAL)
                 self.code_frame.highlight_step("Starting Algorithm")
-                print("init")
+
                 if self.selected_algorithm == "Dijkstra_PQ_lazy":
                     self.code_frame.set_step("Starte Dijkstra mit Priority Queue (mit Lazy Deletion)")
                 if self.selected_algorithm == "Dijkstra_PQ":
@@ -398,8 +406,8 @@ class PfadsuchApp(Tk):
                 if self.selected_algorithm == "Dijkstra_List":
                     self.code_frame.set_step("Starte Dijkstra mit Liste")
             return
-        if self.steps_finished_algorithm:
-            self.gui_frame.cancel_button.config(state=NORMAL)
+
+        self.gui_frame.cancel_button.config(state=NORMAL)
         self.gui_frame.prev_button.config(state=NORMAL)
         step = self.steps_finished_algorithm[self.current_step]
         current_node = step["current_node"]
