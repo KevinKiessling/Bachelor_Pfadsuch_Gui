@@ -68,7 +68,7 @@ class Canvas_Frame(Frame):
         )
         self.shortest_paths_button.grid(row=0, column=6, padx=5)
         self.cancel_button = Button(self.button_frame, image=self.cancel_icon,
-                                          command=self.cancel_button_method)
+                                          command=self.cancel_button_method, state=DISABLED)
         self.cancel_button.grid(row=0, column=7, padx=5)
 
         self.canvas_frame = Frame(self, bd=2, relief="solid")
@@ -79,17 +79,6 @@ class Canvas_Frame(Frame):
 
         self.canvas_frame.grid_rowconfigure(0, weight=1)
         self.canvas_frame.grid_columnconfigure(0, weight=1)
-
-
-        #self.canvas.bind("<Button-1>", self.add_node)
-        '''self.canvas.bind("<Button-3>", self.add_edge)
-        self.canvas.bind("<Button-2>", self.remove_clicked_element)
-        self.canvas.bind("<Control-Button-1>", self.remove_clicked_element)
-
-        self.canvas.bind("<ButtonPress-1>", self.on_press)
-        self.canvas.bind("<B1-Motion>", self.on_drag)
-        self.canvas.bind("<ButtonRelease-1>", self.on_release)
-        self.canvas.bind("<Double-1>", self.on_double_click)'''
 
         self.canvas_bindings = [
             ("<Button-3>", self.add_edge),
@@ -509,7 +498,7 @@ class Canvas_Frame(Frame):
 
             node_canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
                                     fill="lightblue")
-            node_canvas.create_text(x, y - 12, text="A", font=("Arial", 14, "bold"))
+            node_canvas.create_text(x, y - 12, text="1", font=("Arial", 14, "bold"))
             node_canvas.create_text(x, y + 12, text="5", font=("Arial", 12))
             node_canvas.create_text(x + node_radius + 60, y - 12, text="Knoten Name", anchor="w", font=("Arial", 10))
             node_canvas.create_text(x + node_radius + 60, y + 12, text="Distanz vom Startknoten", anchor="w",
@@ -570,7 +559,7 @@ class Canvas_Frame(Frame):
             edge_canvas.create_text(middle_x, middle_y, text="7", fill="black", font=("Arial", 12))
 
 
-            for x, label, distance in [(x1, "A", "5"), (x2, "B", "∞")]:
+            for x, label, distance in [(x1, "1", "5"), (x2, "2", "∞")]:
                 edge_canvas.create_oval(x - node_radius, y - node_radius, x + node_radius, y + node_radius,
                                         fill="lightblue")
                 edge_canvas.create_text(x, y - 12, text=label, font=("Arial", 14, "bold"))

@@ -377,6 +377,7 @@ class PfadsuchApp(Tk):
         self.graph_draw_list = Graph_Visualizer_Dijkstra_List(self.gui_frame, self.node_positions, self.graph, self.start_node, self)
         self.gui_frame.canvas.delete("all")
         self.gui_frame.prev_button.config(state=DISABLED)
+        self.gui_frame.cancel_button.config(state=DISABLED)
         self.gui_frame.shortest_paths_button.config(state=DISABLED)
         if self.current_step == -1:
             self.code_frame.set_step("Warte auf Starten eines Algorithmus")
@@ -387,6 +388,7 @@ class PfadsuchApp(Tk):
             if self.selected_algorithm == "Dijkstra_List":
                 self.graph_draw_list.draw_graph_dijkstra_list(None, None, {node: None for node in self.graph}, set(), set())
             if self.steps_finished_algorithm:
+                self.gui_frame.cancel_button.config(state=NORMAL)
                 self.code_frame.highlight_step("Starting Algorithm")
                 print("init")
                 if self.selected_algorithm == "Dijkstra_PQ_lazy":
@@ -396,7 +398,8 @@ class PfadsuchApp(Tk):
                 if self.selected_algorithm == "Dijkstra_List":
                     self.code_frame.set_step("Starte Dijkstra mit Liste")
             return
-
+        if self.steps_finished_algorithm:
+            self.gui_frame.cancel_button.config(state=NORMAL)
         self.gui_frame.prev_button.config(state=NORMAL)
         step = self.steps_finished_algorithm[self.current_step]
         current_node = step["current_node"]
