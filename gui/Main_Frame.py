@@ -185,6 +185,7 @@ class PfadsuchApp(Tk):
         self.gui_frame.disable_canvas_interactions()
         self.gui_frame.shortest_paths_button.config(state=DISABLED)
         self.gui_frame.prev_button.config(state=DISABLED)
+        self.gui_frame.cancel_button.config(state=NORMAL)
         self.test_dijkstra_algorithm(self.start_node)
 
 
