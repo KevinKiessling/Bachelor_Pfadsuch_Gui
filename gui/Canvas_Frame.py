@@ -1418,56 +1418,64 @@ class Canvas_Frame(Frame):
         try:
             with open(filepath, 'r') as file:
                 data = json.load(file)
+
             if "graph" in data and "node_position" in data:
-                self.parent.graph = data["graph"]
-                self.parent.node_positions = {node: tuple(pos) for node, pos in data["node_position"].items()}
-                if self.parent.debug:
-                    print(f" Graph von {filepath} wurde erfolgreich importiert")
-                self.parent.scale_loaded_graph()
-                self.update_avai_ids()
-                self.operation_history = []
-                self.parent.reset()
+                graph = data["graph"]
+                node_positions = data["node_position"]
+
+
+                def is_valid_node_id(node_id):
+                    return node_id.isdigit() and int(node_id) > 0
+
+                valid_graph = all(
+                    is_valid_node_id(node) and
+                    all(is_valid_node_id(neighbor) and isinstance(weight, (int, float))
+                        for neighbor, weight in neighbors.items())
+                    for node, neighbors in graph.items()
+                )
+
+                valid_positions = all(
+                    is_valid_node_id(node) and isinstance(pos, list) and len(pos) == 2
+                    and all(isinstance(coord, (int, float)) for coord in pos)
+                    for node, pos in node_positions.items()
+                )
+
+                if valid_graph and valid_positions:
+                    self.parent.graph = graph
+                    self.parent.node_positions = {node: tuple(pos) for node, pos in node_positions.items()}
+                    if self.parent.debug:
+                        print(f"Graph von {filepath} wurde erfolgreich importiert")
+                    self.parent.scale_loaded_graph()
+                    self.update_avai_ids()
+                    self.operation_history = []
+                    self.parent.reset()
+                else:
+                    print("Fehlerhafte Input-Datei: Knoten-IDs müssen numerisch sein und Positionen korrekt angegeben.")
             else:
-                print("Fehlerhafte Input datei, Graph oder Node_Position nicht gefunden")
+                print("Fehlerhafte Input-Datei: 'graph' oder 'node_position' nicht gefunden")
         except Exception as e:
-            print(f"Importing error : {e}")
+            print(f"Importing error: {e}")
 
     def generate_node_ids(self):
-
-        ids = []
-        length = 1
-        while len(ids) < 100:
-            for i in range(26**length):
-                name = ""
-                current = i
-                for _ in range(length):
-                    name = chr(ord('A') + (current % 26)) + name
-                    current //= 26
-                ids.append(name)
-            length += 1
-        return ids[:100]
+        return [str(i) for i in range(1, 1000)]
 
     def reset_node_ids(self):
-
         self.node_flags = {node_id: True for node_id in self.generate_node_ids()}
 
     def get_next_id(self):
-
-        for node_id, is_available in sorted(self.node_flags.items(), key=lambda x: (len(x[0]), x[0])):
+        for node_id, is_available in sorted(self.node_flags.items(), key=lambda x: int(x[0])):
             if is_available:
                 self.node_flags[node_id] = False
                 return node_id
         raise ValueError("Keine verfügbaren Knoten-IDs mehr.")
 
     def set_node_availability(self, node_id, available):
-
         if node_id in self.node_flags:
             self.node_flags[node_id] = available
         else:
             raise ValueError(f"Node ID {node_id} does not exist.")
 
     def update_avai_ids(self):
-
         imported_nodes = self.parent.node_positions.keys()
         for node_id in self.node_flags:
             self.node_flags[node_id] = node_id not in imported_nodes
