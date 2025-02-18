@@ -255,7 +255,7 @@ class Graph_Visualizer_Dijkstra_List:
             self.gui_frame.canvas.create_text(
                 x, y - vertical_offset,
                 text=node,
-                fill="black",
+                fill=dis_color,
                 font=("Arial", font_size, "bold"),
                 anchor="center"
             )
@@ -263,7 +263,7 @@ class Graph_Visualizer_Dijkstra_List:
             self.gui_frame.canvas.create_text(
                 x, y + vertical_offset,
                 text=distance_text,
-                fill="#666666",
+                fill=dis_color,
                 font=("Arial", distance_font_size),
                 anchor="center"
             )

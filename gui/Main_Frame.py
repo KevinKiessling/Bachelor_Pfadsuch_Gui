@@ -413,6 +413,10 @@ class PfadsuchApp(Tk):
         step = self.steps_finished_algorithm[self.current_step]
         current_node = step["current_node"]
         neighbor = step["neighbor"]
+        if not isinstance(neighbor, list):
+            neighbor = [neighbor]
+
+        #print(f"neighbor: {neighbor} (Type: {type(neighbor)})")
         distances = step["distances"].copy()
 
         #Lade entweder eine Priority Queue oder eine Liste, je nach algorithmus.
