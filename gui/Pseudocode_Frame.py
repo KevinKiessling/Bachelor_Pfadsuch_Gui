@@ -184,14 +184,29 @@ class Pseudocode_Frame(Frame):
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
 
             if step["step_type"] == "Push Start Node to Priority Queue":
-                dis = step["distances"].get(step["current_node"])
-                node = step["current_node"]
 
-                self.draw_priority_queue(pq, node, dis)
+                '''dis = step["distances"].get(step["current_node"])
+                node = step["current_node"]
+                self.draw_priority_queue(pq, node, dis)'''
+                tmp_node = step["current_node"]
+                tmp_pq = self.parent.steps_finished_algorithm[self.parent.current_step - 1]["priority_queue"]
+
+                distance = step["distances"][tmp_node]
+                tmp_tuple = (distance, tmp_node)
+
+                self.insert_animation(tmp_pq, tmp_tuple)
             elif step["step_type"] == "Push to Heap":
-                dis = step["distances"].get(step["neighbor"])
+                '''dis = step["distances"].get(step["neighbor"])
                 node = step["neighbor"]
-                self.draw_priority_queue(pq, node, dis)
+                self.draw_priority_queue(pq, node, dis)'''
+                tmp_node = step["neighbor"]
+                tmp_pq = self.parent.steps_finished_algorithm[self.parent.current_step - 1]["priority_queue"]
+
+                distance = step["distances"][tmp_node]
+                tmp_tuple = (distance, tmp_node)
+                print(tmp_tuple)
+                print(tmp_pq)
+                self.insert_animation(tmp_pq, tmp_tuple)
             elif step["step_type"] == "Find Position in Heap":
                 dis = step["distances"].get(step["neighbor"])
                 node = step["neighbor"]
@@ -915,8 +930,7 @@ class Pseudocode_Frame(Frame):
         if self.parent.selected_algorithm == "Dijkstra_PQ_lazy" or self.parent.selected_algorithm == "Dijkstra_PQ":
             if self.parent.steps_finished_algorithm:
                 step = self.parent.steps_finished_algorithm[self.parent.current_step]
-                if not step["step_type"] =="Heap Pop":
-                    #print("trigger")
+                if step["step_type"] not in {"Heap Pop", "Push to Heap"}:
                     self.draw_priority_queue(self.priority_queue)
         else:
             if self.parent.current_step == -1:
@@ -1082,6 +1096,75 @@ class Pseudocode_Frame(Frame):
             self.animation_step = 3
             self.stop_animation()
 
+    def insert_animation(self, priority_queue, new_element):
+        self.stop_animation()
+        self.animation_step = 0
+        self.animation_active = True
+
+        self.temp_queue = priority_queue.copy()
+        self.new_element = new_element
+        self.run_insert_step()
+
+    def run_insert_step(self):
+        if not self.animation_active:
+            return
+
+        if self.animation_step == 0:
+
+            self.draw_priority_queue(self.temp_queue)
+            self.priority_queue_label.config(text="Vor Einfügen:")
+            self.animation_step += 1
+            self.after_id = self.canvas.after(1000, self.run_insert_step)
+
+        elif self.animation_step == 1:
+
+            self.temp_queue.append(self.new_element)
+            self.draw_priority_queue(self.temp_queue, highlight_node=self.new_element[1],
+                                     highlight_distance=self.new_element[0])
+            self.priority_queue_label.config(text="Neues Element wird eingefügt")
+            self.animation_step += 1
+            self.after_id = self.canvas.after(1000, self.run_insert_step)
+
+        elif self.animation_step == 2:
+            self.priority_queue_label.config(text="Heapify_up():")
+            self.current_heapify_index = len(self.temp_queue) - 1
+            self.heapify_up_step()
+
+    def heapify_up_step(self):
+        if not self.animation_active:
+            return
+
+        index = self.current_heapify_index
+
+        if index == 0:
+            self.priority_queue_label.config(text="Heapify_up() abgeschlossen")
+            self.stop_animation()
+            return
+
+        parent = (index - 1) // 2
+
+        self.draw_priority_queue(
+            self.temp_queue,
+            highlight_node=self.temp_queue[index][1],
+            highlight_distance=self.temp_queue[index][0]
+        )
+
+        if self.temp_queue[index] < self.temp_queue[parent]:
+
+            self.temp_queue[index], self.temp_queue[parent] = self.temp_queue[parent], self.temp_queue[index]
+
+
+            self.draw_priority_queue(
+                self.temp_queue,
+                highlight_node=self.temp_queue[parent][1],
+                highlight_distance=self.temp_queue[parent][0]
+            )
+
+            self.current_heapify_index = parent
+            self.after_id = self.canvas.after(1000, self.heapify_up_step)
+        else:
+            self.priority_queue_label.config(text="Heapify_up() abgeschlossen")
+            self.stop_animation()
     def setup_frames(self):
         self.canvas_frame.pack_propagate(False)
         self.canvas_frame.config(width=800, height=400)
