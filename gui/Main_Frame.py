@@ -376,7 +376,12 @@ class PfadsuchApp(Tk):
 
     # Updated die Gui
     def update_gui(self):
+        self.code_frame.stop_animation()
+        if self.selected_algorithm in {"Dijkstra_PQ_lazy", "Dijkstra_PQ"}:
+            self.code_frame.priority_queue_label.config(text="Heap")
 
+        elif self.selected_algorithm == "Dijkstra_List":
+            self.code_frame.priority_queue_label.config(text="Liste")
         if not self.fast_forward_paused:
             self.gui_frame.pause_button.config(state=NORMAL)
         else:
@@ -424,7 +429,6 @@ class PfadsuchApp(Tk):
             priority_queue = step["priority_queue"].copy()
         else:
             priority_queue = step["list"].copy()
-
         self.code_frame.update_distances(distances)
         visited = step["visited"].copy()
         visited_edges = step["visited_edges"].copy()

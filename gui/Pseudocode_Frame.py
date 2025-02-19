@@ -77,11 +77,6 @@ class Pseudocode_Frame(Frame):
         self.main_frame.grid(row=5, column=0, sticky="nsew", padx=10)
 
 
-        ''' Remove the switch button for now and just have the Heap/list on a canvas
-        self.toggle_button = Button(self.main_frame, text="Switch to Table", command=self.toggle_view)
-        #self.toggle_button.pack(pady=10)'''
-
-
         self.canvas_frame = Frame(self.main_frame, bd=1, relief="solid")
         self.canvas = Canvas(self.canvas_frame, bg="white")
         self.canvas.pack(expand=True, fill="both")
@@ -111,6 +106,10 @@ class Pseudocode_Frame(Frame):
 
         self.grid_columnconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=0)
+        self.animation_step = 0
+        self.animation_active = False
+        self.after_id = None
+
 
     def update_font_size(self):
         self.pseudocode_display.config(font=("Courier New", self.parent.font_size))
@@ -197,12 +196,16 @@ class Pseudocode_Frame(Frame):
                 dis = step["distances"].get(step["neighbor"])
                 node = step["neighbor"]
                 self.draw_priority_queue(pq, node, dis)
+            elif step["step_type"] == "Heap Pop":
+                print("animation triigger")
+                help_step = self.parent.steps_finished_algorithm[self.parent.current_step-1]
+
+                self.pop_min_animation(help_step["priority_queue"])
             else:
                 self.draw_priority_queue(pq)
         else:
             self.draw_priority_queue(pq)
-        '''Remove Table for now
-        self.populate_table(pq)'''
+
         self.priority_queue = pq.copy()
 
 
@@ -909,7 +912,11 @@ class Pseudocode_Frame(Frame):
     def on_resize(self, event=None):
 
         if self.parent.selected_algorithm == "Dijkstra_PQ_lazy" or self.parent.selected_algorithm == "Dijkstra_PQ":
-            self.draw_priority_queue(self.priority_queue)
+            if self.parent.steps_finished_algorithm:
+                step = self.parent.steps_finished_algorithm[self.parent.current_step]
+                if not step["step_type"] =="Heap Pop":
+                    #print("trigger")
+                    self.draw_priority_queue(self.priority_queue)
         else:
             if self.parent.current_step == -1:
                 return
@@ -938,7 +945,6 @@ class Pseudocode_Frame(Frame):
         node_size_x = canvas_width / (nodes_on_widest_level * 2)
         node_size_y = canvas_height / (num_levels * 3)
 
-
         node_size = min(min(node_size_x, node_size_y), 35)
 
         self.node_size_pq = node_size
@@ -952,7 +958,9 @@ class Pseudocode_Frame(Frame):
             self.canvas.create_oval(
                 x - node_size, y - node_size, x + node_size, y + node_size, fill=color
             )
-            self.canvas.create_text(x, y, text=text, font=("Arial", self.font_size_pq), fill="black")
+            # Only draw the text if the node is not "empty"
+            if text != "empty":
+                self.canvas.create_text(x, y, text=text, font=("Arial", self.font_size_pq), fill="black")
 
         def draw_tree(index, x, y, dx):
             if index >= len(priority_queue):
@@ -964,7 +972,11 @@ class Pseudocode_Frame(Frame):
                     and (highlight_distance is not None and node[0] == highlight_distance)
             )
 
-            draw_node(x, y, f"{node[1]}, {node[0]}", is_highlighted)
+            # If the node is empty, display an empty label without text
+            if node[1] is None:
+                draw_node(x, y, "empty", is_highlighted)
+            else:
+                draw_node(x, y, f"{node[1]}, {node[0]}", is_highlighted)
 
             left_child_idx = 2 * index + 1
             right_child_idx = 2 * index + 2
@@ -986,10 +998,91 @@ class Pseudocode_Frame(Frame):
 
         draw_tree(0, root_x, root_y, initial_dx)
 
+    def pop_min_animation(self, priority_queue):
+
+        self.stop_animation()
+        self.animation_step = 0
+        self.animation_active = True
+        self.temp_queue = priority_queue.copy()
+        self.current_heapify_index = 0
+        self.run_pop_min_step()
+    def stop_animation(self):
+
+        self.animation_active = False
+        if self.after_id is not None:
+            self.canvas.after_cancel(self.after_id)
+            self.after_id = None
+
+    def run_pop_min_step(self):
+        if not self.animation_active:
+            return
+
+        if self.animation_step == 0:
+            root_node = self.temp_queue[0]
+            self.draw_priority_queue(self.temp_queue, highlight_node=root_node[1], highlight_distance=root_node[0])
+            self.priority_queue_label.config(text="H.extractMin():")
+            self.animation_step += 1
+            self.after_id = self.canvas.after(1000, self.run_pop_min_step)
+
+        elif self.animation_step == 1:
+            if len(self.temp_queue) == 1:
+                self.temp_queue.pop()
+                self.draw_priority_queue(self.temp_queue)
+                self.priority_queue_label.config(text="H.extractMin():")
+                self.stop_animation()
+            else:
+                self.temp_queue[0] = ("empty", None)
+                self.draw_priority_queue(self.temp_queue)
+                self.priority_queue_label.config(text="Lösche Wurzel")
+                self.animation_step += 1
+                self.after_id = self.canvas.after(1000, self.run_pop_min_step)
+
+        elif self.animation_step == 2:
+            self.temp_queue[0] = self.temp_queue[-1]
+            self.temp_queue.pop()
+            self.draw_priority_queue(self.temp_queue)
+            self.priority_queue_label.config(text="Letztes Element wird neue Wurzel")
+            self.animation_step += 1
+            self.after_id = self.canvas.after(1000, self.run_pop_min_step)
+
+        elif self.animation_step == 3:
+            self.priority_queue_label.config(text="Heapify_down():")
+            self.heapify_down_step()
+
+    def heapify_down_step(self):
+        if not self.animation_active:
+            return
+
+        index = self.current_heapify_index
+        n = len(self.temp_queue)
+
+        left = 2 * index + 1
+        right = 2 * index + 2
+        smallest = index
+
+        if left < n and self.temp_queue[left] < self.temp_queue[smallest]:
+            smallest = left
+
+        if right < n and self.temp_queue[right] < self.temp_queue[smallest]:
+            smallest = right
+
+        if smallest != index:
+            self.temp_queue[index], self.temp_queue[smallest] = self.temp_queue[smallest], self.temp_queue[index]
+            self.draw_priority_queue(
+                self.temp_queue,
+                highlight_node=self.temp_queue[smallest][1],
+                highlight_distance=self.temp_queue[smallest][0]
+            )
+            self.priority_queue_label.config(text="Heapify_down():")
+            self.current_heapify_index = smallest
+            self.after_id = self.canvas.after(1000, self.heapify_down_step)
+        else:
+            self.priority_queue_label.config(text="Heapify_down() abgeschlossen")
+            self.animation_step = 3
+            self.stop_animation()
+
     def setup_frames(self):
         self.canvas_frame.pack_propagate(False)
-        #self.table_frame.pack_propagate(False)
-        # Set the width and height for the frames
         self.canvas_frame.config(width=800, height=400)
-        #self.table_frame.config(width=800, height=400)
+
 
