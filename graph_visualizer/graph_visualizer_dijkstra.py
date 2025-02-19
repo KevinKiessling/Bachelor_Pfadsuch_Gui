@@ -393,8 +393,7 @@ class Graph_Visualizer_Dijkstra:
                 current_node = step.get("current_node")
                 visited_nb = step.get("visited_edges")
                 if (node, neighbor) in visited_nb and node == current_node:
-                    # visited edges
-                    # weight_color = "light green"
+
                     weight_color = "light grey"
                 elif node == current_node:
                     weight_color = self.parent.color_edge_highlight
@@ -403,11 +402,9 @@ class Graph_Visualizer_Dijkstra:
             elif step["step_type"] == "Skip Visited Neighbor":
                 current_node = step.get("current_node")
                 visited_nb = step.get("visited_edges")
-                if (node, neighbor) in visited_nb and node == current_node:
-                    # visited edges
-                    # weight_color = "light green"
-                    weight_color = "light grey"
-                elif node == current_node:
+                neigh = step.get("neighbor")
+
+                if node == current_node and neighbor == neigh:
                     weight_color = self.parent.color_edge_highlight
                 else:
                     weight_color = "light grey"

@@ -153,6 +153,7 @@ class Dijkstra_Priority_Queue:
                 )
 
                 if visited[neighbor]:
+                    visited_edges.add((current_node, neighbor))
                     self.save_state(
                         step_type="Skip Visited Neighbor",
                         current_node=current_node,
