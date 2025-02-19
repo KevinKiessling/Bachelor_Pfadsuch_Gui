@@ -198,9 +198,11 @@ class Pseudocode_Frame(Frame):
                 self.draw_priority_queue(pq, node, dis)
             elif step["step_type"] == "Heap Pop":
                 print("animation triigger")
-                help_step = self.parent.steps_finished_algorithm[self.parent.current_step-1]
-
-                self.pop_min_animation(help_step["priority_queue"])
+                if self.parent.steps_finished_algorithm and self.parent.current_step > 0:
+                    help_step = self.parent.steps_finished_algorithm[self.parent.current_step - 1]
+                    self.pop_min_animation(help_step["priority_queue"])
+                else:
+                    print("No steps available or invalid current_step.")
             else:
                 self.draw_priority_queue(pq)
         else:
@@ -880,7 +882,6 @@ class Pseudocode_Frame(Frame):
                 self.highlight_specific_ranges([("12.15", "12.32")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("12.12", "12.14")], colors.get("show_edge"))
                 self.highlight_specific_ranges([("7.25", "7.27"),("11.27", "11.29")], colors.get("show_edge"))
-
 
             elif step_type == "Find Min in List":
                 self.highlight_specific_ranges([("7.25", "7.27")], colors.get("show_edge")) # do

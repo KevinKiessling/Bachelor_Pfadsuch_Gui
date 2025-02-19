@@ -353,9 +353,6 @@ class PfadsuchApp(Tk):
         elif self.selected_algorithm == "Dijkstra_List":
             self.code_frame.priority_queue_label.config(text="Liste")
 
-
-
-
     #Setzt alles zurück und löscht auch den geladenen Graph
     def clear_graph(self):
         if self.debug:
