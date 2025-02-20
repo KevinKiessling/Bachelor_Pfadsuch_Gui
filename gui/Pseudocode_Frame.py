@@ -1197,10 +1197,11 @@ class Pseudocode_Frame(Frame):
             return
 
         if self.animation_step == 0:
+            target_distance = next(dist for dist, node in self.temp_queue if node == self.target_node)
             self.draw_priority_queue(
                 self.temp_queue,
                 highlight_node=self.target_node,
-                highlight_distance=None
+                highlight_distance=target_distance
             )
             self.priority_queue_label.config(text=f"Highlighting target node {self.target_node}")
             self.animation_step += 1
