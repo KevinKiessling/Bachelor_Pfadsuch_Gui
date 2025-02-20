@@ -1093,6 +1093,9 @@ class Pseudocode_Frame(Frame):
             self.after_id = self.canvas.after(1000, self.heapify_down_step)
         else:
             self.priority_queue_label.config(text="Heapify_down() abgeschlossen")
+            self.draw_priority_queue(
+                self.temp_queue
+            )
             self.animation_step = 3
             self.stop_animation()
 
@@ -1138,6 +1141,9 @@ class Pseudocode_Frame(Frame):
 
         if index == 0:
             self.priority_queue_label.config(text="Heapify_up() abgeschlossen")
+            self.draw_priority_queue(
+                self.temp_queue
+            )
             self.stop_animation()
             return
 
@@ -1164,6 +1170,9 @@ class Pseudocode_Frame(Frame):
             self.after_id = self.canvas.after(1000, self.heapify_up_step)
         else:
             self.priority_queue_label.config(text="Heapify_up() abgeschlossen")
+            self.draw_priority_queue(
+                self.temp_queue
+            )
             self.stop_animation()
     def setup_frames(self):
         self.canvas_frame.pack_propagate(False)
