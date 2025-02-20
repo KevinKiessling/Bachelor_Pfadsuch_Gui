@@ -204,15 +204,20 @@ class Pseudocode_Frame(Frame):
 
                 distance = step["distances"][tmp_node]
                 tmp_tuple = (distance, tmp_node)
-                print(tmp_tuple)
-                print(tmp_pq)
+
                 self.insert_animation(tmp_pq, tmp_tuple)
             elif step["step_type"] == "Find Position in Heap":
                 dis = step["distances"].get(step["neighbor"])
                 node = step["neighbor"]
                 self.draw_priority_queue(pq, node, dis)
+            elif step["step_type"] == "Remove from Heap":
+                print("remove animation")
+                help_step = self.parent.steps_finished_algorithm[self.parent.current_step - 1]
+                help_pq = help_step["priority_queue"]
+                help_node_to_be_removed = help_step["neighbor"]
+                self.remove_node_heapify_animation(help_pq, help_node_to_be_removed)
             elif step["step_type"] == "Heap Pop":
-                print("animation triigger")
+
                 if self.parent.steps_finished_algorithm and self.parent.current_step > 0:
                     help_step = self.parent.steps_finished_algorithm[self.parent.current_step - 1]
                     self.pop_min_animation(help_step["priority_queue"])
@@ -1174,6 +1179,109 @@ class Pseudocode_Frame(Frame):
                 self.temp_queue
             )
             self.stop_animation()
+
+    def remove_node_heapify_animation(self, priority_queue, target_node):
+        self.stop_animation()
+        self.animation_step = 0
+        self.animation_active = True
+        self.temp_queue = priority_queue.copy()
+        self.target_node = target_node
+
+        if not any(node == self.target_node for _, node in self.temp_queue):
+            return
+
+        self.run_remove_node_heapify_step()
+
+    def run_remove_node_heapify_step(self):
+        if not self.animation_active:
+            return
+
+        if self.animation_step == 0:
+            self.draw_priority_queue(
+                self.temp_queue,
+                highlight_node=self.target_node,
+                highlight_distance=None
+            )
+            self.priority_queue_label.config(text=f"Highlighting target node {self.target_node}")
+            self.animation_step += 1
+            self.after_id = self.canvas.after(1000, self.run_remove_node_heapify_step)
+
+        elif self.animation_step == 1:
+            for i, (dist, node) in enumerate(self.temp_queue):
+                if node == self.target_node:
+                    self.temp_queue[i] = ("empty", None)
+                    break
+            self.draw_priority_queue(self.temp_queue)
+            self.priority_queue_label.config(text=f"Marked {self.target_node} as 'empty'")
+            self.animation_step += 1
+            self.after_id = self.canvas.after(1000, self.run_remove_node_heapify_step)
+
+        elif self.animation_step == 2:
+            self.temp_queue[:] = [(dist, node) for dist, node in self.temp_queue if node != None]
+            self.draw_priority_queue(self.temp_queue)
+            self.priority_queue_label.config(text=f"Removed 'empty' node")
+            self.animation_step += 1
+            self.after_id = self.canvas.after(1000, self.run_remove_node_heapify_step)
+
+        elif self.animation_step == 3:
+            self.current_heapify_index = len(self.temp_queue) // 2 - 1
+            self._heapify_step()
+
+    def _heapify_step(self):
+        if not self.animation_active:
+            return
+
+        if self.current_heapify_index < 0:
+            self.priority_queue_label.config(text="Heapify completed")
+            self.draw_priority_queue(self.temp_queue)
+            self.stop_animation()
+            return
+
+        self.draw_priority_queue(
+            self.temp_queue,
+            highlight_node=self.temp_queue[self.current_heapify_index][1],
+            highlight_distance=self.temp_queue[self.current_heapify_index][0]
+        )
+        self.priority_queue_label.config(text=f"Heapify: Processing node {self.temp_queue[self.current_heapify_index]}")
+
+        self.after_id = self.canvas.after(1000, self._sift_down_step, self.current_heapify_index)
+
+    def _sift_down_step(self, index):
+        if not self.animation_active:
+            return
+
+        smallest = index
+        left = 2 * index + 1
+        right = 2 * index + 2
+
+        self.draw_priority_queue(
+            self.temp_queue,
+            highlight_node=self.temp_queue[index][1],
+            highlight_distance=self.temp_queue[index][0]
+        )
+        self.priority_queue_label.config(text=f"Comparing {self.temp_queue[index]} with children")
+
+        if left < len(self.temp_queue) and self.temp_queue[left][0] < self.temp_queue[smallest][0]:
+            smallest = left
+
+        if right < len(self.temp_queue) and self.temp_queue[right][0] < self.temp_queue[smallest][0]:
+            smallest = right
+
+        if smallest != index:
+            self.priority_queue_label.config(text=f"Swapping {self.temp_queue[index]} with {self.temp_queue[smallest]}")
+            self.temp_queue[index], self.temp_queue[smallest] = self.temp_queue[smallest], self.temp_queue[index]
+            self.draw_priority_queue(
+                self.temp_queue,
+                highlight_node=self.temp_queue[smallest][1],
+                highlight_distance=self.temp_queue[smallest][0]
+            )
+            self.after_id = self.canvas.after(1000, self._sift_down_step, smallest)
+        else:
+            self.current_heapify_index -= 1
+            self.after_id = self.canvas.after(1000, self._heapify_step)
+
+
+
     def setup_frames(self):
         self.canvas_frame.pack_propagate(False)
         self.canvas_frame.config(width=800, height=400)

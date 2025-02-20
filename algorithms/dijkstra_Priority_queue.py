@@ -291,10 +291,47 @@ class Dijkstra_Priority_Queue:
         return self.steps, self.shortest_path_edges
 
     def remove_from_priority_queue(self, priority_queue, target_node):
-        # Remove all occurrences of the node from the priority queue
+        # Remove all occurrences of the target node from the priority queue
         priority_queue[:] = [(dist, node) for dist, node in priority_queue if node != target_node]
-        heapq.heapify(priority_queue)
 
+        # Manually restore the heap property without using heapq
+        for i in range(len(priority_queue) // 2 - 1, -1, -1):
+            self._sift_down(priority_queue, i)
+
+        # Check if the resulting priority queue is still a valid min-heap
+        if not self.is_valid_min_heap(priority_queue):
+            print("The priority queue is not a valid min-heap after removal!")
+
+    def _sift_down(self, priority_queue, index):
+        smallest = index
+        left = 2 * index + 1
+        right = 2 * index + 2
+
+        if left < len(priority_queue) and priority_queue[left][0] < priority_queue[smallest][0]:
+            smallest = left
+        if right < len(priority_queue) and priority_queue[right][0] < priority_queue[smallest][0]:
+            smallest = right
+
+        if smallest != index:
+            priority_queue[index], priority_queue[smallest] = priority_queue[smallest], priority_queue[index]
+            self._sift_down(priority_queue, smallest)
+
+    def is_valid_min_heap(self, priority_queue):
+        # Check if the priority queue is a valid min-heap
+        n = len(priority_queue)
+        for i in range(n // 2):  # Only need to check non-leaf nodes
+            left = 2 * i + 1
+            right = 2 * i + 2
+
+            # Check if the left child is smaller than the parent
+            if left < n and priority_queue[i][0] > priority_queue[left][0]:
+                return False
+
+            # Check if the right child is smaller than the parent
+            if right < n and priority_queue[i][0] > priority_queue[right][0]:
+                return False
+
+        return True
 
     def save_state(self, step_type, current_node, current_distance, neighbor, edge_weight, distances, prev_nodes,
                    visited, visited_edges, priority_queue, selected_algorithm):
