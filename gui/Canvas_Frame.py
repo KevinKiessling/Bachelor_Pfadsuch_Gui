@@ -958,6 +958,7 @@ class Canvas_Frame(Frame):
 
             self.parent.save_config()
             settings_window.destroy()
+            self.parent.update_gui()
 
 
         # COLOR TAB
