@@ -252,25 +252,32 @@ class Graph_Visualizer_Dijkstra_lazy:
             if len(distance_text) >= 5:
                 distance_font_size = max(distance_font_size - (len(distance_text) - 4) * 2, 1)
 
-            vertical_offset = node_radius * 0.4
+            if self.parent.show_distance_on_nodes:
 
+                vertical_offset = node_radius * 0.4
+                self.gui_frame.canvas.create_text(
+                    x, y - vertical_offset,
+                    text=node,
+                    fill=dis_color,
+                    font=("Arial", font_size, "bold"),
+                    anchor="center"
+                )
 
-            self.gui_frame.canvas.create_text(
-                x, y - vertical_offset,
-                text=node,
-                fill=dis_color,
-                font=("Arial", font_size, "bold"),
-                anchor="center"
-            )
-
-
-            self.gui_frame.canvas.create_text(
-                x, y + vertical_offset,
-                text=distance_text,
-                fill=dis_color,
-                font=("Arial", distance_font_size),
-                anchor="center"
-            )
+                self.gui_frame.canvas.create_text(
+                    x, y + vertical_offset,
+                    text=distance_text,
+                    fill=dis_color,
+                    font=("Arial", distance_font_size),
+                    anchor="center"
+                )
+            else:
+                self.gui_frame.canvas.create_text(
+                    x, y,
+                    text=node,
+                    fill=dis_color,
+                    font=("Arial", font_size, "bold"),
+                    anchor="center"
+                )
 
         # Draw edges
         for node, edges in self.graph.items():
