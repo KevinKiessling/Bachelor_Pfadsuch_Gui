@@ -1203,7 +1203,7 @@ class Pseudocode_Frame(Frame):
                 highlight_node=self.target_node,
                 highlight_distance=target_distance
             )
-            self.priority_queue_label.config(text=f"Highlighting target node {self.target_node}")
+            self.priority_queue_label.config(text=f"Markiere Zielknoten {self.target_node}")
             self.animation_step += 1
             self.after_id = self.canvas.after(1000, self.run_remove_node_heapify_step)
 
@@ -1213,38 +1213,47 @@ class Pseudocode_Frame(Frame):
                     self.temp_queue[i] = ("empty", None)
                     break
             self.draw_priority_queue(self.temp_queue)
-            self.priority_queue_label.config(text=f"Marked {self.target_node} as 'empty'")
+            self.priority_queue_label.config(text=f"Knoten {self.target_node} als 'leer' markiert")
             self.animation_step += 1
             self.after_id = self.canvas.after(1000, self.run_remove_node_heapify_step)
 
         elif self.animation_step == 2:
-            self.temp_queue[:] = [(dist, node) for dist, node in self.temp_queue if node != None]
             self.draw_priority_queue(self.temp_queue)
-            self.priority_queue_label.config(text=f"Removed 'empty' node")
+            self.priority_queue_label.config(text=f"Heap mit 'leerem' Knoten (vor Entfernung)")
             self.animation_step += 1
             self.after_id = self.canvas.after(1000, self.run_remove_node_heapify_step)
 
         elif self.animation_step == 3:
+            self.temp_queue[:] = [(dist, node) for dist, node in self.temp_queue if node is not None]
+            self.draw_priority_queue(self.temp_queue)
+            self.priority_queue_label.config(
+                text=f"'Leerer' Knoten entfernt. Heap ist ungültig und wird neu aufgebaut...")
+            self.animation_step += 1
+            self.after_id = self.canvas.after(2000, self.run_remove_node_heapify_step)  # Longer delay here
+
+        elif self.animation_step == 4:
             self.current_heapify_index = len(self.temp_queue) // 2 - 1
-            self._heapify_step()
+            self.priority_queue_label.config(text="Starte Heapify Down...")
+            self.after_id = self.canvas.after(1000, self._heapify_step)
 
     def _heapify_step(self):
         if not self.animation_active:
             return
 
         if self.current_heapify_index < 0:
-            self.priority_queue_label.config(text="Heapify completed")
+            self.priority_queue_label.config(text="Heapify abgeschlossen. Heap ist nun gültig.")
             self.draw_priority_queue(self.temp_queue)
             self.stop_animation()
             return
 
+        current_node = self.temp_queue[self.current_heapify_index][1]
+        current_distance = self.temp_queue[self.current_heapify_index][0]
         self.draw_priority_queue(
             self.temp_queue,
-            highlight_node=self.temp_queue[self.current_heapify_index][1],
-            highlight_distance=self.temp_queue[self.current_heapify_index][0]
+            highlight_node=current_node,
+            highlight_distance=current_distance
         )
-        self.priority_queue_label.config(text=f"Heapify: Processing node {self.temp_queue[self.current_heapify_index]}")
-
+        self.priority_queue_label.config(text=f"Heapify Down: Verarbeite Knoten {current_node}")
         self.after_id = self.canvas.after(1000, self._sift_down_step, self.current_heapify_index)
 
     def _sift_down_step(self, index):
@@ -1255,21 +1264,12 @@ class Pseudocode_Frame(Frame):
         left = 2 * index + 1
         right = 2 * index + 2
 
-        self.draw_priority_queue(
-            self.temp_queue,
-            highlight_node=self.temp_queue[index][1],
-            highlight_distance=self.temp_queue[index][0]
-        )
-        self.priority_queue_label.config(text=f"Comparing {self.temp_queue[index]} with children")
-
         if left < len(self.temp_queue) and self.temp_queue[left][0] < self.temp_queue[smallest][0]:
             smallest = left
-
         if right < len(self.temp_queue) and self.temp_queue[right][0] < self.temp_queue[smallest][0]:
             smallest = right
 
         if smallest != index:
-            self.priority_queue_label.config(text=f"Swapping {self.temp_queue[index]} with {self.temp_queue[smallest]}")
             self.temp_queue[index], self.temp_queue[smallest] = self.temp_queue[smallest], self.temp_queue[index]
             self.draw_priority_queue(
                 self.temp_queue,
