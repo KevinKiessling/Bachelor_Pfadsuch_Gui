@@ -29,7 +29,6 @@ class Graph_Visualizer_Dijkstra:
         :param visited_edges: Besuchete Kanten
         :return:
         """
-        """
         self.gui_frame.canvas.delete("all")
         node_radius = self.parent.node_rad
         font_size = self.parent.font_size_node_label
