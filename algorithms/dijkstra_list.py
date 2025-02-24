@@ -178,7 +178,7 @@ class Dijkstra_List():
                 selected_algorithm="Dijkstra_List",
             )
             current_distance, current_node = distances[u], u
-            print(u)
+
             visited[u] = True
 
             self.save_state(

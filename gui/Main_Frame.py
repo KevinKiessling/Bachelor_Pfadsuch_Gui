@@ -189,7 +189,7 @@ class PfadsuchApp(Tk):
         self.gui_frame.shortest_paths_button.config(state=DISABLED)
         self.gui_frame.prev_button.config(state=DISABLED)
         self.gui_frame.cancel_button.config(state=NORMAL)
-        self.test_dijkstra_algorithm(self.start_node)
+        #self.test_dijkstra_algorithm(self.start_node)
 
 
     def set_starting_node(self, node):

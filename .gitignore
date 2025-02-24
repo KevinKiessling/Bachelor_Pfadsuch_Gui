@@ -10,8 +10,7 @@ save_files/test.py
 *.so
 
 .idea/
-tests/
-# Distribution / packaging
+
 .Python
 build/
 develop-eggs/

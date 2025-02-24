@@ -972,7 +972,7 @@ class Canvas_Frame(Frame):
         }
 
         color_tab = Frame(notebook)
-        notebook.add(color_tab, text="Farb Einstellungen")
+        notebook.add(color_tab, text="Farbeinstellungen")
 
         def choose_color(element):
             color = colorchooser.askcolor()[1]
