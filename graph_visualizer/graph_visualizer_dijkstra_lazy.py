@@ -10,6 +10,9 @@ from algorithms.dijkstra_Priority_queue import *
 import math
 
 class Graph_Visualizer_Dijkstra_lazy:
+    """
+    klassen zum zeichnen des Graphen während lazy Dijkstra.
+    """
     def __init__(self, gui_frame, node_positions, graph, start_node, parent):
         self.gui_frame = gui_frame
         self.node_positions = node_positions
