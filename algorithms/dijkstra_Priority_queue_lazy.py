@@ -2,6 +2,9 @@ import heapq
 
 
 class Dijkstra_Priority_Queue_Lazy():
+    """
+    Dijkstra Implementierung die eine Priority queue und lazy deletion nutzt.
+    """
     def __init__(self):
         super().__init__()
         self.steps = []
@@ -10,6 +13,12 @@ class Dijkstra_Priority_Queue_Lazy():
 
     #dijkstra algorithmus mit priority Queue
     def run_dijkstra_priority_queue_lazy(self, graph, startnode):
+        """
+        Berechnet den Dijkstra Algorithmus aus dem graph mit startknoten
+        :param graph: Graph
+        :param startnode: Startknoten
+        :return: Liste mit gesamtem Dijkstra- Algorithmus in einzelnen Schritten, Liste mit kürzesten Pfaden
+        """
         distances = {}
         priority_queue = []
         prev_nodes = {}
@@ -294,6 +303,21 @@ class Dijkstra_Priority_Queue_Lazy():
     #Speichert Schritt des Algorithmus
     def save_state(self, step_type, current_node, current_distance, neighbor, edge_weight, distances, prev_nodes,
                    visited, visited_edges, priority_queue, selected_algorithm):
+        """
+        speichert einen Schritt
+        :param step_type: Typ des schritts
+        :param current_node: aktueller Knoten
+        :param current_distance: aktuelle Distance
+        :param neighbor: Nachbar
+        :param edge_weight: Kantengewicht
+        :param distances: Distanzen
+        :param prev_nodes: vorgänger Knoten
+        :param visited: Besuchte Knoten
+        :param visited_edges: besuchte Kanten
+        :param priority_queue: aktuelle priority queue
+        :param selected_algorithm: gewählter Algorithmus
+        :return:
+        """
         state = {
             "selected_algorithm": selected_algorithm,
             "step_type": step_type,

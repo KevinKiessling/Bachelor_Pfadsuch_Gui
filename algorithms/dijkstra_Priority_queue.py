@@ -1,11 +1,20 @@
 import heapq
 
 class Dijkstra_Priority_Queue:
+    """
+    Dijkstra Implementierung die eine Priority Queue nutzt
+    """
     def __init__(self):
         super().__init__()
         self.steps = []
         self.shortest_path_edges = {}
     def run_dijkstra_priority_queue(self, graph, startnode):
+        """
+        Berechnet den Dijkstra Algorithmus aus dem graph mit startknoten
+        :param graph: Graph
+        :param startnode: Startknoten
+        :return: Liste mit gesamtem Dijkstra- Algorithmus in einzelnen Schritten, Liste mit kürzesten Pfaden
+        """
         distances = {}
         visited = {}
         priority_queue = []
@@ -291,18 +300,31 @@ class Dijkstra_Priority_Queue:
         return self.steps, self.shortest_path_edges
 
     def remove_from_priority_queue(self, priority_queue, target_node):
-        # Remove all occurrences of the target node from the priority queue
+        """
+        Entfernt einen Knoten aus der Priority Queue
+        :param priority_queue: priority Queue
+        :param target_node: Zu enfernender Knoten
+        :return:
+        """
+
         priority_queue[:] = [(dist, node) for dist, node in priority_queue if node != target_node]
 
-        # Manually restore the heap property without using heapq
+
         for i in range(len(priority_queue) // 2 - 1, -1, -1):
             self._sift_down(priority_queue, i)
 
-        # Check if the resulting priority queue is still a valid min-heap
+
         if not self.is_valid_min_heap(priority_queue):
             print("The priority queue is not a valid min-heap after removal!")
 
     def _sift_down(self, priority_queue, index):
+        """
+        Heapify-down von index aus
+        :param priority_queue: Priority Queue
+        :param index: aktueller Index
+        :return:
+        """
+
         smallest = index
         left = 2 * index + 1
         right = 2 * index + 2
@@ -317,13 +339,18 @@ class Dijkstra_Priority_Queue:
             self._sift_down(priority_queue, smallest)
 
     def is_valid_min_heap(self, priority_queue):
-        # Check if the priority queue is a valid min-heap
+        """
+        Prüft ob PQ ein valider min heap ist
+        :param priority_queue: zu prüfende Queue
+        :return:
+        """
+
         n = len(priority_queue)
-        for i in range(n // 2):  # Only need to check non-leaf nodes
+        for i in range(n // 2):
             left = 2 * i + 1
             right = 2 * i + 2
 
-            # Check if the left child is smaller than the parent
+
             if left < n and priority_queue[i][0] > priority_queue[left][0]:
                 return False
 
@@ -335,6 +362,21 @@ class Dijkstra_Priority_Queue:
 
     def save_state(self, step_type, current_node, current_distance, neighbor, edge_weight, distances, prev_nodes,
                    visited, visited_edges, priority_queue, selected_algorithm):
+        """
+        Speichert einen Schritt
+        :param step_type: Typ des schritts
+        :param current_node: aktueller Knoten
+        :param current_distance: aktuelle Distance
+        :param neighbor: Nachbar
+        :param edge_weight: Kantengewicht
+        :param distances: Distanzen
+        :param prev_nodes: vorgänger Knoten
+        :param visited: Besuchte Knoten
+        :param visited_edges: besuchte Kanten
+        :param priority_queue: aktuelle priority queue
+        :param selected_algorithm: gewählter Algorithmus
+        :return:
+        """
         state = {
             "selected_algorithm": selected_algorithm,
             "step_type": step_type,
@@ -351,5 +393,9 @@ class Dijkstra_Priority_Queue:
         self.steps.append(state)
 
     def print_steps(self):
+        """
+        debug um die Schritt auf der Console zu printen
+        :return:
+        """
         for step in self.steps:
             print(step["step_type"])

@@ -1,12 +1,21 @@
 
 
 class Dijkstra_List():
+    """
+    Dijkstra Implementierung die eine Liste nutzt
+    """
     def __init__(self):
         super().__init__()
         self.steps = []
         self.shortest_path_edges = {}
 
     def run_dijkstra_list(self, graph, startnode):
+        """
+        Berechnet den Dijkstra Algorithmus aus dem graph mit startknoten
+        :param graph: Graph
+        :param startnode: Startknoten
+        :return: Liste mit gesamtem Dijkstra- Algorithmus in einzelnen Schritten, Liste mit kürzesten Pfaden
+        """
         distances = {}
 
 
@@ -308,6 +317,21 @@ class Dijkstra_List():
         current_list,
         selected_algorithm,
     ):
+        """
+        Speichert einen Schritt
+        :param step_type: Typ des schritts
+        :param current_node: aktueller Knoten
+        :param current_distance: aktuelle Distance
+        :param neighbor: Nachbar
+        :param edge_weight: Kantengewicht
+        :param distances: Distanzen
+        :param prev_nodes: vorgänger Knoten
+        :param visited: Besuchte Knoten
+        :param visited_edges: besuchte Kanten
+        :param current_list: aktuelle Liste
+        :param selected_algorithm: gewählter Algorithmus
+        :return:
+        """
         state = {
             "selected_algorithm": selected_algorithm,
             "step_type": step_type,
