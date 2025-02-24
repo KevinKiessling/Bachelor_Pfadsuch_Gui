@@ -622,23 +622,23 @@ class Pseudocode_Frame(Frame):
                 self.pseudocode_display.see(f"{3}.0")
             if step == "Pick Node_1":
                 self.highlight_step("Pick Node_1")
-                self.set_step("Wähle Knoten1")
+                self.set_step("Wähle Knoten")
             if step == "Pick Node_2":
                 self.highlight_step("Pick Node_2")
-                self.set_step("Wähle Knoten2")
+                self.set_step("Wähle Knoten")
             if step == "Pick Node_3":
                 self.highlight_step("Pick Node_3")
-                self.set_step("Wähle Knoten3")
+                self.set_step("Wähle Knoten")
             if step == "Set Start Node Distance":
                 self.highlight_step("Set Start Node Distance")
                 self.set_step("Setze Distanz von Startknoten")
                 self.highlight_row(current_node)
             if step == "Initialize List":
                 self.highlight_step("Initialize List")
-                self.set_step("Initialize List")
+                self.set_step("Initialisiere List")
             if step == "Add Node to List":
                 self.highlight_step("Add Node to List")
-                self.set_step("Add Node to List")
+                self.set_step("Füge Knoten der Liste hinzu")
             if step == "Algorithm Finished":
                 self.highlight_step("Algorithm Finished")
                 self.set_step("Algorithmus abgeschlossen")
@@ -664,7 +664,7 @@ class Pseudocode_Frame(Frame):
                 self.set_step("Update Distanzen")
             if step == "Find Min in List":
                 self.highlight_step("Find Min in List")
-                self.set_step("Find Min in List")
+                self.set_step("Finde Min in der List")
             if step == "Skip Visited Node":
                 self.highlight_step("Skip Visited Node")
                 self.set_step("Überspringe bereits bearbeitete Knoten")
@@ -673,16 +673,16 @@ class Pseudocode_Frame(Frame):
                 self.set_step("Überspringe Kante zu bereits besuchten Knoten")
             if step == "Remove min from List":
                 self.highlight_step("Remove min from List")
-                self.set_step("Remove min from List")
+                self.set_step("Entferne Minimum aus der Liste")
             if step == "Check if visited":
                 self.highlight_step("Check if visited")
                 self.set_step("Prüfe ob Knoten bereits besucht wurde")
             if step == "Visit Node u ":
                 self.highlight_step("Visit Node u ")
-                self.set_step("Visit Node u ")
+                self.set_step("Betrachte Knoten u ")
             if step == "List Empty":
                 self.highlight_step("List Empty")
-                self.set_step("List Empty")
+                self.set_step("Liste ist leer")
 
 
         #if self.parent.selected_algorithm == "Dijkstra_List":
