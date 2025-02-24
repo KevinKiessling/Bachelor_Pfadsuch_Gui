@@ -97,7 +97,7 @@ graph = {
     'C': {'D': 1},
     'D': {}
 }
-start_node = 'A '
+start_node = 'A'
 selected_algorithm = "Dijkstra_List"
 
 tester = DijkstraTester(graph, start_node, selected_algorithm)
