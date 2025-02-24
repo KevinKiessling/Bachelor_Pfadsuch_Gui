@@ -4,6 +4,7 @@ from algorithms.dijkstra_Priority_queue_lazy import *
 from algorithms.dijkstra_Priority_queue import *
 
 class DijkstraTester:
+    '''Programm um die Dijkstra-Algorithmen mit bekannt korrekten des NetworkX-Frameworks zu vergleichen'''
     def __init__(self, graph, start_node, selected_algorithm):
         self.graph = graph
         self.start_node = start_node
@@ -12,9 +13,8 @@ class DijkstraTester:
         self.shortest_paths = {}
 
     def run_dijkstra_implementation(self):
-
         if self.start_node not in self.graph:
-            print(f"Warning: Start node {self.start_node} is not in the graph. Skipping test.")
+            print(f"Warnung: Startknoten {self.start_node} ist nicht im Graph. Test wird übersprungen.")
             return
 
         if self.selected_algorithm == "Dijkstra_PQ_Lazy":
@@ -36,26 +36,26 @@ class DijkstraTester:
         graph_data = self.graph
         G = nx.DiGraph()
         if source_node not in self.graph:
-            print(f"Warning: Source node {source_node} is not in the graph. Skipping test.")
+            print(f"Warnung: Quellknoten {source_node} ist nicht im Graph. Test wird übersprungen.")
             return False
         for node, neighbors in graph_data.items():
             G.add_node(node)
             for neighbor, weight in neighbors.items():
                 G.add_edge(node, neighbor, weight=weight)
 
-        print(f"Graph nodes: {list(G.nodes)}")
-        print(f"Graph edges: {list(G.edges(data=True))}")
-        print(f"Source node: {source_node}")
+        print(f"Graph Knoten: {list(G.nodes)}")
+        print(f"Graph Kanten: {list(G.edges(data=True))}")
+        print(f"Quellknoten: {source_node}")
 
         if source_node not in G:
-            print(f"Error: Source node {source_node} is not in the graph.")
+            print(f"Fehler: Quellknoten {source_node} ist nicht im Graph.")
             return False
 
         computed_distances_nx = nx.single_source_dijkstra_path_length(G, source_node)
         computed_distances_step = self.steps_finished_algorithm[-1]["distances"]
 
-        print("NetworkX computed distances:", computed_distances_nx)
-        print("Algorithm computed distances:", computed_distances_step)
+        print("NetworkX berechnete Distanzen:", computed_distances_nx)
+        print("Algorithmus berechnete Distanzen:", computed_distances_step)
 
         all_nodes = set(computed_distances_nx.keys()).union(set(computed_distances_step.keys()))
         for node in all_nodes:
@@ -63,14 +63,13 @@ class DijkstraTester:
             computed_distance_step = computed_distances_step.get(node, float('inf'))
 
             if computed_distance_step != expected_distance:
-                print(f"Test failed for node {node}: expected {expected_distance}, got {computed_distance_step}")
+                print(f"Test fehlgeschlagen für Knoten {node}: erwartet {expected_distance}, erhalten {computed_distance_step}")
                 return False
 
-        print("All tests passed.")
+        print("Alle Tests bestanden.")
         return True
 
     def test_edge_cases(self):
-
         edge_cases = [
             {'A': {}},
             {'A': {}, 'B': {}},
@@ -84,13 +83,13 @@ class DijkstraTester:
             self.graph = case
             self.run_dijkstra_implementation()
             if not self.test_dijkstra_algorithm(self.start_node):
-                print(f"Test failed for graph: {case}")
+                print(f"Test fehlgeschlagen für Graph: {case}")
                 return False
 
-        print("All edge case tests passed.")
+        print("Alle Edge-Case-Tests bestanden.")
         return True
 
-# Example Usage
+
 graph = {
     'A': {'B': 1, 'C': 4},
     'B': {'C': 2, 'D': 5},
