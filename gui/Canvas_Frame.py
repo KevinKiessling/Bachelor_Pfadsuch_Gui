@@ -16,6 +16,9 @@ from tkinter import Toplevel, Button, Checkbutton, BooleanVar, Text, Frame, Scro
 
 import copy
 class Canvas_Frame(Frame):
+    """
+    Linke seite der GUI
+    """
     def __init__(self, parent):
         super().__init__(parent)
         self.shortest_paths_window = None
@@ -141,29 +144,55 @@ class Canvas_Frame(Frame):
         self.canvas_height = self.initial_height
 
     def disable_canvas_interactions(self):
+        """
+        Entfernt alle Canvas Bindings, wird genutzt um diese Während der Ausführung eines Algorithmusses zu blockieren
+        :return:
+        """
         if self.parent.debug:
             print("Disabling graph interactions while algorithm is running")
 
         for event, _ in self.canvas_bindings:
             self.canvas.unbind(event)
     def enable_canvas_interactions(self):
+        """
+        Aktiviert die Canvas Bindings erneut um diese außerhalb eines Algorithmusses wieder zu aktivieren
+        :return:
+        """
         if self.parent.debug:
             print("Re-enabling graph interactions")
         # Rebind all canvas events
         for event, callback in self.canvas_bindings:
             self.canvas.bind(event, callback)
     def cancel_bind_method(self, event):
+        """
+        Esc- Bind um den Graphen zu resetten
+        :param event: Event was diese Methode ausgelöst hat, in dem Fall esc
+        :return:
+        """
         self.parent.reset()
         self.close_shortest_path_window()
     def cancel_button_method(self):
+        """
+        Methode die den Button mit einer Funktion der Parent Klasse verbindet
+        :return:
+        """
         self.parent.reset()
         self.close_shortest_path_window()
     def close_shortest_path_window(self):
+        """
+        Schließt das kürzeste Pfade menu
+        :return:
+        """
         if hasattr(self, "shortest_paths_window") and self.shortest_paths_window is not None:
             if self.shortest_paths_window.winfo_exists():
                 self.shortest_paths_window.destroy()
             self.shortest_paths_window = None
     def resize_canvas(self, event):
+        """
+        Methode um den Graphen zu skalieren
+        :param event: Event was eine veränderung der Canvas Größe hervorgerufen hat
+        :return:
+        """
 
         new_width = event.width
         new_height = event.height
@@ -183,6 +212,12 @@ class Canvas_Frame(Frame):
         self.parent.update_gui()
 
     def scale_node_positions(self, scale_x, scale_y):
+        """
+        Skaliert die Knoten positionen.
+        :param scale_x: Faktor für x
+        :param scale_y: Faktor für y
+        :return:
+        """
 
         for node, (x, y) in self.parent.node_positions.items():
             new_x = x * scale_x
@@ -190,6 +225,12 @@ class Canvas_Frame(Frame):
             self.parent.node_positions[node] = (new_x, new_y)
 
     def scale_node_size_absolute(self, new_width, new_height):
+        """
+        Skaliert die Knoten größe und schriftgröße der Knoten
+        :param new_width: Neue Breite
+        :param new_height: Neue Höhe
+        :return:
+        """
 
         scale_x = new_width / self.initial_width
         scale_y = new_height / self.initial_height
@@ -201,6 +242,11 @@ class Canvas_Frame(Frame):
 
 
     def on_press(self, event):
+        """
+        Event was mit dem Canvas verbunden ist, um das angeklickt Element zu erkennen
+        :param event: Koordinaten des Mausklicks
+        :return:
+        """
         x, y = event.x, event.y
         clicked_node = self.get_node_at_position(x, y)
 
@@ -210,6 +256,11 @@ class Canvas_Frame(Frame):
             self.add_node(event)
 
     def on_double_click(self, event):
+        """
+        Even um doppelklick zu erkennen
+        :param event: Koordinaten
+        :return:
+        """
         x, y = event.x, event.y
         clicked_node = self.get_node_at_position(x, y)
 
@@ -221,6 +272,11 @@ class Canvas_Frame(Frame):
             if self.parent.debug:
                 print("Kein Knoten unter Doppelklick gefunden!")
     def on_drag(self, event):
+        """
+        Event um maus Drag zu erkennen
+        :param event: Koordinaten
+        :return:
+        """
         if self.dragging_node is not None:
             # Clamp x and y within canvas bounds
             x = max(self.parent.node_rad, min(event.x, self.canvas_width - self.parent.node_rad))
@@ -230,11 +286,20 @@ class Canvas_Frame(Frame):
             self.parent.reset()
 
     def on_release(self, event):
+        """
+        Event um loslassen des Mausdrags zu erkennne
+        :param event: Koordinaten
+        :return:
+        """
         if self.dragging_node is not None:
             #self.operation_history.append(("move_node", self.dragging_node, (event.x, event.y)))
             self.dragging_node = None
     # öffnet ein Fenster mit Buttons um die kürzesten Pfade zu zeichnen
     def open_shortest_paths(self):
+        """
+        Öffnet kürzeste Pfade Fenster
+        :return:
+        """
         if hasattr(self, "shortest_paths_window") and self.shortest_paths_window is not None:
             if self.shortest_paths_window.winfo_exists():
                 self.refresh_window_content()
@@ -267,11 +332,21 @@ class Canvas_Frame(Frame):
         window_id = canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
 
         def update_scrollregion(event):
+            """
+            Updated die Scrollregion der Scrollbar
+            :param event: Event was diese Funktion ausgelöst hat
+            :return:
+            """
             canvas.configure(scrollregion=canvas.bbox("all"))
 
         scrollable_frame.bind("<Configure>", update_scrollregion)
 
         def resize_scrollable_frame(event):
+            """
+            Skaliert den Scrollbar frame
+            :param event: Event was diese Funktion ausgelöst hat
+            :return:
+            """
             canvas.itemconfig(window_id, width=event.width)
 
         canvas.bind("<Configure>", resize_scrollable_frame)
@@ -295,11 +370,20 @@ class Canvas_Frame(Frame):
 
         #Besseres Scrollen auf Win/linux
         def on_mouse_wheel(event):
+            """
+            Verbessert das Scrollen auf anderen Plattformen
+            :param event: mouserad scroll
+            :return:
+            """
             canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
         self.shortest_paths_window.bind_all("<MouseWheel>", on_mouse_wheel)
 
     def refresh_window_content(self):
+        """
+        Methode des kürzeste Pfade menüs, um den Inhalt zu refreshen
+        :return:
+        """
 
         scrollable_frame = self.shortest_paths_window.winfo_children()[0].winfo_children()[0].winfo_children()[
             0]
@@ -318,11 +402,21 @@ class Canvas_Frame(Frame):
             button.grid(row=index, column=0, sticky="ew", padx=5, pady=5)
 
     def _on_window_close(self):
+        """
+        Schließt kürzeste Pfade menu wenn Hauptfenster geschlossen wird
+        :return:
+        """
         if hasattr(self, "shortest_paths_window"):
             self.shortest_paths_window.destroy()
             self.shortest_paths_window = None
 
     def on_button_click(self, end_node, path_window):
+        """
+        Funktion um die Buttons im kürzeste Pfade Fenster mit Funktionen zu verbinden
+        :param end_node: Endknoten
+        :param path_window: aktuelles Fenster
+        :return:
+        """
 
         path = self.parent.shortest_paths.get(end_node, [])
 
@@ -336,6 +430,10 @@ class Canvas_Frame(Frame):
            # messagebox.showinfo("Path Drawn", f"Path to {end_node} has been drawn!")
 
     def open_tutorial(self):
+        """
+        Öffnet ein Hilfsfenster, was eine Features des Programms erklärt
+        :return:
+        """
 
         tutorial_window = Toplevel(self.parent)
         tutorial_window.title("Tutorial")
@@ -350,9 +448,15 @@ class Canvas_Frame(Frame):
         self._add_welcome_tab(notebook, custom_font)
         self._add_node_management_tab(notebook, custom_font)
         self._add_button_explanations_tab(notebook, custom_font)
-        self._add_other_features_tab(notebook, custom_font)
+        self._add_heap_description_tab(notebook, custom_font)
 
     def _add_welcome_tab(self, notebook, custom_font):
+        """
+        Willkommensfenster
+        :param notebook: notbook tab
+        :param custom_font: fontsize
+        :return:
+        """
 
         welcome_tab = ttk.Frame(notebook)
         notebook.add(welcome_tab, text="Übersicht")
@@ -373,6 +477,11 @@ class Canvas_Frame(Frame):
 
 
         def update_scrollregion(event=None):
+            """
+            Updated die Scrollregion des Fensters
+            :param event: Scroll event
+            :return:
+            """
             canvas.configure(scrollregion=canvas.bbox("all"))
 
 
@@ -437,6 +546,11 @@ class Canvas_Frame(Frame):
 
 
         def on_resize(event):
+            """
+            Skaliert das fenster mit der Fenstergröße
+            :param event: Resize event
+            :return:
+            """
             canvas_width = event.width
             canvas.itemconfig(canvas_frame_window, width=canvas_width)
             update_wraplength()
@@ -446,7 +560,12 @@ class Canvas_Frame(Frame):
                                                    width=canvas.winfo_width())
         canvas.bind("<Configure>", on_resize)
     def _add_node_management_tab(self, notebook, custom_font):
-
+        """
+        Fügt Graphen Aufbaue tab hinzu
+        :param notebook: Notebook
+        :param custom_font: font
+        :return:
+        """
         node_tab = ttk.Frame(notebook)
         notebook.add(node_tab, text="Graphen Aufbau")
 
@@ -466,6 +585,11 @@ class Canvas_Frame(Frame):
 
 
         def update_scrollregion(event=None):
+            """
+            Updated die Scrollregion des Fensters
+            :param event:
+            :return:
+            """
             canvas.configure(scrollregion=canvas.bbox("all"))
 
 
@@ -489,6 +613,11 @@ class Canvas_Frame(Frame):
         node_canvas.pack(fill="both", expand=True, pady=5)
 
         def draw_single_node():
+            """
+            Zeichnet einen Knoten zur Hilfe
+            :return:
+            """
+
             node_canvas.delete("all")
             canvas_width = node_canvas.winfo_width()
             canvas_height = node_canvas.winfo_height()
@@ -535,6 +664,10 @@ class Canvas_Frame(Frame):
         edge_canvas.pack(fill="both", expand=True, pady=5)
 
         def draw_edge_example():
+            """
+            Zeichnet eine Kante zur Hilfe
+            :return:
+            """
             edge_canvas.delete("all")
             canvas_width = edge_canvas.winfo_width()
             canvas_height = edge_canvas.winfo_height()
@@ -588,12 +721,27 @@ class Canvas_Frame(Frame):
 
 
         def _on_mousewheel(event):
+            """
+            Fügt Mousebinds hinzu
+            :param event: mouseevent
+            :return:
+            """
             canvas.yview_scroll(-1 * (event.delta // 120), "units")
 
         def _bind_mousewheel(event):
+            """
+            Bindet wheel, solange maus in dem fenster ist
+            :param event:
+            :return:
+            """
             canvas.bind_all("<MouseWheel>", _on_mousewheel)
 
         def _unbind_mousewheel(event):
+            """
+            Unbinded Mauswheel, falls sie das Fenster verlässt
+            :param event:
+            :return:
+            """
             canvas.unbind_all("<MouseWheel>")
 
 
@@ -602,6 +750,11 @@ class Canvas_Frame(Frame):
 
 
         def on_resize(event):
+            """
+            Methode zur Skalierung des Fensters
+            :param event: Resize event
+            :return:
+            """
             canvas_width = event.width
             canvas.itemconfig(canvas_frame_window, width=canvas_width)
             update_wraplength()
@@ -612,6 +765,12 @@ class Canvas_Frame(Frame):
         canvas.bind("<Configure>", on_resize)
 
     def _add_button_explanations_tab(self, notebook, custom_font):
+        """
+        Fügt einen Tab hinzu der die buttons erklärt
+        :param notebook:
+        :param custom_font:
+        :return:
+        """
         button_tab = ttk.Frame(notebook)
         notebook.add(button_tab, text="Schaltflächen Erklärungen")
 
@@ -716,20 +875,116 @@ class Canvas_Frame(Frame):
                                                    width=canvas.winfo_width())
         canvas.bind("<Configure>", on_resize)
 
-    def _add_other_features_tab(self, notebook, custom_font):
-
-        features_tab = ttk.Frame(notebook)
-        notebook.add(features_tab, text="Weitere Funktionen")
-
-        features_text = """
-        Weitere Funktionen:
-        - todo
+    def _add_heap_description_tab(self, notebook, custom_font):
         """
-        Label(features_tab, text=features_text, justify="left", wraplength=750, font=custom_font).pack(padx=20, pady=20)
+        Fügt einen Tab hinzu der den Heap erklärt
+        :param notebook:
+        :param custom_font:
+        :return:
+        """
+        features_tab = ttk.Frame(notebook)
+        notebook.add(features_tab, text="Heap Erklärungen")
 
+        description_text = (
+            "Der Heap wird als Binärbaum dargestellt. Jeder Knoten v hat die Form:\n"
+            "(v, d[v])\n"
+        )
 
+        Label(features_tab, text=description_text, justify="left", wraplength=750, font=custom_font).pack(padx=20,
+                                                                                                          pady=10)
+
+        canvas_frame = ttk.Frame(features_tab)
+        canvas_frame.pack(pady=10)
+
+        example_canvas = Canvas(canvas_frame, width=400, height=250, bg="white")
+        example_canvas.pack()
+
+        example_priority_queue = [(1, 1), (3, 2), (5, 3), (4, 4), (6, 5), (7, 6)]
+
+        def draw_example_priority_queue():
+            """
+            Zeichnet bespiel heap
+            :return:
+            """
+            example_canvas.delete("all")
+
+            if not example_priority_queue:
+                return
+
+            canvas_width = example_canvas.winfo_width()
+            canvas_height = example_canvas.winfo_height()
+
+            if canvas_width <= 1 or canvas_height <= 1:
+                example_canvas.after(100, draw_example_priority_queue)
+                return
+
+            num_levels = math.floor(math.log2(len(example_priority_queue))) + 1
+            nodes_on_widest_level = 2 ** (num_levels - 1)
+
+            node_size_x = canvas_width / (nodes_on_widest_level * 2)
+            node_size_y = canvas_height / (num_levels * 3)
+            node_size = min(min(node_size_x, node_size_y), 35)
+
+            font_size = max(1, int(node_size // 2))
+            horizontal_spacing = canvas_width / (2 ** num_levels)
+            vertical_spacing = canvas_height / (num_levels + 1)
+
+            def draw_node(x, y, text):
+                """
+                Zeichnet Knoten
+                :param x: x koordinate
+                :param y: y koordinate
+                :param text: Beschriftung
+                :return:
+                """
+                color = "lightgrey"
+                example_canvas.create_oval(
+                    x - node_size, y - node_size, x + node_size, y + node_size, fill=color
+                )
+                example_canvas.create_text(x, y, text=text, font=("Arial", font_size), fill="black")
+
+            def draw_tree(index, x, y, dx):
+                """
+                Zeichnet rekursiv den Heap als Baum
+                :param index: aktueller index
+                :param x: x koordinate
+                :param y: y koordinate
+                :param dx: offset
+                :return:
+                """
+                if index >= len(example_priority_queue):
+                    return
+
+                node = example_priority_queue[index]
+                draw_node(x, y, f"{node[1]}, {node[0]}")
+
+                left_child_idx = 2 * index + 1
+                right_child_idx = 2 * index + 2
+
+                if left_child_idx < len(example_priority_queue):
+                    left_x, left_y = x - dx, y + vertical_spacing
+                    example_canvas.create_line(x, y + node_size, left_x, left_y - node_size)
+                    draw_tree(left_child_idx, left_x, left_y, dx / 2)
+
+                if right_child_idx < len(example_priority_queue):
+                    right_x, right_y = x + dx, y + vertical_spacing
+                    example_canvas.create_line(x, y + node_size, right_x, right_y - node_size)
+                    draw_tree(right_child_idx, right_x, right_y, dx / 2)
+
+            root_x = canvas_width // 2
+            root_y = vertical_spacing
+            initial_dx = canvas_width / 4
+
+            draw_tree(0, root_x, root_y, initial_dx)
+
+        draw_example_priority_queue()
 
     def undo_last_operation(self, event=None):
+        """
+        Strg+z Methode die Knoten erstellung/kanten erstellung rückgängig macht
+        :param event: strg + z
+        :return:
+        """
         if self.parent.debug:
             print(self.operation_history)
         if not self.operation_history:
@@ -753,6 +1008,11 @@ class Canvas_Frame(Frame):
 
     #Löscht Knoten oder Kante an Klick position,
     def remove_clicked_element(self, event):
+        """
+        Entfernt das element an geklickter Position
+        :param event: klick koordinaten
+        :return:
+        """
         x, y = event.x, event.y
         if self.parent.debug:
             print("removal event at:", event.x, event.y)
@@ -781,6 +1041,12 @@ class Canvas_Frame(Frame):
                     print("Error, keine Kante gefunden")
 
     def _remove_from_history(self, op_type, item):
+        """
+        Entfernt Tupel aus der History, wird für strg+ z genutzt
+        :param op_type: Typ der Operation
+        :param item: Item, was gelöscht wird
+        :return:
+        """
         if self.parent.debug:
             print(op_type)
             print(item)
@@ -796,6 +1062,11 @@ class Canvas_Frame(Frame):
                     break
     #Löscht übergebenen Knoten
     def delete_note(self, node):
+        """
+        Löscht den Knoten
+        :param node: Knoten der gelöscht werden soll
+        :return:
+        """
         if node in self.parent.graph:
             del self.parent.graph[node]
 
@@ -813,6 +1084,10 @@ class Canvas_Frame(Frame):
 
     #Öffnet Einstellungsmenu, welches den Debug mode, random mode und Animationspeed einstellen lässt und in der Config.json speichert.
     def open_settings(self):
+        """
+        Öffnet Einstellungsfenster
+        :return:
+        """
         settings_window = Toplevel(self)
         settings_window.title("Einstellungen")
         settings_window.geometry("500x550")
@@ -851,6 +1126,11 @@ class Canvas_Frame(Frame):
 
 
         def on_mousewheel(event):
+            """
+            Mousewheel binds um scrolling zu ermöglichen
+            :param event: mousewheel
+            :return:
+            """
 
             general_tab_canvas.yview_scroll(-1 * (event.delta // 120), "units")
 
@@ -872,6 +1152,11 @@ class Canvas_Frame(Frame):
         max_weight_var = IntVar(value=self.parent.max_edge_weight)
 
         def validate_input(new_val):
+            """
+            Validiert das input, sodass keine invaliden Werte eingefügt werden können
+            :param new_val: Objekt was validiert werden solll
+            :return:
+            """
             return new_val == "" or new_val.isdigit()
 
         validate_command = settings_window.register(validate_input)
@@ -893,6 +1178,10 @@ class Canvas_Frame(Frame):
         show_distance_checkbox.grid(row=0, column=3)
 
         def save_default_graph_to_parent():
+            """
+            Speichert den aktuellen Graph als Standardgraph
+            :return:
+            """
 
             self.parent.default_graph_pos = json.loads(json.dumps(self.parent.node_positions))
             self.parent.default_graph = json.loads(json.dumps(self.parent.graph))
@@ -920,6 +1209,11 @@ class Canvas_Frame(Frame):
         speed_label.pack()
 
         def update_speed_label(*args):
+            """
+            Updated den Text des Speedlabels, sodass es immer den aktuellen wert zeigt
+            :param args:
+            :return:
+            """
             speed_label.config(text=f"Verzögerung bei Vorspul Wiedergabe: {speed_var.get()} ms")
 
         speed_var.trace_add("write", update_speed_label)
@@ -934,6 +1228,11 @@ class Canvas_Frame(Frame):
         font_label.pack()
 
         def update_font_label(*args):
+            """
+            Updated den Text des Fontlabels, sodass es immer den aktuellen wert zeigt
+            :param args:
+            :return:
+            """
             font_label.config(text=f"Aktuelle Font Größe: {font_var.get()}")
 
         font_var.trace_add("write", update_font_label)
@@ -943,6 +1242,10 @@ class Canvas_Frame(Frame):
         settings_window.grid_columnconfigure(0, weight=1)
 
         def apply_settings():
+            """
+            Speichert die Variablen des Settingsfenster in der Hauptklasse
+            :return:
+            """
             #self.parent.debug = debug_var.get()
             self.parent.random_edge_mode = random_mode_var.get()
             self.parent.show_distance_on_nodes = show_distance_var.get()
@@ -975,6 +1278,11 @@ class Canvas_Frame(Frame):
         notebook.add(color_tab, text="Farbeinstellungen")
 
         def choose_color(element):
+            """
+            Colourpicker, die mit den colour buttons verbunden ist.
+            :param element:
+            :return:
+            """
             color = colorchooser.askcolor()[1]
             if color:
                 if element == 'color_heap':
@@ -998,6 +1306,10 @@ class Canvas_Frame(Frame):
 
 
         def reset_colors():
+            """
+            Setzt die Farben auf Standardwerte zurück
+            :return:
+            """
 
             self.parent.color_heap = default_colors["color_heap"]
             self.parent.color_d_v = default_colors["color_d_v"]
@@ -1016,6 +1328,13 @@ class Canvas_Frame(Frame):
 
 
         def create_color_button(frame, text, element):
+            """
+            Erstellt die Farbbuttons
+            :param frame: Frame auf dem die Buttons sind
+            :param text: Display text
+            :param element: Name, um den Button zu steuern
+            :return:
+            """
             button = Button(frame, text="    ", width=5, command=lambda: choose_color(element))
             button.grid(row=0, column=0, padx=10)
             label = Label(frame, text=text)
@@ -1071,33 +1390,62 @@ class Canvas_Frame(Frame):
 
     # hilfsunktion um die parent funktion zu callen für die Keybinds
     def start_alg (self, event):
+        """
+        start Algorithm Binding, nötig um die Parent Methode zu callen
+        :param event: Canvas Bind
+        :return:
+        """
         if self.parent.debug:
             print("Beginne Algorithmus")
 
         self.parent.start_algorithm()
     def go_to_next_step(self, event):
+        """
+        1 Schritt vor Binding
+        :param event: Canvas Bind
+        :return:
+        """
         if self.parent.debug:
             print("1 Schritt vor")
 
         self.parent.next_step()
     def go_step_back(self, event):
+        """
+        1 schritt zurück Binding
+        :param event:
+        :return:
+        """
         if self.parent.debug:
             print("1 Schritt zurück")
         self.parent.prev_step()
 
     def go_forward_button(self):
+        """
+        Fast forward binding
+        :return:
+        """
         if self.parent.debug:
             print("Vorspulen aktiviert")
         self.parent.fast_forward_paused = False
 
         self.parent.fast_forward()
     def go_fast_forward(self, event):
+        """
+        2. Fast vorward Binding
+        :param event:
+        :return:
+        """
         if self.parent.debug:
             print("Vorspulen aktiviert")
         self.parent.fast_forward_paused = False
 
         self.parent.fast_forward()
     def pause_fast_forward(self, event):
+        """
+        Pausiere fast forward Binding
+        :param event:
+        :return:
+        """
         if self.parent.debug:
             print("Vorspulen pausiert")
         self.parent.pause()
@@ -1105,6 +1453,10 @@ class Canvas_Frame(Frame):
 
     # gibt den aktuellen graphen auf der Konsole aus -> debug optionen
     def print_loaded_graph(self):
+        """
+        Debuf funktion die den aktuellen Graph auf der console ausgibt
+        :return:
+        """
         if self.parent.debug:
             print("Aktuell geladener Graph: ")
         print(self.parent.graph)
@@ -1113,6 +1465,10 @@ class Canvas_Frame(Frame):
 
     # select dijkstra mit List as algorithm
     def toggle_dijk_L(self):
+        """
+        Binding mit der Algorithmusauswahl, hier wechsel zu Dijkstra mit Liste
+        :return:
+        """
         if self.parent.debug:
             print("Wechsel zu Dijkstram mit Liste")
         self.parent.selected_algorithm = "Dijkstra_List"
@@ -1124,6 +1480,10 @@ class Canvas_Frame(Frame):
 
     #select dijkstra mit Pq as algorithm
     def toggle_dijk_PQ_lazy(self):
+        """
+        Binding mit der Algorithmusauswahl, hier wechsel zu Dijkstra Lazy
+        :return:
+        """
         if self.parent.debug:
             print("Wechsel zu Dijkstra mit Priority Queue (Lazy Deletion)")
         self.parent.selected_algorithm = "Dijkstra_PQ_lazy"
@@ -1133,6 +1493,10 @@ class Canvas_Frame(Frame):
         self.dijk_PQ.set(False)
         self.dijk_PQ_lazy.set(True)
     def toggle_dijk_PQ(self):
+        """
+        Binding mit der Algorithmusauswahl, hier wechsel zu Dijkstra mit PQ
+        :return:
+        """
         if self.parent.debug:
             print("Wechsel zu Dijkstra mit Priority Queue")
         self.parent.selected_algorithm = "Dijkstra_PQ"
@@ -1146,6 +1510,11 @@ class Canvas_Frame(Frame):
 
     #Knoten hinzufügen
     def add_node(self, event):
+        """
+        Fügt knoten hinzu
+        :param event: Koordinaten für den Knoten
+        :return:
+        """
         x, y = event.x, event.y
         clicked_node = self.get_node_at_position(x, y)
         self.parent.reset()
@@ -1177,6 +1546,12 @@ class Canvas_Frame(Frame):
 
 
     def add_edge(self, event):
+        """
+        Wenn an dem Event ein Knoten ist, startet die Kanten erstellung, Klick auf 2. Knoten erstellt Kante. Klick auf
+        Kante öffnet Kantengewichtanpassung.
+        :param event: Koordinaten des klicks
+        :return:
+        """
 
         x, y = event.x, event.y
         clicked_node = self.get_node_at_position(x, y)
@@ -1225,6 +1600,11 @@ class Canvas_Frame(Frame):
             self.parent.reset()
 
     def start_edge_simulation(self, start_node):
+        """
+        Startet Kanten erstellungs Simulation
+        :param start_node: Startknoten der Kante
+        :return:
+        """
 
         cx, cy = self.parent.node_positions[start_node]
         mx, my = self.canvas.winfo_pointerx(), self.canvas.winfo_pointery()
@@ -1246,6 +1626,11 @@ class Canvas_Frame(Frame):
         self.canvas.bind("<Button-1>", self.cancel_edge)
 
     def update_edge_simulation(self, event):
+        """
+        Simuliert das Folgen der Maus von der simulierten Kante
+        :param event: Koordinaten
+        :return:
+        """
 
         if hasattr(self, "simulated_edge") and self.parent.selected_nodes:
             try:
@@ -1270,6 +1655,12 @@ class Canvas_Frame(Frame):
                 self.cancel_edge()
 
     def finalize_edge(self, node1, node2):
+        """
+        Beendet die Kantenerstellung und erstellt die Kante
+        :param node1: Startknoten
+        :param node2: Zielknoten
+        :return:
+        """
 
         if hasattr(self, "simulated_edge"):
             self.canvas.delete(self.simulated_edge)
@@ -1290,6 +1681,11 @@ class Canvas_Frame(Frame):
         self.parent.reset()
 
     def cancel_edge(self, event=None):
+        """
+        Abbruch Binding der Kantenerstellung
+        :param event: Linksklick
+        :return:
+        """
 
         if hasattr(self, "simulated_edge"):
             self.canvas.delete(self.simulated_edge)
@@ -1299,6 +1695,10 @@ class Canvas_Frame(Frame):
         self.parent.selected_nodes.clear()
         self.parent.reset()
     def ask_for_edge_weight(self):
+        """
+        Öffnet dialog, der den Nutzer auffordert ein Kantengewicht einzugeben, validiert außerdem die Eingabe, sodass nur int <99999 möglich ist
+        :return:
+        """
 
         if self.parent.random_edge_mode:
             if self.parent.debug:
@@ -1323,6 +1723,12 @@ class Canvas_Frame(Frame):
         return weight
      # Hilfsfunktion die einen Knoten returned der in einem Radius von 30px zu click coordinaten ist. Wird benötigt für die Erstellung von Kanten
     def get_node_at_position(self, x, y):
+        """
+        Gibt den Knoten an Position zurück
+        :param x: x Koordinate
+        :param y: y Koordinate
+        :return: Knoten an Position x,y
+        """
 
         for node, (nx, ny) in self.parent.node_positions.items():
             if math.hypot(nx - x, ny - y) <= 30:
@@ -1330,7 +1736,14 @@ class Canvas_Frame(Frame):
         return None
 
     def add_or_update_edge(self, node1, node2, weight):
-        """Adds or updates an edge in the graph."""
+        """
+        Erstellt Kante oder updated das Gewicht der Kante
+        :param node1: Starknoten
+        :param node2: Zielknoten
+        :param weight: Gewicht
+        :return:
+        """
+
         if node2 in self.parent.graph[node1]:
             if self.parent.debug:
                 print(f"Updating existing edge {node1} -> {node2} with weight {weight}")
@@ -1349,6 +1762,12 @@ class Canvas_Frame(Frame):
                 print(f"Added edge {node1} -> {node2} with weight {weight}")
     # hilfsfunktion die naheste kante zu 2 koordinaten findet, wird benötigt um Kanten zu löschen
     def get_edge_at_coordinates(self, x, y):
+        """
+        Gibt die Kante an Koordinaten zurück
+        :param x: x Koordinate
+        :param y: y Koordinate
+        :return: Kante an Koordinate
+        """
         nearest_edge = None
         min = float('inf')
 
@@ -1365,9 +1784,19 @@ class Canvas_Frame(Frame):
                         nearest_edge = (node_s, node_e)
         return nearest_edge
 
-    # Berechnet die distanz von einem punkt zu einer Linie
+
 
     def distance_to_edge(self, x, y, x2, y2, x3, y3):
+        """
+        Berechnet die Distanz von einem Punkt zu einer Linie
+        :param x: x Koordinate
+        :param y: y Koordinate
+        :param x2: x Startknoten
+        :param y2: y Startknoten
+        :param x3: x Zielknoten
+        :param y3: y Zielknoten
+        :return: Distanz zur von einem Punkt zur Linie
+        """
         if (x2, y2) == (x3, y3):
             return math.hypot(x - x2, y - y2)
         dx, dy = x3 - x2, y3 - y2
@@ -1379,6 +1808,10 @@ class Canvas_Frame(Frame):
 
     # export funktion, Hier wird der Graph als .json file gespeichert. Default directory ist dafür der save_files ordner
     def export_graph(self):
+        """
+        Öffnet Dateifenster, was dem Nutzer ermöglich den aktuellen Graphen als JSON zu speichern
+        :return:
+        """
         default_dir = os.path.join(os.getcwd(), "save_files")
         os.makedirs(default_dir, exist_ok=True)
         filepath = filedialog.asksaveasfilename(
@@ -1408,6 +1841,10 @@ class Canvas_Frame(Frame):
 
     # import funktion, um einen Graphen als .json zu importieren
     def import_graph(self):
+        """
+        Import einen Graphen im richtigen Format als JSON,
+        :return:
+        """
         default_dir = os.path.join(os.getcwd(), "save_files")
         os.makedirs(default_dir, exist_ok=True)
         filepath = filedialog.askopenfilename(
@@ -1460,12 +1897,24 @@ class Canvas_Frame(Frame):
             print(f"Importing error: {e}")
 
     def generate_node_ids(self):
+        """
+        Erstellt die Liste von möglichen Knoten namen
+        :return: Liste der Knotennamen
+        """
         return [str(i) for i in range(1, 1000)]
 
     def reset_node_ids(self):
+        """
+        Setzt der verfügbaren Knotennamen zurück
+        :return:
+        """
         self.node_flags = {node_id: True for node_id in self.generate_node_ids()}
 
     def get_next_id(self):
+        """
+        Gibt den nächsten Knoten namen zurück
+        :return: Knotenname für den nächsten Knoten
+        """
         for node_id, is_available in sorted(self.node_flags.items(), key=lambda x: int(x[0])):
             if is_available:
                 self.node_flags[node_id] = False
@@ -1473,12 +1922,22 @@ class Canvas_Frame(Frame):
         raise ValueError("Keine verfügbaren Knoten-IDs mehr.")
 
     def set_node_availability(self, node_id, available):
+        """
+        Setzt den Knoten namen auf verfügbar
+        :param node_id: Knotenname
+        :param available: Verfügbar flag
+        :return:
+        """
         if node_id in self.node_flags:
             self.node_flags[node_id] = available
         else:
             raise ValueError(f"Node ID {node_id} does not exist.")
 
     def update_avai_ids(self):
+        """
+        Updated verfügbare Knoten, wird beim Import genutzt
+        :return:
+        """
         imported_nodes = self.parent.node_positions.keys()
         for node_id in self.node_flags:
             self.node_flags[node_id] = node_id not in imported_nodes

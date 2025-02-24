@@ -4,6 +4,9 @@ import math
 from tkinter import font
 import random
 class Pseudocode_Frame(Frame):
+    """
+    Rechte Hälfte der GUI
+    """
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
@@ -112,10 +115,21 @@ class Pseudocode_Frame(Frame):
 
 
     def update_font_size(self):
+        """
+        Updated die Fontsize des Pseudocodes
+        :return:
+        """
         self.pseudocode_display.config(font=("Courier New", self.parent.font_size))
         self.style_pseudocode_initial()
 
     def draw_list(self, list_data, distances, highlight_node=None):
+        """
+        Zeichnet die Liste
+        :param list_data: Listen data
+        :param distances: Distanuen
+        :param highlight_node: Zu highlightender Knoten
+        :return:
+        """
         self.canvas.delete("all")
 
         width = max(1, self.canvas.winfo_width())
@@ -170,6 +184,11 @@ class Pseudocode_Frame(Frame):
 
     # draws heap with highlighting
     def update_priority_queue(self, pq):
+        """
+        Updated die Visuelle Priorityqueue
+        :param pq: priorityqueue die updated werden soll
+        :return:
+        """
         if not self.parent.current_step == -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
             if self.parent.selected_algorithm == "Dijkstra_List":
@@ -233,6 +252,12 @@ class Pseudocode_Frame(Frame):
 
     #highlighted die zu dem nodename gehöhrende Row in der Distance Tabelle
     def highlight_row(self, node_name_1, node_name_2=None):
+        """
+        Highlighted 1 bzw. optional 2 Reihen in der Distanz tabelle
+        :param node_name_1: 1. Reihe
+        :param node_name_2: 2. Reihe
+        :return:
+        """
 
         for item in self.distance_table.get_children():
             self.distance_table.item(item, tags=())
@@ -269,6 +294,11 @@ class Pseudocode_Frame(Frame):
                 self.distance_table.tag_configure("highlight_2", background=self.parent.color_d_v, foreground="black")
 
     def center_item_in_view(self, index):
+        """
+        Setzt den Focus der Tabelle auf das zu highligtende Element
+        :param index: Index der highlighted werden soll
+        :return:
+        """
 
         children = self.distance_table.get_children()
         total_items = len(children)
@@ -280,6 +310,11 @@ class Pseudocode_Frame(Frame):
 
     #Setzt den Text für das Pseudocode display, je nach algorithmus
     def set_algorithm(self, algorithm):
+        """
+        Setzt den Pseudocode basierend auf Parameter
+        :param algorithm: Algorithmus der gesetzt werden soll
+        :return:
+        """
 
         if algorithm == "Dijkstra_List":
             self.pcode = """1:DijkstraH(Gerichteter Graph G = (V, E),
@@ -339,6 +374,10 @@ class Pseudocode_Frame(Frame):
 
     #funktion um characters im pseudocode bold/italic zu setzen
     def style_pseudocode_initial(self):
+        """
+        Styled den Pseudocode, sodass er wie in der vorlesung aussieht
+        :return:
+        """
         self.pseudocode_display.config(state=NORMAL)
 
 
@@ -390,6 +429,11 @@ class Pseudocode_Frame(Frame):
         }
 
         def apply_tag_to_keywords(keywords_dict):
+            """
+            Fügt den Keywords tags hinzu, wird fürs styling genutzt
+            :param keywords_dict: Dictionary mit Keywords
+            :return:
+            """
             for keyword, style in keywords_dict.items():
                 start_idx = "1.0"
                 while start_idx:
@@ -411,10 +455,21 @@ class Pseudocode_Frame(Frame):
 
 
     def set_step(self, steptype, calculation=None):
+        """
+        Setzt das Label
+        :param steptype: Aktueller schritt
+        :param calculation:
+        :return:
+        """
         self.step_label.config(text=f"Aktueller Schritt: {steptype}")
 
     # zwischen funktion die je nach step type die zugehörige Line im Pseudocode gelb markiert
     def highlight(self, step):
+        """
+        Highlighted Linien um pseudocode
+        :param step: akteuller schritt
+        :return:
+        """
         if not self.parent.current_step == -1:
             step_for_highlighting_table = self.parent.steps_finished_algorithm[self.parent.current_step]
         if step_for_highlighting_table:
@@ -633,6 +688,10 @@ class Pseudocode_Frame(Frame):
         #if self.parent.selected_algorithm == "Dijkstra_List":
 
     def clear_highlights_and_Canvas(self):
+        """
+        Setzt alle highlights zurück
+        :return:
+        """
         # Iterate through all rows and remove any tags
         for item in self.distance_table.get_children():
             self.distance_table.item(item, tags=())  # Remove all tags
@@ -644,6 +703,10 @@ class Pseudocode_Frame(Frame):
 
     # Löscht Tabelle
     def clear_table(self):
+        """
+        Löscht die Tabelle
+        :return:
+        """
         for item in self.distance_table.get_children():
             self.distance_table.delete(item)
 
@@ -652,6 +715,11 @@ class Pseudocode_Frame(Frame):
 
     # Tabelle mit aktuellen distanzen
     def update_distances(self, distances):
+        """
+        Füllt die Tabelle mit neuen Distanzen
+        :param distances: Distance liste
+        :return:
+        """
         for item in self.distance_table.get_children():
             self.distance_table.delete(item)
         for node, distance in distances.items():
@@ -659,6 +727,11 @@ class Pseudocode_Frame(Frame):
             self.distance_table.insert("", "end", values=(node, display_distance))
 
     def highlight_step(self, step_type):
+        """
+        Highlighted schritt im Pseudocode, basierend auf schritttyp und ausgewähltem Algorithmus
+        :param step_type: Schritt typ
+        :return:
+        """
 
         self.pseudocode_display.config(state=NORMAL)
         for tag in self.highlighted_tags:
@@ -920,6 +993,12 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display.config(state=DISABLED)
 
     def highlight_specific_ranges(self, ranges, color):
+        """
+        Highlighted die Zeichen innerhalb der Ranges in der Color
+        :param ranges: zu highlightender Bereicht
+        :param color: Farbe
+        :return:
+        """
 
         for start, end in ranges:
             tag_name = f"highlight_{start}-{end}"
@@ -931,6 +1010,11 @@ class Pseudocode_Frame(Frame):
 
 
     def on_resize(self, event=None):
+        """
+        Skalierungsfunktion für die Liste und Priority Queue
+        :param event: Resize event
+        :return:
+        """
 
         if self.parent.selected_algorithm == "Dijkstra_PQ_lazy" or self.parent.selected_algorithm == "Dijkstra_PQ":
             if self.parent.steps_finished_algorithm:
@@ -947,6 +1031,13 @@ class Pseudocode_Frame(Frame):
                 self.draw_list(list_var, step["distances"])
 
     def draw_priority_queue(self, priority_queue, highlight_node=None, highlight_distance=None):
+        """
+        Zeichnet die priority Queue als Baum, mit optionalem Highlighting
+        :param priority_queue: Priority Queue
+        :param highlight_node: optionales Highlight
+        :param highlight_distance: optionales Highlight
+        :return:
+        """
         self.canvas.delete("all")
 
         if not priority_queue:
@@ -974,6 +1065,14 @@ class Pseudocode_Frame(Frame):
         vertical_spacing = canvas_height / (num_levels + 1)
 
         def draw_node(x, y, text, is_highlighted=False):
+            """
+            Zeichnet einen Knoten
+            :param x: x Koordinate
+            :param y: y Koordinate
+            :param text: Beschriftung
+            :param is_highlighted: Highlighting, yes/no
+            :return:
+            """
             color = self.parent.color_heap if is_highlighted else "lightgrey"
             self.canvas.create_oval(
                 x - node_size, y - node_size, x + node_size, y + node_size, fill=color
@@ -983,6 +1082,14 @@ class Pseudocode_Frame(Frame):
                 self.canvas.create_text(x, y, text=text, font=("Arial", self.font_size_pq), fill="black")
 
         def draw_tree(index, x, y, dx):
+            """
+            Zeichnet rekursiv den Binärbaum
+            :param index: aktueller index
+            :param x: x Koordinate
+            :param y: y Koordinate
+            :param dx: Offet
+            :return:
+            """
             if index >= len(priority_queue):
                 return
 
@@ -1019,6 +1126,11 @@ class Pseudocode_Frame(Frame):
         draw_tree(0, root_x, root_y, initial_dx)
 
     def pop_min_animation(self, priority_queue):
+        """
+        Starte die Animation, die das Min der Priority Queue entfernt
+        :param priority_queue: Priority Queue bei der das min entfernt wird
+        :return:
+        """
 
         self.stop_animation()
         self.animation_step = 0
@@ -1027,6 +1139,10 @@ class Pseudocode_Frame(Frame):
         self.current_heapify_index = 0
         self.run_pop_min_step()
     def stop_animation(self):
+        """
+        Stopped alle laufenden Animationen
+        :return:
+        """
 
         self.animation_active = False
         if self.after_id is not None:
@@ -1034,6 +1150,10 @@ class Pseudocode_Frame(Frame):
             self.after_id = None
 
     def run_pop_min_step(self):
+        """
+        Schrittweise animation des entfernnen des Minimums
+        :return:
+        """
         if not self.animation_active:
             return
 
@@ -1070,6 +1190,10 @@ class Pseudocode_Frame(Frame):
             self.heapify_down_step()
 
     def heapify_down_step(self):
+        """
+        Schrittweises Heapify-down, zeichnet in jedem Schritt den Baum neu
+        :return:
+        """
         if not self.animation_active:
             return
 
@@ -1105,6 +1229,12 @@ class Pseudocode_Frame(Frame):
             self.stop_animation()
 
     def insert_animation(self, priority_queue, new_element):
+        """
+        Startet die Insert animation
+        :param priority_queue: priority queue
+        :param new_element: element was eingefügt werden solll
+        :return:
+        """
         self.stop_animation()
         self.animation_step = 0
         self.animation_active = True
@@ -1114,6 +1244,10 @@ class Pseudocode_Frame(Frame):
         self.run_insert_step()
 
     def run_insert_step(self):
+        """
+        Schrittweise animation des Einfügens
+        :return:
+        """
         if not self.animation_active:
             return
 
@@ -1139,6 +1273,10 @@ class Pseudocode_Frame(Frame):
             self.heapify_up_step()
 
     def heapify_up_step(self):
+        """
+        Schrittweise visualisierung von Heapify-up
+        :return:
+        """
         if not self.animation_active:
             return
 
@@ -1181,6 +1319,12 @@ class Pseudocode_Frame(Frame):
             self.stop_animation()
 
     def remove_node_heapify_animation(self, priority_queue, target_node):
+        """
+        Entfernt spezifischen Knoten aus der Priorityqueue und animiert die Schritte
+        :param priority_queue: priority Queue
+        :param target_node: zu entfernender Knoten
+        :return:
+        """
         self.stop_animation()
         self.animation_step = 0
         self.animation_active = True
@@ -1193,6 +1337,10 @@ class Pseudocode_Frame(Frame):
         self.run_remove_node_heapify_step()
 
     def run_remove_node_heapify_step(self):
+        """
+        Schrittweise animation der Heapify Schritte
+        :return:
+        """
         if not self.animation_active:
             return
 
@@ -1237,6 +1385,10 @@ class Pseudocode_Frame(Frame):
             self.after_id = self.canvas.after(1000, self._heapify_step)
 
     def _heapify_step(self):
+        """
+        Abschluss schritt bei den Heapify Operationen
+        :return:
+        """
         if not self.animation_active:
             return
 
@@ -1257,6 +1409,11 @@ class Pseudocode_Frame(Frame):
         self.after_id = self.canvas.after(1000, self._sift_down_step, self.current_heapify_index)
 
     def _sift_down_step(self, index):
+        """
+        Heapify down starting von index knoten
+        :param index: Knoten index, für Heapify down
+        :return:
+        """
         if not self.animation_active:
             return
 
@@ -1284,6 +1441,10 @@ class Pseudocode_Frame(Frame):
 
 
     def setup_frames(self):
+        """
+        Initiales Canvas setup
+        :return:
+        """
         self.canvas_frame.pack_propagate(False)
         self.canvas_frame.config(width=800, height=400)
 

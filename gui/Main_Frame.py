@@ -13,6 +13,9 @@ from graph_visualizer.graph_visualizer_path import *
 import math
 import copy
 class PfadsuchApp(Tk):
+    """
+    Hauptklasse der GUI, von hier aus werden die die anderen GUI Elemente erstellt und die Algorithmen gesteuert.
+    """
     CONFIG_FILE = "config.json"
     def __init__(self):
         super().__init__()
@@ -72,16 +75,29 @@ class PfadsuchApp(Tk):
         self.font_size_node_label_original = self.font_size_node_label
 
     def global_focus_control(self, event):
+        """
+        Funktion zur Fokuskontrolle
+
+        :param event: Das Ereignis, das die Fokuskontrolle auslöst
+        """
         if event.widget in self.code_frame.winfo_children():
             self.gui_frame.focus_set()
 
     def on_close(self):
+        """
+        Schließt alle noch offenen Fenster beim schließen des Programms
+
+        """
         if self.gui_frame.shortest_paths_window and self.gui_frame.shortest_paths_window.winfo_exists():
             self.gui_frame.shortest_paths_window.destroy()
         self.destroy()
 
-    # Läd config datei beim Start
+
     def load_config(self):
+        """
+        Läd Config Datei im JSON Format und setzt die Variablen
+
+        """
         if os.path.exists(self.CONFIG_FILE):
             try:
                 with open(self.CONFIG_FILE, "r") as f:
@@ -126,8 +142,10 @@ class PfadsuchApp(Tk):
 
     #speichert config datei als json
     def save_config(self):
+        """
+        Speichert die Config Datei
+        """
         config = {
-            #"debug": self.debug,
             "random_edge_mode": self.random_edge_mode,
             "animation_speed": self.animation_speed,
             "default_graph_pos": self.default_graph_pos,
@@ -143,9 +161,14 @@ class PfadsuchApp(Tk):
         }
         with open(self.CONFIG_FILE, "w") as f:
             json.dump(config, f, indent=4)
-        #self.update_gui()
+
         self.code_frame.update_font_size()
+
     def start_algorithm(self):
+        """
+        Starte den Algorithmus und frag ggf. nach Startknoten, falls dieser nicht gesetzt ist.
+
+        """
         if self.current_step:
             self.steps_finished_algorithm = []
             self.shortest_paths = {}
@@ -192,6 +215,11 @@ class PfadsuchApp(Tk):
 
 
     def set_starting_node(self, node):
+        """
+        Setzt den Parameterknoten als Startknoten
+        :param node: Knoten, der als Startknoten gesetzt werden soll
+        :return:
+        """
         self.start_node = node
         self.selected_nodes = []
         if self.debug:
@@ -205,6 +233,10 @@ class PfadsuchApp(Tk):
         self.code_frame.priority_queue = {}
 
     def next_step(self):
+        """
+        Spring einen schritt in der Ausführung nach vorne
+        :return:
+        """
 
         if self.debug:
             print("next step")
@@ -218,6 +250,10 @@ class PfadsuchApp(Tk):
 
 
     def prev_step(self):
+        """
+        Spring einen Schritt in der Ausführung zurück
+        :return:
+        """
         if self.debug:
             print("prev step")
         if self.steps_finished_algorithm == []:
@@ -230,6 +266,10 @@ class PfadsuchApp(Tk):
 
 
     def fast_forward(self):
+        """
+        Startet die automatische Wiedergabe
+        :return:
+        """
         if self.debug:
             print("fast forward")
         if self.fast_forward_paused:
@@ -247,6 +287,10 @@ class PfadsuchApp(Tk):
 
 
     def pause(self):
+        """
+        Hält die automatische Wiedergabe an.
+        :return:
+        """
 
         if self.steps_finished_algorithm == []:
             if self.debug:
@@ -264,6 +308,10 @@ class PfadsuchApp(Tk):
 
     # Läd default graph beim starten der App und auf wunsch
     def load_default_graph(self):
+        """
+        Läd Standardgraph
+        :return:
+        """
         if self.default_graph:
             self.graph = copy.deepcopy(self.default_graph)
             self.node_positions = copy.deepcopy(self.default_graph_pos)
@@ -306,6 +354,10 @@ class PfadsuchApp(Tk):
         self.reset()
 
     def scale_loaded_graph(self):
+        """
+        Skaliert den geladenen Graph, sodass er korrekt angezeigt wird
+        :return:
+        """
 
         scale_x = self.gui_frame.canvas_width / 1000
         scale_y = self.gui_frame.canvas_height / 1000
@@ -316,6 +368,10 @@ class PfadsuchApp(Tk):
             self.node_positions[node] = (new_x, new_y)
 
     def reset_node_size(self):
+        """
+        macht Skalierung der Knoten rückgängig, damit die Knoten immer basierend auf dem Ausganslayout gespeichert werden
+        :return:
+        """
         scale_x = self.gui_frame.canvas_width / 1000
         scale_y = self.gui_frame.canvas_height / 1000
         average_scale = (scale_x + scale_y) / 2
@@ -326,6 +382,10 @@ class PfadsuchApp(Tk):
 
     #Setzt den Algorithmus komplett zurück, aber behält den Graph geladen
     def reset(self):
+        """
+        Setzt den aktuellen Graphen komplett zurück
+        :return:
+        """
         self.selected_nodes = []
         self.fast_forward_paused = True
         if self.debug:
@@ -357,6 +417,10 @@ class PfadsuchApp(Tk):
 
     #Setzt alles zurück und löscht auch den geladenen Graph
     def clear_graph(self):
+        """
+        Löscht den aktuellen Graphen
+        :return:
+        """
         if self.debug:
             print("clearing everything")
         self.gui_frame.canvas.bind("<ButtonPress-1>", self.gui_frame.on_press)
@@ -375,6 +439,11 @@ class PfadsuchApp(Tk):
 
     # Updated die Gui
     def update_gui(self):
+        """
+        Haupt methode zur Wiedergabe, ruft die Visualizer klassen auf um die Graphen zu zeichnen
+        :return:
+        """
+
         self.code_frame.stop_animation()
         if self.selected_algorithm in {"Dijkstra_PQ_lazy", "Dijkstra_PQ"}:
             self.code_frame.priority_queue_label.config(text="Heap")
@@ -455,6 +524,11 @@ class PfadsuchApp(Tk):
 
     #Zeichnet den übergebenen Pfad, need rework still
     def draw_graph_path(self,path):
+        """
+        Zeichnet den Übergebenen Pfad in den Graphen
+        :param path: Pfad der gezeichnet werden soll
+        :return:
+        """
         self.graph_draw_path = Graph_Visualizer_Path(self.gui_frame, self.node_positions, self.graph, self.start_node, self)
         self.graph_draw_path.draw_path(path)
 
