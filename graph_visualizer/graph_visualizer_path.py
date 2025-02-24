@@ -9,6 +9,9 @@ from algorithms.dijkstra_Priority_queue import *
 
 import math
 class Graph_Visualizer_Path:
+    """
+    Klasse zum Zeichnen von kürzesten Pfaden
+    """
     def __init__(self, gui_frame, node_positions, graph, start_node, parent):
         self.gui_frame = gui_frame
         self.node_positions = node_positions
@@ -19,6 +22,11 @@ class Graph_Visualizer_Path:
         self.path = {}
 
     def draw_path(self, path):
+        """
+        Zeichnet den Graph mit highlightetem path
+        :param path: Pfad der highlighted wird
+        :return:
+        """
         self.gui_frame.canvas.delete("all")
         node_radius = self.parent.node_rad
         font_size = self.parent.font_size_node_label
@@ -150,6 +158,23 @@ class Graph_Visualizer_Path:
 
     def draw_directed_edge(self, x1, y1, x2, y2, dx, dy, distance, middle_space, edge_color, weight,
                            already_drawn_edges, node, neighbor):
+        """
+        Zeichnet eine Kante
+        :param x1: x start
+        :param y1: y start
+        :param x2: x ziel
+        :param y2: y ziel
+        :param dx: x offset
+        :param dy: y offset
+        :param distance: Entfernung der Knoten
+        :param middle_space: Mittelraum
+        :param edge_color: Farbe
+        :param weight: Gewicht
+        :param already_drawn_edges: liste mit bereits gezeichneten Kanten
+        :param node: Knoten
+        :param neighbor: Nachbar
+        :return:
+        """
         step = {}
         if self.parent.current_step != -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
@@ -185,6 +210,8 @@ class Graph_Visualizer_Path:
                                           tags="weight")
         already_drawn_edges.add((node, neighbor))
 
+
+    #remove for now, was used for bidirectional edges
     def draw_bidirectional_edge(self, x1, y1, x2, y2, dx, dy, distance, middle_space, node, neighbor, weight,
                                 visited_edges, current_node, neighbor_list, already_drawn_edges):
         forward_colour = "black"
