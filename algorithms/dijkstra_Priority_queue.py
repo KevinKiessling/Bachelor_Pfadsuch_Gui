@@ -36,7 +36,7 @@ class Dijkstra_Priority_Queue:
                 visited=visited,
                 visited_edges=visited_edges,
                 priority_queue=priority_queue,
-                selected_algorithm="Dijkstra_PQ_lazy"
+                selected_algorithm="Dijkstra_PQ"
             )
 
             visited[node] = False
@@ -51,7 +51,7 @@ class Dijkstra_Priority_Queue:
                 visited=visited,
                 visited_edges=visited_edges,
                 priority_queue=priority_queue,
-                selected_algorithm="Dijkstra_PQ_lazy"
+                selected_algorithm="Dijkstra_PQ"
             )
             distances[node] = float('inf')
             self.save_state(
@@ -65,7 +65,7 @@ class Dijkstra_Priority_Queue:
                 visited=visited,
                 visited_edges=visited_edges,
                 priority_queue=priority_queue,
-                selected_algorithm="Dijkstra_PQ_lazy"
+                selected_algorithm="Dijkstra_PQ"
             )
         # Set distance for start node
         distances[startnode] = 0
@@ -81,7 +81,7 @@ class Dijkstra_Priority_Queue:
             visited=visited,
             visited_edges=visited_edges,
             priority_queue=priority_queue,
-            selected_algorithm="Dijkstra_PQ_lazy"
+            selected_algorithm="Dijkstra_PQ"
         )
         heapq.heappush(priority_queue, (0, startnode))
         self.save_state(
@@ -95,7 +95,7 @@ class Dijkstra_Priority_Queue:
             visited=visited,
             visited_edges=visited_edges,
             priority_queue=priority_queue,
-            selected_algorithm="Dijkstra_PQ_lazy"
+            selected_algorithm="Dijkstra_PQ"
         )
 
 
@@ -111,7 +111,7 @@ class Dijkstra_Priority_Queue:
                 visited=visited,
                 visited_edges=visited_edges,
                 priority_queue=priority_queue,
-                selected_algorithm="Dijkstra_PQ_lazy"
+                selected_algorithm="Dijkstra_PQ"
             )
 
             # Extract the node with the smallest distance
@@ -127,7 +127,7 @@ class Dijkstra_Priority_Queue:
                 visited=visited,
                 visited_edges=visited_edges,
                 priority_queue=priority_queue,
-                selected_algorithm="Dijkstra_PQ_lazy"
+                selected_algorithm="Dijkstra_PQ"
             )
             visited[current_node] = True
             self.save_state(
@@ -141,7 +141,7 @@ class Dijkstra_Priority_Queue:
                 visited=visited,
                 visited_edges=visited_edges,
                 priority_queue=priority_queue,
-                selected_algorithm="Dijkstra_PQ_lazy"
+                selected_algorithm="Dijkstra_PQ"
             )
 
 
@@ -158,7 +158,7 @@ class Dijkstra_Priority_Queue:
                     visited=visited,
                     visited_edges=visited_edges,
                     priority_queue=priority_queue,
-                    selected_algorithm="Dijkstra_PQ_lazy"
+                    selected_algorithm="Dijkstra_PQ"
                 )
 
                 if visited[neighbor]:
@@ -174,7 +174,7 @@ class Dijkstra_Priority_Queue:
                         visited=visited,
                         visited_edges=visited_edges,
                         priority_queue=priority_queue,
-                        selected_algorithm="Dijkstra_PQ_lazy"
+                        selected_algorithm="Dijkstra_PQ"
                     )
                     continue
                 visited_edges.add((current_node, neighbor))
@@ -189,7 +189,7 @@ class Dijkstra_Priority_Queue:
                     visited=visited,
                     visited_edges=visited_edges,
                     priority_queue=priority_queue,
-                    selected_algorithm="Dijkstra_PQ_lazy"
+                    selected_algorithm="Dijkstra_PQ"
                 )
                 new_distance = current_distance + edge_weight
                 self.save_state(
@@ -203,7 +203,7 @@ class Dijkstra_Priority_Queue:
                     visited=visited,
                     visited_edges=visited_edges,
                     priority_queue=priority_queue,
-                    selected_algorithm="Dijkstra_PQ_lazy"
+                    selected_algorithm="Dijkstra_PQ"
                 )
                 if new_distance < distances[neighbor]:
                     self.save_state(
@@ -217,7 +217,7 @@ class Dijkstra_Priority_Queue:
                         visited=visited,
                         visited_edges=visited_edges,
                         priority_queue=priority_queue,
-                        selected_algorithm="Dijkstra_PQ_lazy"
+                        selected_algorithm="Dijkstra_PQ"
                     )
                     self.remove_from_priority_queue(priority_queue, neighbor)
                     self.save_state(
@@ -231,7 +231,7 @@ class Dijkstra_Priority_Queue:
                         visited=visited,
                         visited_edges=visited_edges,
                         priority_queue=priority_queue,
-                        selected_algorithm="Dijkstra_PQ_lazy"
+                        selected_algorithm="Dijkstra_PQ"
                     )
 
                     distances[neighbor] = new_distance
@@ -247,7 +247,7 @@ class Dijkstra_Priority_Queue:
                         visited=visited,
                         visited_edges=visited_edges,
                         priority_queue=priority_queue,
-                        selected_algorithm="Dijkstra_PQ_lazy"
+                        selected_algorithm="Dijkstra_PQ"
                     )
                     prev_nodes[neighbor] = current_node
                     visited_edges.add((current_node, neighbor))
@@ -265,7 +265,7 @@ class Dijkstra_Priority_Queue:
                         visited=visited,
                         visited_edges=visited_edges,
                         priority_queue=priority_queue,
-                        selected_algorithm="Dijkstra_PQ_lazy"
+                        selected_algorithm="Dijkstra_PQ"
                     )
         if not priority_queue:
             self.save_state(
@@ -279,7 +279,7 @@ class Dijkstra_Priority_Queue:
                 visited=visited,
                 visited_edges=visited_edges,
                 priority_queue=priority_queue,
-                selected_algorithm="Dijkstra_PQ_lazy"
+                selected_algorithm="Dijkstra_PQ"
             )
 
         self.save_state(
@@ -293,7 +293,7 @@ class Dijkstra_Priority_Queue:
             visited=visited,
             visited_edges=visited_edges,
             priority_queue=priority_queue,
-            selected_algorithm="Dijkstra_PQ_lazy"
+            selected_algorithm="Dijkstra_PQ"
         )
 
         self.shortest_path_edges = path_edges
@@ -301,22 +301,38 @@ class Dijkstra_Priority_Queue:
 
     def remove_from_priority_queue(self, priority_queue, target_node):
         """
-        Entfernt einen Knoten aus der Priority Queue
-        :param priority_queue: priority Queue
-        :param target_node: Zu enfernender Knoten
+        entfernt element aus queue
+        :param priority_queue: Priority Queue
+        :param target_node: Node to be removed
         :return:
         """
 
-        priority_queue[:] = [(dist, node) for dist, node in priority_queue if node != target_node]
+        target_index = next((i for i, (_, node) in enumerate(priority_queue) if node == target_node), None)
+        if target_index is None:
+            return
 
+        last_index = len(priority_queue) - 1
+        priority_queue[target_index], priority_queue[last_index] = priority_queue[last_index], priority_queue[
+            target_index]
 
-        for i in range(len(priority_queue) // 2 - 1, -1, -1):
-            self._sift_down(priority_queue, i)
+        priority_queue.pop()
 
+        self._sift_down(priority_queue, target_index)
+        self._sift_up(priority_queue, target_index)
 
-        if not self.is_valid_min_heap(priority_queue):
-            print("The priority queue is not a valid min-heap after removal!")
+        '''if not self.is_valid_min_heap(priority_queue):
+            print("The priority queue is not a valid min-heap after removal!")'''
 
+    def _sift_up(self, priority_queue, index):
+
+        if index >= len(priority_queue) or index < 0:
+            return
+
+        parent = (index - 1) // 2
+        while index > 0 and priority_queue[index][0] < priority_queue[parent][0]:
+            priority_queue[index], priority_queue[parent] = priority_queue[parent], priority_queue[index]
+            index = parent
+            parent = (index - 1) // 2
     def _sift_down(self, priority_queue, index):
         """
         Heapify-down von index aus

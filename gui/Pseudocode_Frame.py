@@ -241,7 +241,7 @@ class Pseudocode_Frame(Frame):
                 node = step["neighbor"]
                 self.draw_priority_queue(pq, node, dis)
             elif step["step_type"] == "Remove from Heap":
-                print("remove animation")
+                #print("remove animation")
                 help_step = self.parent.steps_finished_algorithm[self.parent.current_step - 1]
                 help_pq = help_step["priority_queue"]
                 help_node_to_be_removed = help_step["neighbor"]
@@ -1331,9 +1331,9 @@ class Pseudocode_Frame(Frame):
 
     def remove_node_heapify_animation(self, priority_queue, target_node):
         """
-        Entfernt spezifischen Knoten aus der Priorityqueue und animiert die Schritte
-        :param priority_queue: priority Queue
-        :param target_node: zu entfernender Knoten
+        Entfernt einen Knoten aus der Priority Queue und animiert dies.
+        :param priority_queue: Priority Queue
+        :param target_node: Node der entfernt wird
         :return:
         """
         self.stop_animation()
@@ -1349,7 +1349,7 @@ class Pseudocode_Frame(Frame):
 
     def run_remove_node_heapify_step(self):
         """
-        Schrittweise animation der Heapify Schritte
+        Heapify-Animationsschritte.
         :return:
         """
         if not self.animation_active:
@@ -1367,62 +1367,62 @@ class Pseudocode_Frame(Frame):
             self.after_id = self.canvas.after(1000, self.run_remove_node_heapify_step)
 
         elif self.animation_step == 1:
+
             for i, (dist, node) in enumerate(self.temp_queue):
                 if node == self.target_node:
-                    self.temp_queue[i] = ("empty", None)
+                    self.temp_queue[i] = self.temp_queue[-1]
+                    self.temp_queue[-1] = ("empty", None)
+                    self.swapped_index = i
                     break
             self.draw_priority_queue(self.temp_queue)
-            self.priority_queue_label.config(text=f"Knoten {self.target_node} als 'leer' markiert")
+            self.priority_queue_label.config(text=f"Knoten {self.target_node} mit dem letzten Knoten getauscht")
             self.animation_step += 1
             self.after_id = self.canvas.after(1000, self.run_remove_node_heapify_step)
 
         elif self.animation_step == 2:
-            self.draw_priority_queue(self.temp_queue)
-            self.priority_queue_label.config(text=f"Heap mit 'leerem' Knoten (vor Entfernung)")
-            self.animation_step += 1
-            self.after_id = self.canvas.after(1000, self.run_remove_node_heapify_step)
 
-        elif self.animation_step == 3:
-            self.temp_queue[:] = [(dist, node) for dist, node in self.temp_queue if node is not None]
+            self.temp_queue.pop()
             self.draw_priority_queue(self.temp_queue)
             self.priority_queue_label.config(
-                text=f"'Leerer' Knoten entfernt. Heap ist ungültig und wird neu aufgebaut...")
+                text=f"Leerer Knoten entfernt. Heap wird neu aufgebaut...")
             self.animation_step += 1
-            self.after_id = self.canvas.after(2000, self.run_remove_node_heapify_step)  # Longer delay here
+            self.after_id = self.canvas.after(2000, self.run_remove_node_heapify_step)
 
-        elif self.animation_step == 4:
-            self.current_heapify_index = len(self.temp_queue) // 2 - 1
+        elif self.animation_step == 3:
+            # Start Heapify Down from the swapped node
             self.priority_queue_label.config(text="Starte Heapify Down...")
             self.after_id = self.canvas.after(1000, self._heapify_step)
 
     def _heapify_step(self):
         """
-        Abschluss schritt bei den Heapify Operationen
+        Letzter Heapify schritt
         :return:
         """
         if not self.animation_active:
             return
 
-        if self.current_heapify_index < 0:
+
+        if self.swapped_index >= len(self.temp_queue) // 2:
+
             self.priority_queue_label.config(text="Heapify abgeschlossen. Heap ist nun gültig.")
             self.draw_priority_queue(self.temp_queue)
             self.stop_animation()
             return
 
-        current_node = self.temp_queue[self.current_heapify_index][1]
-        current_distance = self.temp_queue[self.current_heapify_index][0]
+        current_node = self.temp_queue[self.swapped_index][1]
+        current_distance = self.temp_queue[self.swapped_index][0]
         self.draw_priority_queue(
             self.temp_queue,
             highlight_node=current_node,
             highlight_distance=current_distance
         )
         self.priority_queue_label.config(text=f"Heapify Down: Verarbeite Knoten {current_node}")
-        self.after_id = self.canvas.after(1000, self._sift_down_step, self.current_heapify_index)
+        self.after_id = self.canvas.after(1000, self._sift_down_step, self.swapped_index)
 
     def _sift_down_step(self, index):
         """
-        Heapify down starting von index knoten
-        :param index: Knoten index, für Heapify down
+        Heapify down starting from the given index.
+        :param index: Node index for Heapify Down
         :return:
         """
         if not self.animation_active:
@@ -1446,10 +1446,10 @@ class Pseudocode_Frame(Frame):
             )
             self.after_id = self.canvas.after(1000, self._sift_down_step, smallest)
         else:
-            self.current_heapify_index -= 1
-            self.after_id = self.canvas.after(1000, self._heapify_step)
-
-
+            # Stop if no swap is necessary
+            self.priority_queue_label.config(text="Heapify abgeschlossen. Heap ist nun gültig.")
+            self.draw_priority_queue(self.temp_queue)
+            self.stop_animation()
 
     def setup_frames(self):
         """

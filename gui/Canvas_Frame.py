@@ -118,7 +118,7 @@ class Canvas_Frame(Frame):
         # Graph optionen Menu
         self.graph_menu = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Graph-Funktionen", menu=self.graph_menu)
-        self.graph_menu.add_command(label="Lade Standard Graph", command=parent.load_default_graph)
+        self.graph_menu.add_command(label="Lade Standard-Graph", command=parent.load_default_graph)
         self.graph_menu.add_command(label="Lösche Graph", command=parent.clear_graph)
         self.graph_menu.add_command(label="Importiere Graph", command=self.import_graph)
         self.graph_menu.add_command(label="Exportiere Graph", command=self.export_graph)

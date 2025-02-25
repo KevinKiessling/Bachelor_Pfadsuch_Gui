@@ -10,6 +10,7 @@ from graph_visualizer.graph_visualizer_dijkstra_lazy import *
 from graph_visualizer.graph_visualizer_dijkstra import *
 from graph_visualizer.graph_visualizer_dijkstra_list import *
 from graph_visualizer.graph_visualizer_path import *
+import networkx as nx
 import math
 import copy
 class PfadsuchApp(Tk):
@@ -213,6 +214,7 @@ class PfadsuchApp(Tk):
         self.gui_frame.shortest_paths_button.config(state=DISABLED)
         self.gui_frame.prev_button.config(state=DISABLED)
         self.gui_frame.cancel_button.config(state=NORMAL)
+        self.test_dijkstra_algorithm(self.start_node)
 
 
 
@@ -553,6 +555,40 @@ class PfadsuchApp(Tk):
         self.graph_draw_path = Graph_Visualizer_Path(self.gui_frame, self.node_positions, self.graph, self.start_node, self)
         self.graph_draw_path.draw_path(path)
 
+    def test_dijkstra_algorithm(self, source_node):
+        graph_data = self.graph
+        G = nx.DiGraph()
 
+        for node, neighbors in graph_data.items():
+            G.add_node(node)
+            for neighbor, weight in neighbors.items():
+                G.add_edge(node, neighbor, weight=weight)
+
+        print(f"Graph nodes: {list(G.nodes)}")
+        print(f"Graph edges: {list(G.edges(data=True))}")
+        print(f"Source node: {source_node}")
+
+        if source_node not in G:
+            print(f"Error: Source node {source_node} is not in the graph.")
+            return False
+
+        computed_distances_nx = nx.single_source_dijkstra_path_length(G, source_node)
+
+        computed_distances_step = self.steps_finished_algorithm[-1]["distances"]
+
+        print("NetworkX computed distances:", computed_distances_nx)
+        print("Algorithm computed distances:", computed_distances_step)
+
+        all_nodes = set(computed_distances_nx.keys()).union(set(computed_distances_step.keys()))
+        for node in all_nodes:
+            expected_distance = computed_distances_nx.get(node, float('inf'))
+            computed_distance_step = computed_distances_step.get(node, float('inf'))
+
+            if computed_distance_step != expected_distance:
+                print(f"Test failed for node {node}: expected {expected_distance}, got {computed_distance_step}")
+                return False
+
+        print("All tests passed.")
+        return True
 
 
