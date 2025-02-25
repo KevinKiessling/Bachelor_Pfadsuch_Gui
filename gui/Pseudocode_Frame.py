@@ -151,8 +151,17 @@ class Pseudocode_Frame(Frame):
             y1 = row * element_height
             x2 = x1 + element_width
             y2 = y1 + element_height
-
             color = self.parent.color_heap if value == highlight_node else "light grey"
+
+            if not self.parent.current_step == -1:
+                step = self.parent.steps_finished_algorithm[self.parent.current_step]
+                if self.parent.selected_algorithm == "Dijkstra_List":
+                    if step["step_type"] == "Update Distance":
+                        color = self.parent.color_d_v if value == highlight_node else "light grey"
+                    else:
+                        color = self.parent.color_heap if value == highlight_node else "light grey"
+
+
 
             self.canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="black")
 
@@ -196,6 +205,8 @@ class Pseudocode_Frame(Frame):
                     self.draw_list(pq, step["distances"],step["current_node"])
                 elif step["step_type"] == "Find Min in List":
                     self.draw_list(pq, step["distances"],step["current_node"])
+                elif step["step_type"] == "Update Distance":
+                    self.draw_list(pq, step["distances"],step["neighbor"])
                 else:
                     self.draw_list(pq, step["distances"])
                 return

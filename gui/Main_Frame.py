@@ -36,6 +36,8 @@ class PfadsuchApp(Tk):
         self.font_size_edge_weight = 14
         self.font_size_node_label = 14
 
+        self.fast_forward_id = None
+        self.fast_forward_running = False
         self.fast_forward_paused = False
         self.node_positions = {}
         self.selected_nodes = []
@@ -264,27 +266,36 @@ class PfadsuchApp(Tk):
             if self.current_step == -1:
                 self.code_frame.update_priority_queue([])
 
-
     def fast_forward(self):
-        """
-        Startet die automatische Wiedergabe
-        :return:
-        """
+        """Startet die automatische Wiedergabe"""
         if self.debug:
             print("fast forward")
-        if self.fast_forward_paused:
+
+        if self.fast_forward_running:
             return
-        if self.steps_finished_algorithm == []:
-            self.start_algorithm()
-        if self.current_step < len(self.steps_finished_algorithm) -1:
-            self.current_step += 1
-            self.update_gui()
-            self.after(self.animation_speed, self.fast_forward)
-        else:
 
-            if self.debug:
-                print("finished algorithm")
+        self.fast_forward_running = True
 
+        def step():
+            """Recursive function for stepping through the algorithm."""
+            if self.fast_forward_paused:
+                self.fast_forward_running = False
+                return
+
+            if not self.steps_finished_algorithm:
+                self.start_algorithm()
+
+            if self.current_step < len(self.steps_finished_algorithm) - 1:
+                self.current_step += 1
+                self.update_gui()
+                self.fast_forward_id = self.after(self.animation_speed, step)  # Store after ID
+            else:
+                self.fast_forward_running = False
+                self.fast_forward_id = None  # Reset when finished
+                if self.debug:
+                    print("finished algorithm")
+
+        step()
 
     def pause(self):
         """
@@ -388,6 +399,16 @@ class PfadsuchApp(Tk):
         """
         self.selected_nodes = []
         self.fast_forward_paused = True
+        self.fast_forward_running = False
+
+
+        if self.fast_forward_id:
+            try:
+                self.after_cancel(self.fast_forward_id)
+            except ValueError:  #
+                pass
+            self.fast_forward_id = None
+
         if self.debug:
             print("resetting without clear")
         self.steps_finished_algorithm = []

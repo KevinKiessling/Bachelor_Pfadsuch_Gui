@@ -10,7 +10,7 @@ import tkinter as tk
 
 def main():
     """
-    Haupeinstigspunkt der GUI
+    Haupeinstiegspunkt der GUI
     :return:
     """
 
