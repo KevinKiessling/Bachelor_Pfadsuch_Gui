@@ -121,7 +121,6 @@ class PfadsuchApp(Tk):
                 self.color_edge_highlight = config.get("color_edge_highlight", self.color_edge_highlight)
                 self.color_shortest_path = config.get("color_shortest_path", self.color_shortest_path)
                 self.font_size = config.get("font_size", self.font_size)
-                self.show_distance_on_nodes = config.get("show_distances",self.show_distance_on_nodes)
 
 
             except json.JSONDecodeError as e:
@@ -159,8 +158,7 @@ class PfadsuchApp(Tk):
             "color_discovered_true": self.color_discovered_true,
             "color_discovered_false": self.color_discovered_false,
             "color_edge_highlight": self.color_edge_highlight,
-            "color_shortest_path": self.color_shortest_path,
-            "show_distances": self.show_distance_on_nodes
+            "color_shortest_path": self.color_shortest_path
         }
         with open(self.CONFIG_FILE, "w") as f:
             json.dump(config, f, indent=4)

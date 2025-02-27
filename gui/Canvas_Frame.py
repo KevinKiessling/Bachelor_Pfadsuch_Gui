@@ -1167,15 +1167,7 @@ class Canvas_Frame(Frame):
         max_weight_label = Label(random_checkbox_frame, text="Maximales Gewicht (<100000)")
         max_weight_label.grid(row=0, column=2)
 
-        show_distance_var = BooleanVar(value=self.parent.show_distance_on_nodes)
-        show_distance_var_frame = Frame(general_tab_frame)
-        show_distance_var_frame.pack(anchor="w", pady=10, padx=10)
-        show_distance_checkbox = Checkbutton(
-            show_distance_var_frame,
-            text="Zeige Distanzen zum Startknoten auf den Knoten",
-            variable=show_distance_var
-        )
-        show_distance_checkbox.grid(row=0, column=3)
+
 
         def save_default_graph_to_parent():
             """
@@ -1246,9 +1238,7 @@ class Canvas_Frame(Frame):
             Speichert die Variablen des Settingsfenster in der Hauptklasse
             :return:
             """
-            #self.parent.debug = debug_var.get()
             self.parent.random_edge_mode = random_mode_var.get()
-            self.parent.show_distance_on_nodes = show_distance_var.get()
             self.parent.animation_speed = speed_var.get()
             self.parent.font_size = font_var.get()
             max_edge_weight = max_weight_var.get()

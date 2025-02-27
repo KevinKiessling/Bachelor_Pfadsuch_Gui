@@ -48,9 +48,33 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display_frame.grid_rowconfigure(0, weight=1)
         self.pseudocode_display_frame.grid_propagate(False)
         self.pseudocode_display_frame.config(width=800, height=400)
-        self.distance_table_label = Label(self, text="Aktuelle Distanzen", font=("Arial", 12))
-        self.distance_table_label.grid(row=2, column=0, pady=5, sticky="ew", padx=10)
 
+        #--
+
+
+        distance_frame = Frame(self)
+        distance_frame.grid(row=2, column=0, pady=5, sticky="ew", padx=10)
+
+        # Create the label
+        self.distance_table_label = Label(distance_frame, text="Aktuelle Distanzen", font=("Arial", 12))
+        self.distance_table_label.grid(row=0, column=1, padx=(10, 5), sticky="w")
+
+        # Create the checkbox
+        self.show_distances_var = IntVar()
+        self.show_distances_checkbox = Checkbutton(
+            distance_frame,
+            text="Zeige Distanzen auf Knoten",
+            variable=self.show_distances_var,
+            command=self.on_checkbox_toggle  # Calls the method when toggled
+        )
+        self.show_distances_checkbox.grid(row=0, column=2, padx=5, sticky="w")
+
+        # Adjust column weights
+        distance_frame.grid_columnconfigure(0, weight=2)  # Pushes label to the right
+        distance_frame.grid_columnconfigure(1, weight=0)
+        distance_frame.grid_columnconfigure(2, weight=0)
+        distance_frame.grid_columnconfigure(3, weight=1)
+        #--
         self.distance_table_frame = Frame(self, bd=1, relief=SOLID)
         self.distance_table_frame.grid(row=3, column=0, sticky="nsew", padx=10)
 
@@ -113,7 +137,10 @@ class Pseudocode_Frame(Frame):
         self.animation_active = False
         self.after_id = None
 
-
+    def on_checkbox_toggle(self):
+        self.parent.show_distance_on_nodes = bool(self.show_distances_var.get())  # Update parent variable
+        #print(f"Updating: show_distance_on_nodes = {self.parent.show_distance_on_nodes}")
+        self.parent.update_gui()
     def update_font_size(self):
         """
         Updated die Fontsize des Pseudocodes

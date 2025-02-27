@@ -36,7 +36,7 @@ class DijkstraTester:
         graph_data = self.graph
         G = nx.DiGraph()
         if source_node not in self.graph:
-            print(f"Warnung: Quellknoten {source_node} ist nicht im Graph. Test wird übersprungen.")
+            print(f"Warnung: Startknoten {source_node} ist nicht im Graph. Test wird übersprungen.")
             return False
         for node, neighbors in graph_data.items():
             G.add_node(node)
@@ -45,10 +45,10 @@ class DijkstraTester:
 
         print(f"Graph Knoten: {list(G.nodes)}")
         print(f"Graph Kanten: {list(G.edges(data=True))}")
-        print(f"Quellknoten: {source_node}")
+        print(f"Startknoten: {source_node}")
 
         if source_node not in G:
-            print(f"Fehler: Quellknoten {source_node} ist nicht im Graph.")
+            print(f"Fehler: Startknoten {source_node} ist nicht im Graph.")
             return False
 
         computed_distances_nx = nx.single_source_dijkstra_path_length(G, source_node)
