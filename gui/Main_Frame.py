@@ -540,8 +540,32 @@ class PfadsuchApp(Tk):
                 self.gui_frame.shortest_paths_button.config(state=DISABLED)
             else:
                 self.gui_frame.shortest_paths_button.config(state=NORMAL)
+        if step["step_type"] == "Algorithm Finished":
+            # Zeige das Popup an, das beides enthält
+            self.blink_button(self.gui_frame.shortest_paths_button)
+            messagebox.showinfo("Algorithmus beendet",
+                                "Der Dijkstra-Algorithmus wurde erfolgreich abgeschlossen.\n\nDer kürzeste Pfade Button ist jetzt verfügbar und kann geklickt werden.")
 
-    #Zeichnet den übergebenen Pfad, need rework still
+    def blink_button(self, button, times=5, interval=500):
+        """
+        lässt Button blinken zwischen gelb und weiß
+        :param button: Button der blinken soll
+        :param times: wie oft
+        :param interval: Intervall
+        :return:
+        """
+        def toggle_color(count):
+            if count % 2 == 0:
+                button.config(bg="yellow")
+            else:
+                button.config(bg="white")
+
+            if count < times * 2 - 1:
+                button.after(interval, toggle_color, count + 1)
+            else:
+                button.config(bg=button.cget("bg"))
+        toggle_color(0)
+
     def draw_graph_path(self,path):
         """
         Zeichnet den Übergebenen Pfad in den Graphen
