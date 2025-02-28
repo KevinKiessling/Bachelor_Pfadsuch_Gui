@@ -150,11 +150,23 @@ class Pseudocode_Frame(Frame):
         self.animation_step = 0
         self.animation_active = False
         self.after_id = None
+        self.resize_after_id = None  # Store the scheduled call
 
     def auto_adjust_font_size(self, event=None):
         """
-        skaliert die fontsize basierend auf frame size
+        resize methode, mit throttle für bessere performance
         :param event:
+        :return:
+        """
+
+        if self.resize_after_id:
+            self.parent.after_cancel(self.resize_after_id)
+
+        self.resize_after_id = self.parent.after(100, self._resize_font)
+
+    def _resize_font(self):
+        """
+        resize methode
         :return:
         """
         frame_width = self.pseudocode_display_frame.winfo_width()
