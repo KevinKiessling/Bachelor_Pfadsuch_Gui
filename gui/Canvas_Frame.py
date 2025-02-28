@@ -1183,10 +1183,22 @@ class Canvas_Frame(Frame):
             :return:
             """
 
-            self.parent.default_graph_pos = json.loads(json.dumps(self.parent.node_positions))
-            self.parent.default_graph = json.loads(json.dumps(self.parent.graph))
-            if self.parent.debug:
-                print("Default graph updated successfully.")
+            try:
+
+                scale_x = 1000 / self.parent.gui_frame.canvas_width
+                scale_y = 1000 / self.parent.gui_frame.canvas_height
+
+
+                self.parent.default_graph_pos = {
+                    node: (x * scale_x, y * scale_y) for node, (x, y) in self.parent.node_positions.items()
+                }
+
+                self.parent.default_graph = self.parent.graph.copy()
+
+                if self.parent.debug:
+                    print("Default graph updated successfully.")
+            except Exception as e:
+                print(f"Error saving default graph: {e}")
 
         save_cur_a_d_button = Button(
             general_tab_frame,
