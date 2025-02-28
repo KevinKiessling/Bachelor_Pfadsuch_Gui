@@ -273,9 +273,14 @@ class Canvas_Frame(Frame):
         clicked_node = self.get_node_at_position(x, y)
 
         if clicked_node:
-            self.parent.set_starting_node(clicked_node)
-            if self.parent.debug:
-                print(f"Startknoten gesetzt auf {clicked_node}")
+            if self.parent.start_node == clicked_node:
+                self.parent.set_starting_node("")
+                if self.parent.debug:
+                    print(f"Startknoten {clicked_node} entfernt")
+            else:
+                self.parent.set_starting_node(clicked_node)
+                if self.parent.debug:
+                    print(f"Startknoten gesetzt auf {clicked_node}")
         else:
             if self.parent.debug:
                 print("Kein Knoten unter Doppelklick gefunden!")

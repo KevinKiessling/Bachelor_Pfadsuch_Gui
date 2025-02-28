@@ -20,6 +20,9 @@ class PfadsuchApp(Tk):
     CONFIG_FILE = "config.json"
     def __init__(self):
         super().__init__()
+        self.enable_tests = True
+
+
         self.random_edge_mode = False
         self.animation_speed = 100
         self.debug = False
@@ -210,7 +213,8 @@ class PfadsuchApp(Tk):
         self.gui_frame.shortest_paths_button.config(state=DISABLED)
         self.gui_frame.prev_button.config(state=DISABLED)
         self.gui_frame.cancel_button.config(state=NORMAL)
-        self.test_dijkstra_algorithm(self.start_node)
+        if self.enable_tests:
+            self.test_dijkstra_algorithm(self.start_node)
 
 
 
@@ -223,7 +227,10 @@ class PfadsuchApp(Tk):
         self.start_node = node
         self.selected_nodes = []
         if self.debug:
-            print(f" Knoten {node} als Startknoten gesetzt")
+            if node:
+                print(f"Knoten {node} als Startknoten gesetzt")
+            else:
+                print("Startknoten entfernt")
         self.selected_nodes = []
         self.steps_finished_algorithm = []
         self.current_step = -1
@@ -544,7 +551,7 @@ class PfadsuchApp(Tk):
             # Zeige das Popup an, das beides enthält
             self.blink_button(self.gui_frame.shortest_paths_button)
             messagebox.showinfo("Algorithmus beendet",
-                                "Der Dijkstra-Algorithmus wurde erfolgreich abgeschlossen.\n\nDer kürzeste Pfade Button ist jetzt verfügbar und kann geklickt werden.")
+                                "Der Dijkstra-Algorithmus wurde erfolgreich abgeschlossen.\n\nDer kürzeste Pfade Button ist jetzt verfügbar.")
 
     def blink_button(self, button, times=5, interval=500):
         """
