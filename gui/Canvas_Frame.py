@@ -1891,6 +1891,12 @@ class Canvas_Frame(Frame):
                 )
 
                 if valid_graph and valid_positions:
+                    max_x = max(x for x, y in node_positions.values())
+                    max_y = max(y for x, y in node_positions.values())
+
+                    if max_x > 1000 or max_y > 1000:
+                        print("Fehlerhafte Input-Datei: Die Positionen des Graphen überschreiten das 1000x1000 Limit.")
+                        return
                     self.parent.graph = graph
                     self.parent.node_positions = {node: tuple(pos) for node, pos in node_positions.items()}
                     if self.parent.debug:

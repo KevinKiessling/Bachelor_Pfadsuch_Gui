@@ -18,13 +18,25 @@ class Pseudocode_Frame(Frame):
         self.step_label = Label(self, text="Aktueller Schritt: ", font=("Arial", 12))
         self.step_label.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
 
+
         self.pseudocode_display_frame = Frame(self)
         self.pseudocode_display_frame.grid(row=1, column=0, pady=5, sticky="nsew", padx=10)
 
-        self.pseudocode_display = Text(self.pseudocode_display_frame, wrap=WORD, height=12, width=60, takefocus=0)
+
+        self.pseudocode_display = Text(
+            self.pseudocode_display_frame,
+            wrap=NONE,
+            height=12,
+            width=60,
+            takefocus=0,
+            xscrollcommand=lambda *args: self.scrollbar_pseudocode_x.set(*args),
+            yscrollcommand=lambda *args: self.scrollbar_pseudocode.set(*args)
+        )
         self.pseudocode_display.grid(row=0, column=0, sticky="nsew")
-        self.pseudocode_display.config(state=DISABLED)
+
+
         self.pseudocode_display.config(
+            state=DISABLED,
             font=("Courier New", self.parent.font_size),
             bg="#f4f4f4",
             fg="#333333",
@@ -34,18 +46,32 @@ class Pseudocode_Frame(Frame):
             padx=10,
             pady=10,
         )
+
+
         self.pseudocode_display.tag_configure("highlight", background="#ffff00")
         self.pseudocode_display.tag_configure("dim", background="#f0f0f0")
 
-        self.scrollbar_pseudocode = Scrollbar(self.pseudocode_display_frame, orient="vertical",
-                                              command=self.pseudocode_display.yview)
+        #
+        self.scrollbar_pseudocode = Scrollbar(
+            self.pseudocode_display_frame, orient="vertical", command=self.pseudocode_display.yview
+        )
         self.scrollbar_pseudocode.grid(row=0, column=1, sticky="ns")
-        self.pseudocode_display.configure(yscrollcommand=self.scrollbar_pseudocode.set)
+
+
+        self.scrollbar_pseudocode_x = Scrollbar(
+            self.pseudocode_display_frame, orient="horizontal", command=self.pseudocode_display.xview
+        )
+        self.scrollbar_pseudocode_x.grid(row=1, column=0, sticky="ew")
+
+
+        self.pseudocode_display.configure(xscrollcommand=self.scrollbar_pseudocode_x.set)
+
 
         self.pseudocode_display_frame.grid_columnconfigure(0, weight=1)
         self.pseudocode_display_frame.grid_rowconfigure(0, weight=1)
         self.pseudocode_display_frame.grid_propagate(False)
         self.pseudocode_display_frame.config(width=800, height=400)
+        self.pseudocode_display_frame.bind("<Configure>", self.auto_adjust_font_size)
 
         distance_frame = Frame(self)
         distance_frame.grid(row=2, column=0, pady=5, sticky="ew", padx=10)
@@ -124,6 +150,30 @@ class Pseudocode_Frame(Frame):
         self.animation_step = 0
         self.animation_active = False
         self.after_id = None
+
+    def auto_adjust_font_size(self, event=None):
+        """
+        skaliert die fontsize basierend auf frame size
+        :param event:
+        :return:
+        """
+        frame_width = self.pseudocode_display_frame.winfo_width()
+        frame_height = self.pseudocode_display_frame.winfo_height()
+
+        estimated_font_size = min(frame_width // 45, frame_height // 15)
+        estimated_font_size = max(8, min(estimated_font_size, 25))
+        estimated_font_size = int(estimated_font_size)
+
+        test_font = ("Courier New", estimated_font_size)
+        self.pseudocode_display.config(font=test_font)
+
+        self.pseudocode_display.update_idletasks()
+
+        if self.pseudocode_display.yview()[1] < 1.0 or self.pseudocode_display.xview()[1] < 1.0:
+            estimated_font_size = max(8, estimated_font_size - 1)
+
+        self.parent.font_size = estimated_font_size
+        self.update_font_size()
 
     def on_checkbox_toggle(self):
         self.parent.show_distance_on_nodes = bool(self.show_distances_var.get())  # Update parent variable
@@ -1404,7 +1454,7 @@ class Pseudocode_Frame(Frame):
             self.after_id = self.canvas.after(2000, self.run_remove_node_heapify_step)
 
         elif self.animation_step == 3:
-            # Start Heapify Down from the swapped node
+
             self.priority_queue_label.config(text="Starte Heapify Down...")
             self.after_id = self.canvas.after(1000, self._heapify_step)
 
