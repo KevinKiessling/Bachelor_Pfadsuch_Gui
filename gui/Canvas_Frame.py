@@ -13,6 +13,7 @@ from tkinter import Tk, Canvas, Frame, Scrollbar, Button
 from tkinter import StringVar, OptionMenu
 from tkinter import Toplevel, Label, Button, Checkbutton, BooleanVar
 from tkinter import Toplevel, Button, Checkbutton, BooleanVar, Text, Frame, Scrollbar, PhotoImage, LEFT
+from idlelib.tooltip import Hovertip
 
 import copy
 class Canvas_Frame(Frame):
@@ -51,28 +52,35 @@ class Canvas_Frame(Frame):
 
         self.prev_button = Button(self.button_frame, image=self.prev_icon, command=parent.prev_step)
         self.prev_button.grid(row=0, column=1, padx=5)
+        Hovertip(self.prev_button, "1 Schritt zurück")
 
         self.next_button = Button(self.button_frame, image=self.next_icon, command=parent.next_step)
         self.next_button.grid(row=0, column=2, padx=5)
+        Hovertip(self.next_button, "1 Schritt vor")
 
         self.pause_button = Button(self.button_frame, image=self.pause_icon, command=parent.pause, state=DISABLED)
         self.pause_button.grid(row=0, column=3, padx=5)
+        Hovertip(self.pause_button, "Pausiert automatische Wiedergabe")
 
         self.fast_forward_button = Button(self.button_frame, image=self.fast_forward_icon, command=self.go_forward_button)
         self.fast_forward_button.grid(row=0, column=4, padx=5)
+        Hovertip(self.fast_forward_button, "Startet automatische Wiedergabe")
 
         self.starting_button = Button(
             self.button_frame, image=self.start_icon, command=parent.start_algorithm, width=20
         )
         self.starting_button.grid(row=0, column=5, padx=5)
+        Hovertip(self.starting_button, "Starte Algorithmus")
 
         self.shortest_paths_button = Button(
             self.button_frame, image=self.shortest_paths_icon, command=self.open_shortest_paths, state=DISABLED, width=20
         )
         self.shortest_paths_button.grid(row=0, column=6, padx=5)
+        Hovertip(self.shortest_paths_button, "Öffne kürzeste Pfade Fenster")
         self.cancel_button = Button(self.button_frame, image=self.cancel_icon,
                                           command=self.cancel_button_method, state=DISABLED)
         self.cancel_button.grid(row=0, column=7, padx=5)
+        Hovertip(self.cancel_button, "Abbruch")
 
         self.canvas_frame = Frame(self, bd=2, relief="solid")
         self.canvas_frame.grid(row=1, column=0, padx=10, pady=5, columnspan=6, sticky="nsew")

@@ -106,8 +106,6 @@ class PfadsuchApp(Tk):
                 with open(self.CONFIG_FILE, "r") as f:
                     config = json.load(f)
 
-
-                #self.debug = config.get("debug", self.debug)
                 self.random_edge_mode = config.get("random_edge_mode", self.random_edge_mode)
                 self.animation_speed = config.get("animation_speed", self.animation_speed)
                 self.default_graph = config.get("default_graph", self.default_graph)

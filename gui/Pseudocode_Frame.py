@@ -18,10 +18,8 @@ class Pseudocode_Frame(Frame):
         self.step_label = Label(self, text="Aktueller Schritt: ", font=("Arial", 12))
         self.step_label.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
 
-
         self.pseudocode_display_frame = Frame(self)
         self.pseudocode_display_frame.grid(row=1, column=0, pady=5, sticky="nsew", padx=10)
-
 
         self.pseudocode_display = Text(self.pseudocode_display_frame, wrap=WORD, height=12, width=60, takefocus=0)
         self.pseudocode_display.grid(row=0, column=0, sticky="nsew")
@@ -49,32 +47,26 @@ class Pseudocode_Frame(Frame):
         self.pseudocode_display_frame.grid_propagate(False)
         self.pseudocode_display_frame.config(width=800, height=400)
 
-        #--
-
-
         distance_frame = Frame(self)
         distance_frame.grid(row=2, column=0, pady=5, sticky="ew", padx=10)
 
-        # Create the label
         self.distance_table_label = Label(distance_frame, text="Aktuelle Distanzen", font=("Arial", 12))
         self.distance_table_label.grid(row=0, column=1, padx=(10, 5), sticky="w")
 
-        # Create the checkbox
         self.show_distances_var = IntVar()
         self.show_distances_checkbox = Checkbutton(
             distance_frame,
             text="Zeige Distanzen auf Knoten",
             variable=self.show_distances_var,
-            command=self.on_checkbox_toggle  # Calls the method when toggled
+            command=self.on_checkbox_toggle
         )
         self.show_distances_checkbox.grid(row=0, column=2, padx=5, sticky="w")
 
-        # Adjust column weights
-        distance_frame.grid_columnconfigure(0, weight=2)  # Pushes label to the right
+        distance_frame.grid_columnconfigure(0, weight=2)
         distance_frame.grid_columnconfigure(1, weight=0)
         distance_frame.grid_columnconfigure(2, weight=0)
         distance_frame.grid_columnconfigure(3, weight=1)
-        #--
+
         self.distance_table_frame = Frame(self, bd=1, relief=SOLID)
         self.distance_table_frame.grid(row=3, column=0, sticky="nsew", padx=10)
 
@@ -92,10 +84,8 @@ class Pseudocode_Frame(Frame):
         self.scrollbar_distance.grid(row=0, column=1, sticky="ns")
         self.distance_table.configure(yscrollcommand=self.scrollbar_distance.set)
 
-
         self.distance_table_frame.grid_columnconfigure(0, weight=1)
         self.distance_table_frame.grid_rowconfigure(0, weight=1)
-
 
         self.priority_queue_label = Label(self, text="Priority Queue", font=("Arial", 12))
         self.priority_queue_label.grid(row=4, column=0, pady=5, sticky="ew", padx=10)
@@ -103,12 +93,10 @@ class Pseudocode_Frame(Frame):
         self.main_frame = Frame(self, bd=0, relief=SOLID)
         self.main_frame.grid(row=5, column=0, sticky="nsew", padx=10)
 
-
         self.canvas_frame = Frame(self.main_frame, bd=1, relief="solid")
         self.canvas = Canvas(self.canvas_frame, bg="white")
         self.canvas.pack(expand=True, fill="both")
         self.canvas_frame.pack_forget()
-
 
         self.current_view = "canvas"
         self.canvas_frame.pack(expand=True, fill="both", padx=10, pady=10)
