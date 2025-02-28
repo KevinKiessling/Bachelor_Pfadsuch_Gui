@@ -216,15 +216,15 @@ class Pseudocode_Frame(Frame):
             y1 = row * element_height
             x2 = x1 + element_width
             y2 = y1 + element_height
-            color = self.parent.color_heap if value == highlight_node else "light grey"
+            color = self.parent.color_heap if value == highlight_node else "light steel blue"
 
             if not self.parent.current_step == -1:
                 step = self.parent.steps_finished_algorithm[self.parent.current_step]
                 if self.parent.selected_algorithm == "Dijkstra_List":
                     if step["step_type"] == "Update Distance":
-                        color = self.parent.color_d_v if value == highlight_node else "light grey"
+                        color = self.parent.color_d_v if value == highlight_node else "light steel blue"
                     else:
-                        color = self.parent.color_heap if value == highlight_node else "light grey"
+                        color = self.parent.color_heap if value == highlight_node else "light steel blue"
 
 
 
