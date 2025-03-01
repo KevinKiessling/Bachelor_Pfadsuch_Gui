@@ -190,7 +190,7 @@ class Pseudocode_Frame(Frame):
     def on_checkbox_toggle(self):
         self.parent.show_distance_on_nodes = bool(self.show_distances_var.get())  # Update parent variable
         #print(f"Updating: show_distance_on_nodes = {self.parent.show_distance_on_nodes}")
-        self.parent.update_gui()
+        self.parent.update_gui(show_popup=False)
     def update_font_size(self):
         """
         Updated die Fontsize des Pseudocodes
@@ -1279,7 +1279,9 @@ class Pseudocode_Frame(Frame):
 
     def heapify_down_step(self):
         """
-        Schrittweises Heapify-down, zeichnet in jedem Schritt den Baum neu
+        Schrittweises Heapify-down, zeichnet in jedem Schritt den Baum neu, Wichtig es wird lexikografisch verglichen
+        bei tiebreaks.
+        (5, "11") < (5, "9")  # True, weil 1<9
         :return:
         """
         if not self.animation_active:

@@ -464,7 +464,7 @@ class PfadsuchApp(Tk):
         self.update_gui()
 
     # Updated die Gui
-    def update_gui(self):
+    def update_gui(self, show_popup=True):
         """
         Haupt methode zur Wiedergabe, ruft die Visualizer klassen auf um die Graphen zu zeichnen
         :return:
@@ -549,9 +549,10 @@ class PfadsuchApp(Tk):
                 self.gui_frame.shortest_paths_button.config(state=NORMAL)
         if step["step_type"] == "Algorithm Finished":
             # Zeige das Popup an, das beides enthält
-            self.blink_button(self.gui_frame.shortest_paths_button)
-            messagebox.showinfo("Algorithmus beendet",
-                                "Der Dijkstra-Algorithmus wurde erfolgreich abgeschlossen.\n\nDer kürzeste Pfade Button ist jetzt verfügbar.")
+            if show_popup:
+                self.blink_button(self.gui_frame.shortest_paths_button)
+                messagebox.showinfo("Algorithmus beendet",
+                                    "Der Dijkstra-Algorithmus wurde erfolgreich abgeschlossen.\n\nDer kürzeste Pfade Button ist jetzt verfügbar.")
 
     def blink_button(self, button, times=5, interval=500):
         """

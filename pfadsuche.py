@@ -1,7 +1,7 @@
 
 '''
 
-Ausführen der Gui via : " pythonpfadsuche.py  "
+Ausführen der Gui via : "python pfadsuche.py"
 
 '''
 from gui.Main_Frame import PfadsuchApp
