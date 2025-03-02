@@ -126,7 +126,7 @@ class Canvas_Frame(Frame):
         # Graph optionen Menu
         self.graph_menu = Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label="Graph-Funktionen", menu=self.graph_menu)
-        self.graph_menu.add_command(label="Lade Standard-Graph", command=parent.load_default_graph)
+        self.graph_menu.add_command(label="Lade Standardgraph", command=parent.load_default_graph)
         self.graph_menu.add_command(label="Lösche Graph", command=parent.clear_graph)
         self.graph_menu.add_command(label="Importiere Graph", command=self.import_graph)
         self.graph_menu.add_command(label="Exportiere Graph", command=self.export_graph)
@@ -1207,7 +1207,7 @@ class Canvas_Frame(Frame):
 
         save_cur_a_d_button = Button(
             general_tab_frame,
-            text="Aktuellen Graphen als Standard Speichern",
+            text="Aktuellen Graphen als Standardgraph Speichern",
             command=lambda: save_default_graph_to_parent()
         )
         save_cur_a_d_button.pack(anchor="w", pady=10, padx=10)
@@ -1540,7 +1540,7 @@ class Canvas_Frame(Frame):
             self.parent.set_starting_node(clicked_node)
             return
 
-        min_dis = 60
+        min_dis = self.parent.node_rad * 2
         for node, (c_x, c_y) in self.parent.node_positions.items():
             if math.hypot(c_x - x, c_y - y) < min_dis:
                 if self.parent.debug:
