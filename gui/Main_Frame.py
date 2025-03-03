@@ -1,6 +1,7 @@
 import json
 from tkinter import *
 from tkinter import messagebox
+
 from gui.Canvas_Frame import *
 from gui.Pseudocode_Frame import *
 from algorithms.dijkstra_list import *
@@ -22,6 +23,7 @@ class PfadsuchApp(Tk):
         super().__init__()
         self.enable_tests = True
 
+        self.show_welcome = True
 
         self.random_edge_mode = False
         self.animation_speed = 100
@@ -58,7 +60,7 @@ class PfadsuchApp(Tk):
 
         self.show_distance_on_nodes = False
         self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
-        self.geometry('1850x1100')
+        self.geometry('1550x900')
         self.minsize(800, 600)
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -79,6 +81,67 @@ class PfadsuchApp(Tk):
         self.node_rad_original = self.node_rad
         self.font_size_edge_weight_original = self.font_size_edge_weight
         self.font_size_node_label_original = self.font_size_node_label
+        if self.show_welcome:
+            self.after(300, self.show_welcome_window)
+
+    def show_welcome_window(self):
+        """
+        Öffnet Willkommens Fenster
+        :return:
+        """
+        welcome_window = Toplevel(self)
+        welcome_window.title("Willkommen")
+        win_width = 400
+        win_height = 300
+
+
+        welcome_window.geometry(f"{win_width}x{win_height}")
+
+
+        self.tk.eval(f'tk::PlaceWindow {welcome_window} center')
+
+
+
+        self.raise_above_all(welcome_window)
+
+
+        label = Label(welcome_window, text="Willkommen zur GUI zur Visualisierung von Pfadsuchalgorithmen!\n\n"
+                                           "Startknoten wählen:\n"
+                                           "• Doppelklick auf einen Knoten\n\n"
+                                           "Algorithmus starten:\n"
+                                           "• Klicken Sie auf 'Start', '1 Schritt vor' oder 'Vorspulen'\n\n"
+                                           "Weitere Informationen finden Sie im Hilfe-Menü.",
+                      justify="left")
+        label.pack(pady=10)
+
+
+        self.welcome_var = BooleanVar(value=not self.show_welcome)
+
+        check = ttk.Checkbutton(welcome_window, text="Nicht mehr anzeigen",
+                                variable=self.welcome_var,
+                                command=self.toggle_welcome)
+        check.pack(pady=5)
+
+
+        btn_ok = ttk.Button(welcome_window, text="OK", command=welcome_window.destroy)
+        btn_ok.pack(pady=10)
+
+    def raise_above_all(self, window):
+        """
+        Platziert das übergebene Fenster nach vorne
+        :param window: Fenster das nach vorne gesetzt werden soll
+        :return:
+        """
+        window.attributes('-topmost', 1)
+        window.after(100, lambda: window.attributes('-topmost', 0))
+
+    def toggle_welcome(self):
+        """
+        Ändert die Willkommens Variable und speichert sie in der Config
+        :return:
+        """
+        self.show_welcome = not self.welcome_var.get()
+        self.save_config()
 
     def global_focus_control(self, event):
         """
@@ -123,6 +186,7 @@ class PfadsuchApp(Tk):
                 self.color_shortest_path = config.get("color_shortest_path", self.color_shortest_path)
                 self.font_size = config.get("font_size", self.font_size)
 
+                self.show_welcome = config.get("show_welcome", True)
 
             except json.JSONDecodeError as e:
                 if self.debug:
@@ -159,7 +223,8 @@ class PfadsuchApp(Tk):
             "color_discovered_true": self.color_discovered_true,
             "color_discovered_false": self.color_discovered_false,
             "color_edge_highlight": self.color_edge_highlight,
-            "color_shortest_path": self.color_shortest_path
+            "color_shortest_path": self.color_shortest_path,
+            "show_welcome": self.show_welcome  # Neu: speichern der Variable
         }
         with open(self.CONFIG_FILE, "w") as f:
             json.dump(config, f, indent=4)
