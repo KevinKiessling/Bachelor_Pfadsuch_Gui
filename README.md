@@ -15,6 +15,7 @@ Voraussetzungen:
   
 - NetworkX Version 3.4.2
   -> Installieren Sie die benötigte Version mit dem folgenden Befehl:
+
      pip install networkx==3.4.2
 
 Ausführung:
