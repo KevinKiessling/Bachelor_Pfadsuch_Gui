@@ -21,4 +21,5 @@ Voraussetzungen:
 Ausführung:
 -----------
 Das Programm kann durch Aufrufen des folgenden Befehls in der Kommandozeile innerhalb des Ordners, in dem sich das Programm befindet, gestartet werden:
-  python pfadsuche.py
+  
+    python pfadsuche.py
