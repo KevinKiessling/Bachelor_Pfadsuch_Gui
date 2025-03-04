@@ -615,7 +615,7 @@ class Pseudocode_Frame(Frame):
                 self.set_step("Update Distanzen")
             if step == "Push to Heap":
                 self.highlight_step("Push to Heap")
-                self.set_step("Pushe neue Distanz auf Heap")
+                self.set_step("Füge neue Distanz in den Heap ein")
             if step == "Skip Visited Node":
                 self.highlight_step("Skip Visited Node")
                 self.set_step("Überspringe bereits bearbeitete Knoten")
@@ -644,7 +644,7 @@ class Pseudocode_Frame(Frame):
                 self.set_step("Wähle Knoten")
             if step == "Set Start Node Distance":
                 self.highlight_step("Set Start Node Distance")
-                self.set_step("Setze Distanz von Startknoten")
+                self.set_step("Initialisiere Distanz des Startknotens")
                 self.highlight_row(current_node)
             if step == "Push Start Node to Priority Queue":
                 self.highlight_step("Push Start Node to Priority Queue")
@@ -752,7 +752,7 @@ class Pseudocode_Frame(Frame):
                 self.set_step("Update Distanzen")
             if step == "Find Min in List":
                 self.highlight_step("Find Min in List")
-                self.set_step("Finde Min in der List")
+                self.set_step("Finde minimal Distanz in der List")
             if step == "Skip Visited Node":
                 self.highlight_step("Skip Visited Node")
                 self.set_step("Überspringe bereits bearbeitete Knoten")
@@ -767,7 +767,7 @@ class Pseudocode_Frame(Frame):
                 self.set_step("Prüfe ob Knoten bereits besucht wurde")
             if step == "Visit Node u ":
                 self.highlight_step("Visit Node u ")
-                self.set_step("Betrachte Knoten u ")
+                self.set_step("Setze Knoten u als besucht ")
             if step == "List Empty":
                 self.highlight_step("List Empty")
                 self.set_step("Liste ist leer")
