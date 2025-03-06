@@ -59,7 +59,7 @@ class PfadsuchApp(Tk):
         self.color_shortest_path = "light blue"
 
         self.show_distance_on_nodes = False
-        self.title("Eine Gui zur Visualisierung von Pfadsuch-Algorithmen")
+        self.title("Eine Gui zur Visualisierung von Pfad-Such-Algorithmen")
         self.geometry('1550x900')
         self.minsize(800, 600)
         self.grid_rowconfigure(0, weight=1)

@@ -70,7 +70,7 @@ class Canvas_Frame(Frame):
             self.button_frame, image=self.start_icon, command=parent.start_algorithm, width=20
         )
         self.starting_button.grid(row=0, column=5, padx=5)
-        Hovertip(self.starting_button, "Starte Algorithmus")
+        Hovertip(self.starting_button, "Algorithmus starten")
 
         self.shortest_paths_button = Button(
             self.button_frame, image=self.shortest_paths_icon, command=self.open_shortest_paths, state=DISABLED, width=20
