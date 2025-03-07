@@ -1,5 +1,7 @@
 import heapq
-
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 class PriorityQueueTester:
     """Programm um die eigens implementierten Heapify-Up und Down Operationen mit den bekannt korrekten von heapq zu vergleichen"""

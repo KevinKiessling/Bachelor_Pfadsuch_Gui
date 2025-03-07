@@ -1,4 +1,8 @@
 import networkx as nx
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from algorithms import *
 from algorithms.dijkstra_list import *
 from algorithms.dijkstra_Priority_queue_lazy import *
 from algorithms.dijkstra_Priority_queue import *
@@ -71,11 +75,11 @@ class DijkstraTester:
 
     def test_edge_cases(self):
         edge_cases = [
-            {'A': {}},
-            {'A': {}, 'B': {}},
-            {'A': {'B': 1}, 'B': {'C': 2}, 'C': {'A': 3}},
-            {'A': {'B': 1, 'C': 4}, 'B': {'C': 2}, 'C': {}},
-            {chr(65 + i): {chr(66 + i): 1} for i in range(100)} | {chr(65 + 99): {}}
+            {'0': {}},
+            {'0': {}, '1': {}},
+            {'0': {'1': 1}, '1': {'2': 2}, '2': {'0': 3}},
+            {'0': {'1': 1, '2': 4}, '1': {'2': 2}, '2': {}},
+            {str(i): {str(i + 1): 1} for i in range(100)} | {str(99): {}}
         ]
 
         for case in edge_cases:
@@ -90,12 +94,12 @@ class DijkstraTester:
 
 
 graph = {
-    'A': {'B': 1, 'C': 4},
-    'B': {'C': 2, 'D': 5},
-    'C': {'D': 1},
-    'D': {}
+    '0': {'1': 1, '2': 4},
+    '1': {'2': 2, '3': 5},
+    '2': {'3': 1},
+    '3': {}
 }
-start_node = 'A'
+start_node = '0'
 selected_algorithm = "Dijkstra_List"
 
 tester = DijkstraTester(graph, start_node, selected_algorithm)
