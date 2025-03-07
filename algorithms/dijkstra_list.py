@@ -219,6 +219,7 @@ class Dijkstra_List():
                     selected_algorithm="Dijkstra_List"
                 )
                 if visited[neighbor]:
+
                     self.save_state(
                         step_type="Skip Visited Neighbor",
                         current_node=current_node,
@@ -232,6 +233,7 @@ class Dijkstra_List():
                         current_list=L,
                         selected_algorithm="Dijkstra_List"
                     )
+
                     continue
                 visited_edges.add((current_node, neighbor))
 
