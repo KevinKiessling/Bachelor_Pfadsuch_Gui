@@ -2,7 +2,7 @@ Eine GUI zur Visualisierung von Pfadsuch-Algorithmen
 
 Dieses Programm wurde zur Visualisierung von Pfadsuchalgorithmen entwickelt.
 
-Wichtiger Hinweis:
+Wichtige Hinweise:
 -------------------
 Manuelle Änderungen an der Konfigurationsdatei `Config` können zu unerwartetem Verhalten führen. 
 Die Standardwerte lassen sich wiederherstellen, indem die Datei `Config` gelöscht wird. 
