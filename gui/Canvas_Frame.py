@@ -1235,25 +1235,15 @@ class Canvas_Frame(Frame):
 
         speed_var.trace_add("write", update_speed_label)
 
+        font_size_var = IntVar(value=self.parent.font_size)
+        # Register the validation function
+        validate_command = general_tab_frame.register(validate_input)
+
         Label(general_tab_frame, text="Font Größe:").pack(pady=10)
-        font_var = IntVar(value=self.parent.font_size)
-        font_slider = ttk.Scale(
-            general_tab_frame, from_=8, to=25, orient="horizontal", length=300, variable=font_var
-        )
-        font_slider.pack(pady=10)
-        font_label = Label(general_tab_frame, text=f"Aktuelle Font Größe: {font_var.get()}")
-        font_label.pack()
 
-        def update_font_label(*args):
-            """
-            Updated den Text des Fontlabels, sodass es immer den aktuellen wert zeigt
-            :param args:
-            :return:
-            """
-            font_label.config(text=f"Aktuelle Font Größe: {font_var.get()}")
-
-        font_var.trace_add("write", update_font_label)
-
+        font_entry = Entry(general_tab_frame, textvariable=font_size_var, width=10, validate="key",
+                           validatecommand=(validate_command, "%P"))
+        font_entry.pack(pady=10)
 
         settings_window.grid_rowconfigure(0, weight=1)
         settings_window.grid_columnconfigure(0, weight=1)
@@ -1265,7 +1255,23 @@ class Canvas_Frame(Frame):
             """
             self.parent.random_edge_mode = random_mode_var.get()
             self.parent.animation_speed = speed_var.get()
-            self.parent.font_size = font_var.get()
+            try:
+
+                font_size = int(font_size_var.get())
+            except ValueError:
+
+                messagebox.showerror("Ungültige Eingabe", "Schriftgröße muss eine Zahl sein.")
+                return
+
+            if font_size < 7:
+                font_size_var.set(7)
+                self.parent.font_size = 7
+            elif font_size > 25:
+                font_size_var.set(25)
+                self.parent.font_size = 25
+            else:
+                self.parent.font_size = font_size
+
             max_edge_weight = max_weight_var.get()
 
             if max_edge_weight < 0 or max_edge_weight >= 100000:
