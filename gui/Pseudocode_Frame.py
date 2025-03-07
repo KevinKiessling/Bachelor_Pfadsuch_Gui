@@ -1167,7 +1167,32 @@ class Pseudocode_Frame(Frame):
             )
             # Only draw the text if the node is not "empty"
             if text != "empty":
-                self.canvas.create_text(x, y, text=text, font=("Arial", self.font_size_pq), fill="black")
+                max_text_width = 2 * node_size * 0.8
+
+                font_size = self.font_size_pq
+                font = ("Arial", font_size)
+
+                text_id = self.canvas.create_text(0, 0, text=text, font=font, anchor="nw")
+                text_bbox = self.canvas.bbox(text_id)
+                if text_bbox is not None:
+                    text_width = text_bbox[2] - text_bbox[0]
+                else:
+                    text_width = 0
+
+                max_iterations = 50
+                iterations = 0
+
+                while text_width > max_text_width and font_size > 1 and iterations < max_iterations:
+                    font_size -= 1
+                    font = ("Arial", font_size)
+                    self.canvas.itemconfig(text_id, font=font)
+                    text_bbox = self.canvas.bbox(text_id)
+                    text_width = text_bbox[2] - text_bbox[0]
+                    iterations += 1
+
+                self.canvas.delete(text_id)
+
+                self.canvas.create_text(x, y, text=text, font=font, fill="black")
 
         def draw_tree(index, x, y, dx):
             """
