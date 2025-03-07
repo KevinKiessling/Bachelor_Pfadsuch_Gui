@@ -423,7 +423,7 @@ class Pseudocode_Frame(Frame):
             self.pcode = """1:DijkstraH(Gerichteter Graph G = (V, E),
     Gewichtsfunktion ω : E → N, Startknoten s ∈ V):
 2:   foreach v ∈ V do discovered[v] ← false, d[v] ← ∞ 
-3:   d[s] ← 0, Heap H ← 0, H.insert((s, d[s])) 
+3:   d[s] ← 0, Heap H ← \u2205, H.insert((s, d[s])) 
 4:   while H.length() > 0 do 
 5:      u ← H.extractMin() 
 6:      if discovered[u] then continue else 
@@ -438,7 +438,7 @@ class Pseudocode_Frame(Frame):
             self.pcode = """1:DijkstraH(Gerichteter Graph G = (V, E),
     Gewichtsfunktion ω : E → N, Startknoten s ∈ V):
 2:   foreach v ∈ V do discovered[v] ← false, d[v] ← ∞ 
-3:   d[s] ← 0, Heap H ← 0, H.insert((s, d[s])) 
+3:   d[s] ← 0, Heap H ← \u2205, H.insert((s, d[s])) 
 4:   while H.length() > 0 do 
 5:      u ← H.extractMin() 
 6:      discovered[u] ← true            
