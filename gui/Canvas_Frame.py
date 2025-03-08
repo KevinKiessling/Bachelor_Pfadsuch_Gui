@@ -217,7 +217,7 @@ class Canvas_Frame(Frame):
 
         self.canvas_width = new_width
         self.canvas_height = new_height
-        self.parent.update_gui()
+        self.parent.update_gui(show_popup=False)
 
     def scale_node_positions(self, scale_x, scale_y):
         """
