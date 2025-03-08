@@ -36,7 +36,7 @@ class Graph_Visualizer_Path:
         step = {}
         if self.parent.current_step != -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
-            print(step)
+            #print(step)
 
             distances = step["distances"]
         else:

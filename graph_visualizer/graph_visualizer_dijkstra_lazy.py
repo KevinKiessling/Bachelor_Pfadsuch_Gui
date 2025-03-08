@@ -42,7 +42,7 @@ class Graph_Visualizer_Dijkstra_lazy:
         step = {}
         if self.parent.current_step != -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
-            print(step)
+            #print(step)
         discovered_node_true_color = self.parent.color_discovered_true
         discovered_node_false_color = self.parent.color_discovered_false
         current_node_color = self.parent.color_default
