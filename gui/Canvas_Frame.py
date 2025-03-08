@@ -817,41 +817,35 @@ class Canvas_Frame(Frame):
         Label(content_frame, text="Schaltflächen und ihre Funktionen:", font=("Arial", 14, "bold")).pack(anchor="w",
                                                                                                          pady=(10, 0))
 
-
         prev_button = Button(content_frame, image=self.prev_icon)
         prev_button.pack(anchor="w", pady=(5, 0))
         Label(content_frame,
-              text="- Geht einen Schritt im Algorithmus zurück.",
+              text="- Geht einen Schritt im Algorithmus zurück. (Pfeiltaste links)",
               justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
-
 
         next_button = Button(content_frame, image=self.next_icon)
         next_button.pack(anchor="w", pady=(5, 0))
         Label(content_frame,
-              text="- Geht einen Schritt im Algorithmus vorwärts.",
+              text="- Geht einen Schritt im Algorithmus vorwärts. (Pfeiltaste rechts)",
               justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
-
 
         pause_button = Button(content_frame, image=self.pause_icon)
         pause_button.pack(anchor="w", pady=(5, 0))
         Label(content_frame,
-              text="- Pausiert die Ausführung des Algorithmus.",
+              text="- Pausiert die Ausführung des Algorithmus. (Pfeiltaste unten)",
               justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
-
 
         fast_forward_button = Button(content_frame, image=self.fast_forward_icon)
         fast_forward_button.pack(anchor="w", pady=(5, 0))
         Label(content_frame,
-              text="- Startet die automatische Wiedergabe des Algorithmus.",
+              text="- Startet die automatische Wiedergabe des Algorithmus. (Pfeiltaste oben)",
               justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
-
 
         start_button = Button(content_frame, image=self.start_icon)
         start_button.pack(anchor="w", pady=(5, 0))
         Label(content_frame,
-              text="- Startet den ausgewählten Algorithmus.",
+              text="- Startet den ausgewählten Algorithmus. (Enter)",
               justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
-
 
         shortest_paths_button = Button(content_frame, image=self.shortest_paths_icon)
         shortest_paths_button.pack(anchor="w", pady=(5, 0))
@@ -859,11 +853,10 @@ class Canvas_Frame(Frame):
               text="- Zeigt die kürzesten Pfade an (verfügbar nach Abschluss des Algorithmus).",
               justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 5))
 
-
         cancel_button = Button(content_frame, image=self.cancel_icon)
         cancel_button.pack(anchor="w", pady=(5, 0))
         Label(content_frame,
-              text="- Bricht die aktuelle Ausführung des Algorithmus ab.",
+              text="- Bricht die aktuelle Ausführung des Algorithmus ab. (Escape)",
               justify="left", font=custom_font, wraplength=750).pack(anchor="w", pady=(0, 15))
 
         def _on_mousewheel(event):
