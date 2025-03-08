@@ -1904,7 +1904,12 @@ class Canvas_Frame(Frame):
                 if valid_graph and valid_positions:
                     max_x = max(x for x, y in node_positions.values())
                     max_y = max(y for x, y in node_positions.values())
+                    min_x = min(x for x, y in node_positions.values())
+                    min_y = min(y for x, y in node_positions.values())
 
+                    if min_x < 0 or min_y < 0:
+                        print("Fehlerhafte Input-Datei: Die Positionen des Graphen enthalten negative Koordinaten.")
+                        return
                     if max_x > 1000 or max_y > 1000:
                         print("Fehlerhafte Input-Datei: Die Positionen des Graphen überschreiten das 1000x1000 Limit.")
                         return
