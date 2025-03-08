@@ -1752,7 +1752,7 @@ class Canvas_Frame(Frame):
         """
 
         for node, (nx, ny) in self.parent.node_positions.items():
-            if math.hypot(nx - x, ny - y) <= 30:
+            if math.hypot(nx - x, ny - y) <= self.parent.node_rad:
                 return node
         return None
 
