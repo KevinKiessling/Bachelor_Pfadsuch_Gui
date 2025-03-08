@@ -38,7 +38,7 @@ class PfadsuchApp(Tk):
         self.current_step = -1
         self.max_edge_weight = 100
         self.font_size = 18
-        self.node_rad = 40
+        self.node_rad = 35
         self.font_size_edge_weight = 18
         self.font_size_node_label = 18
 
