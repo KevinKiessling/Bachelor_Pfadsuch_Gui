@@ -462,6 +462,7 @@ class Canvas_Frame(Frame):
         self._add_node_management_tab(notebook, custom_font)
         self._add_button_explanations_tab(notebook, custom_font)
         self._add_heap_description_tab(notebook, custom_font)
+        self._add_list_description_tab(notebook, custom_font)
 
     def _add_welcome_tab(self, notebook, custom_font):
         """
@@ -984,6 +985,85 @@ class Canvas_Frame(Frame):
             draw_tree(0, root_x, root_y, initial_dx)
 
         draw_example_priority_queue()
+
+    def _add_list_description_tab(self, notebook, custom_font):
+        """
+        Fügt einen Tab hinzu, der die Liste erklärt.
+        :param notebook:
+        :param custom_font:
+        :return:
+        """
+        list_tab = ttk.Frame(notebook)
+        notebook.add(list_tab, text="Liste Erklärungen")
+
+        description_text = (
+            "Die Liste enthält die Knoten und ihre Distanzen in der Form:\n"
+            "(Knoten, d[Knoten] = Distanz)\n"
+            "Dabei repräsentiert d[Knoten] den aktuellen Abstand des Knotens zum Startknoten.\n"
+        )
+
+        Label(list_tab, text=description_text, justify="left", wraplength=750, font=custom_font).pack(padx=20, pady=10)
+
+
+        canvas_frame = ttk.Frame(list_tab)
+        canvas_frame.pack(pady=10)
+
+        example_canvas = Canvas(canvas_frame, width=400, height=250, bg="white")
+        example_canvas.pack()
+
+        example_list = [1, 2, 3, 4, 5]  # Beispiel-Liste
+        example_distances = {1: 10, 2: 20, 3: 30, 4: 40, 5: 50}  # Beispiel-Distanzen
+
+        def draw_example_list():
+            """
+            Zeichnet die Beispiel-Liste.
+            :return:
+            """
+            example_canvas.delete("all")
+
+            if not example_list:
+                return
+
+            canvas_width = example_canvas.winfo_width()
+            canvas_height = example_canvas.winfo_height()
+
+            if canvas_width <= 1 or canvas_height <= 1:
+                example_canvas.after(100, draw_example_list)
+                return
+
+            cols = max(1, int(canvas_width // 70))
+            rows = (len(example_list) + cols - 1) // cols
+
+            element_width = canvas_width // cols
+            element_height = canvas_height // rows
+
+            for i, value in enumerate(example_list):
+                row, col = divmod(i, cols)
+                x1 = col * element_width
+                y1 = row * element_height
+                x2 = x1 + element_width
+                y2 = y1 + element_height
+                color = "lightsteelblue"
+
+                example_canvas.create_rectangle(x1, y1, x2, y2, fill=color, outline="black")
+
+                center_x = (x1 + x2) // 2
+                center_y = (y1 + y2) // 2
+
+
+                distance = example_distances.get(value, float('inf'))
+                distance_text = str(distance) if distance != float('inf') else '∞'
+
+                text = f"{value}\nd[{value}] = {distance_text}"
+
+                font_size_height = element_height // 3
+                font_size_width = element_width // 6
+                font_size = max(6, min(font_size_height, font_size_width))
+
+                example_canvas.create_text(center_x, center_y, text=text, font=("Arial", font_size), justify="center",
+                                           width=element_width - 4)
+
+        draw_example_list()
 
     def undo_last_operation(self, event=None):
         """
