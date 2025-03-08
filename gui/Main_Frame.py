@@ -104,12 +104,15 @@ class PfadsuchApp(Tk):
 
         self.raise_above_all(welcome_window)
 
-
-        label = Label(welcome_window, text="Willkommen zur GUI zur Visualisierung von Pfadsuchalgorithmen!\n\n"
+        label = Label(welcome_window, text="Willkommen zur GUI zur Visualisierung von Pfad-Such-Algorithmen!\n\n"
                                            "Startknoten wählen:\n"
                                            "• Doppelklick auf einen Knoten\n\n"
                                            "Algorithmus starten:\n"
                                            "• Klicken Sie auf 'Start', '1 Schritt vor' oder 'Vorspulen'\n\n"
+                                           "Knoten erstellen:\n"
+                                           "• Linksklick auf den Canvas\n\n"
+                                           "Kanten erstellen:\n"
+                                           "• Rechtsklick auf zwei Knoten\n\n"
                                            "Weitere Informationen finden Sie im Hilfe-Menü.",
                       justify="left")
         label.pack(pady=10)
