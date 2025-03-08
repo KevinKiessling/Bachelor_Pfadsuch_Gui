@@ -1636,8 +1636,8 @@ class Canvas_Frame(Frame):
 
         if length > 0:
 
-            start_x = cx + (dx / length) * 30
-            start_y = cy + (dy / length) * 30
+            start_x = cx + (dx / length) * self.parent.node_rad
+            start_y = cy + (dy / length) * self.parent.node_rad
         else:
 
             start_x, start_y = cx, cy
@@ -1664,8 +1664,8 @@ class Canvas_Frame(Frame):
 
                 if length > 0:
 
-                    start_x = cx + (dx / length) * 30
-                    start_y = cy + (dy / length) * 30
+                    start_x = cx + (dx / length) * self.parent.node_rad
+                    start_y = cy + (dy / length) * self.parent.node_rad
                 else:
                     start_x, start_y = cx, cy
 
