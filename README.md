@@ -1,6 +1,6 @@
 Eine GUI zur Visualisierung von Pfadsuch-Algorithmen
 
-Dieses Programm wurde zur Visualisierung von Pfadsuchalgorithmen entwickelt.
+Dieses Programm wurde entwickelt, um die Funktionsweise von Pfadsuchalgorithmen interaktiv zu visualisieren.
 
 Wichtige Hinweise:
 -------------------
