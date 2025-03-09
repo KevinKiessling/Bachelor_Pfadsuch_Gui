@@ -92,7 +92,7 @@ class PfadsuchApp(Tk):
         welcome_window = Toplevel(self)
         welcome_window.title("Willkommen")
         win_width = 400
-        win_height = 300
+        win_height = 400
 
 
         welcome_window.geometry(f"{win_width}x{win_height}")
@@ -113,6 +113,8 @@ class PfadsuchApp(Tk):
                                            "• Linksklick auf den Canvas\n\n"
                                            "Kanten erstellen:\n"
                                            "• Rechtsklick auf zwei Knoten\n\n"
+                                           "Knoten und Kanten löschen:\n"
+                                           "• Mittlere Maustaste oder Strg + Linksklick auf den Knoten/Kante\n\n"
                                            "Weitere Informationen finden Sie im Hilfe-Menü.",
                       justify="left")
         label.pack(pady=10)
