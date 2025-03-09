@@ -722,10 +722,17 @@ class Canvas_Frame(Frame):
                    "- Rechtsklick auf einen anderen Knoten erstellt die Kante.",
               justify="left", font=custom_font, wraplength=400).pack(anchor="w", pady=(0, 5))
 
+        Label(content_frame, text="Kanten löschen:", font=("Arial", 12, "bold")).pack(anchor="w",
+                                                                                                 pady=(5, 0))
+        Label(content_frame,
+              text="- Kanten können durch Mittelklick oder Strg + Linksklick gelöscht werden.",
+              justify="left", font=custom_font, wraplength=400).pack(anchor="w", pady=(0, 5))
+
         Label(content_frame, text="Kantengewichte:", font=("Arial", 12, "bold")).pack(anchor="w", pady=(5, 0))
         Label(content_frame,
               text="- Während der Kantenerstellung wird der Nutzer nach einem Gewicht für die Kante gefragt.\n"
-                   "- Falls die zufällige Gewichte Option aktiviert ist, wird ein zufälliges Gewicht verwendet.",
+                   "- Falls die zufällige Gewichte Option aktiviert ist, wird ein zufälliges Gewicht verwendet.\n"
+                   "- Rechtsklick auf eine Kante öffnet ein Fenster in dem das Kantengewicht geändert werden kann.",
               justify="left", font=custom_font, wraplength=400).pack(anchor="w", pady=(0, 5))
 
         Label(content_frame, text="Kantenrichtung:", font=("Arial", 12, "bold")).pack(anchor="w", pady=(5, 0))
