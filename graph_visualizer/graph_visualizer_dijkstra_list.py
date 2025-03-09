@@ -40,7 +40,7 @@ class Graph_Visualizer_Dijkstra_List:
         step = {}
         if self.parent.current_step != -1:
             step = self.parent.steps_finished_algorithm[self.parent.current_step]
-            #(step)
+            #print(step)
         discovered_node_true_color = self.parent.color_discovered_true
         discovered_node_false_color = self.parent.color_discovered_false
         current_node_color = self.parent.color_default
@@ -480,7 +480,8 @@ class Graph_Visualizer_Dijkstra_List:
                 current_node = step.get("current_node")
                 visited_nb = step.get("neighbor")
                 weight_color = "light grey"
-                if node == current_node and neighbor in visited_nb:
+
+                if node == current_node and neighbor == visited_nb:
 
                     weight_color = self.parent.color_edge_highlight
 
