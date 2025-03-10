@@ -1,4 +1,4 @@
-Eine GUI zur Visualisierung von Pfadsuch-Algorithmen
+Eine GUI zur Visualisierung von Pfad-Such-Algorithmen
 
 Dieses Programm wurde entwickelt, um die Funktionsweise von Pfadsuchalgorithmen interaktiv zu visualisieren.
 
@@ -15,16 +15,28 @@ dass Knoten außerhalb des darstellbaren Bereichs des Canvas liegen.
 
 Voraussetzungen:
 ----------------
+
+Je nach Betriebssystem müssen "pip" zu "pip3" und "python" zu "python3" ersetzt werden.
+
 - Python 3.13 oder neuer
   -> Laden Sie Python hier herunter: https://www.python.org/downloads/
   
 - NetworkX Version 3.4.2
-  -> Installieren Sie die benötigte Version mit dem folgenden Befehl:
+  -> Installieren Sie die benötigte Version z. B. mit pip, das in Python enthalten ist.  
+  Mit dem folgenden Befehl :
 
-     pip install networkx==3.4.2
+       pip install networkx==3.4.2
+
+- Unter bestimmten Betriebssystemen (z.B. Ubuntu oder andere Linux-Distributionen) 
+  kann es notwendig sein, "idle" zu installieren, falls es nicht standardmäßig mit Python installiert wurde:
+  
+- Dies ist mit dem folgenden Befehle möglich:
+  
+        sudo apt install idle3
+  
 
 Ausführung:
 -----------
 Das Programm kann durch Aufrufen des folgenden Befehls in der Kommandozeile innerhalb des Ordners, in dem sich das Programm befindet, gestartet werden:
   
-    python pfadsuche.py
+python pfadsuche.py
