@@ -632,16 +632,18 @@ class PfadsuchApp(Tk):
         :param interval: Intervall
         :return:
         """
+
+        original_color = button.cget("bg")
         def toggle_color(count):
             if count % 2 == 0:
                 button.config(bg="yellow")
             else:
-                button.config(bg="white")
+                button.config(bg=original_color)
 
             if count < times * 2 - 1:
                 button.after(interval, toggle_color, count + 1)
             else:
-                button.config(bg=button.cget("bg"))
+                button.config(bg=original_color)
         toggle_color(0)
 
     def draw_graph_path(self,path):
