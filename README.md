@@ -28,9 +28,9 @@ Je nach Betriebssystem müssen "pip" zu "pip3" und "python" zu "python3" ersetzt
        pip install networkx==3.4.2
 
 - Unter bestimmten Betriebssystemen (z.B. Ubuntu oder andere Linux-Distributionen) 
-  kann es notwendig sein, "idle" zu installieren, falls es nicht standardmäßig mit Python installiert wurde:
+  kann es notwendig sein, "idle" zu installieren, falls es nicht standardmäßig mit Python installiert wurde.
   
-- Dies ist mit dem folgenden Befehle möglich:
+  Dies ist mit dem folgenden Befehl möglich:
   
         sudo apt install idle3
   
@@ -39,4 +39,4 @@ Ausführung:
 -----------
 Das Programm kann durch Aufrufen des folgenden Befehls in der Kommandozeile innerhalb des Ordners, in dem sich das Programm befindet, gestartet werden:
   
-python pfadsuche.py
+    python pfadsuche.py
