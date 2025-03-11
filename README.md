@@ -1,4 +1,5 @@
 Eine GUI zur Visualisierung von Pfad-Such-Algorithmen
+---------------------------------------------------
 
 Dieses Programm wurde entwickelt, um die Funktionsweise von Pfadsuchalgorithmen interaktiv zu visualisieren.
 

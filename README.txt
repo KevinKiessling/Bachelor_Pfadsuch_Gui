@@ -16,6 +16,7 @@ dass Knoten außerhalb des darstellbaren Bereichs des Canvas liegen.
 
 Voraussetzungen:
 ----------------
+
 Je nach Betriebssystem muss "pip" zu "pip3" ersetzt werden.
 
 - Python 3.13 oder neuer
@@ -38,7 +39,7 @@ Je nach Betriebssystem muss "pip" zu "pip3" ersetzt werden.
 
 Ausführung:
 -----------
-Je nach Betriebssystem müssen "python" zu "python3" ersetzt werden.
+Je nach Betriebssystem muss "python" zu "python3" ersetzt werden.
 
 Das Programm kann durch Aufrufen des folgenden Befehls in der Kommandozeile innerhalb des Ordners, in dem sich das Programm befindet, gestartet werden:
 
