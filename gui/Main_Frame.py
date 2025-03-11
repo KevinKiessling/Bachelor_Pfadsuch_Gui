@@ -639,17 +639,16 @@ class PfadsuchApp(Tk):
 
     def cancel_blink(self, button):
         """
-        Cancels any ongoing blink cycle and resets the button to its original color.
+        Cancelled laufende Blink jobs
+        :param button: Blinkender Button
+        :return:
         """
         if hasattr(self, 'blink_after_id') and self.blink_after_id is not None:
-            # Cancel any ongoing blink cycle
             button.after_cancel(self.blink_after_id)
 
-        # Reset the button color to the original color
         button.config(bg=self.og_button_colour)
-
-        # Reset blink_after_id to None
         self.blink_after_id = None
+
     def blink_button(self, button, times=5, interval=500):
         """
         lässt Button blinken zwischen gelb und weiß
@@ -658,10 +657,10 @@ class PfadsuchApp(Tk):
         :param interval: Intervall
         :return:
         """
-        # Always reset the button color to the original color first
+
         button.config(bg=self.og_button_colour)
 
-        # Cancel any existing blinking if it's already running
+
         if hasattr(self, 'blink_after_id') and self.blink_after_id is not None:
             button.after_cancel(self.blink_after_id)
 
@@ -672,14 +671,14 @@ class PfadsuchApp(Tk):
                 button.config(bg=self.og_button_colour)
 
             if count < times * 2 - 1:
-                # Schedule the next toggle
+
                 self.blink_after_id = button.after(interval, toggle_color, count + 1)
             else:
-                # Reset to the original color after blinking
-                button.config(bg=self.og_button_colour)
-                self.blink_after_id = None  # Reset after blinking is complete
 
-        self.blink_after_id = None  # Ensure no residual after ID
+                button.config(bg=self.og_button_colour)
+                self.blink_after_id = None
+
+        self.blink_after_id = None
         toggle_color(0)
 
     def draw_graph_path(self,path):
