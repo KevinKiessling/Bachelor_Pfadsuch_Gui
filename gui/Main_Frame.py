@@ -624,9 +624,9 @@ class PfadsuchApp(Tk):
                 self.popup = Toplevel(self)
                 self.popup.title("Algorithmus beendet")
                 self.tk.eval(f'tk::PlaceWindow {self.popup} center')
-                label = Label(self.popup, text="Der Dijkstra-Algorithmus wurde erfolgreich abgeschlossen.\n\n"
-                                               "Klicken Sie auf den folgenden Button in der Symbolleiste, um die kürzesten Pfade anzuzeigen:",
-                              padx=10, pady=10, wraplength=300, justify="center")
+                label=Label(self.popup, text="Dijkstra-Algorithmus abgeschlossen.\n\n"
+                                       "Klicken Sie auf das folgende Symbol in der Symbolleiste, "
+                                       "um die kürzesten Pfade anzuzeigen.", padx=10, pady=10, wraplength=300, justify="center")
                 label.pack()
 
                 image_label = Label(self.popup, image=self.gui_frame.shortest_paths_icon)
