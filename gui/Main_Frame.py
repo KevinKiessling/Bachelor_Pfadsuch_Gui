@@ -21,7 +21,7 @@ class PfadsuchApp(Tk):
     CONFIG_FILE = "config.json"
     def __init__(self):
         super().__init__()
-        self.enable_tests = False
+        self.enable_tests = True
 
         self.show_welcome = True
 
@@ -60,7 +60,9 @@ class PfadsuchApp(Tk):
 
         self.show_distance_on_nodes = False
         self.title("Eine Gui zur Visualisierung von Pfad-Such-Algorithmen")
-        self.geometry('1550x900')
+
+        self.geometry('1250x700')
+
         self.minsize(800, 600)
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(1, weight=1)
@@ -71,6 +73,7 @@ class PfadsuchApp(Tk):
 
         self.code_frame = Pseudocode_Frame(self)
         self.gui_frame = Canvas_Frame(self)
+        self.og_button_colour = self.gui_frame.shortest_paths_button.cget("bg")
 
         self.load_config()
         self.load_default_graph()
@@ -83,6 +86,7 @@ class PfadsuchApp(Tk):
         self.font_size_node_label_original = self.font_size_node_label
         if self.show_welcome:
             self.after(300, self.show_welcome_window)
+        #self.og_button_colour = self.gui_frame.shortest_paths_button.cget("bg")
 
     def show_welcome_window(self):
         """
@@ -403,34 +407,21 @@ class PfadsuchApp(Tk):
             self.node_positions = copy.deepcopy(self.default_graph_pos)
         else:
             self.graph = {
-                "1": {"5": 1, "2": 2, "11": 5, "9": 5},
-                "2": {"3": 6},
-                "3": {"13": 2},
-                "4": {"3": 2},
-                "5": {"7": 10, "4": 1},
-                "6": {"4": 9},
-                "7": {"6": 4, "8": 16},
-                "8": {"10": 4},
-                "9": {"8": 12, "7": 4},
-                "10": {},
-                "11": {"12": 4, "13": 12},
-                "12": {"10": 42},
-                "13": {}
+                "1": {"2": 81, "4": 11, "5": 10, "3": 96},
+                "2": {"3": 99},
+                "3": {"4": 89},
+                "4": {"5": 56, "6": 49},
+                "5": {"2": 59, "6": 14},
+                "6": {}
             }
+
             self.node_positions = {
-                "1": [412, 433],
-                "2": [549, 278],
-                "3": [786, 222],
-                "4": [455, 96],
-                "5": [291, 248],
-                "6": [73, 102],
-                "7": [48, 488],
-                "8": [112, 815],
-                "9": [426, 678],
-                "10": [657, 949],
-                "11": [756, 453],
-                "12": [831, 723],
-                "13": [956, 364]
+                "1": [483, 447],
+                "2": [216, 225],
+                "3": [737, 227],
+                "4": [740, 662],
+                "5": [213, 656],
+                "6": [486, 904]
             }
 
         self.selected_nodes = []
@@ -539,7 +530,9 @@ class PfadsuchApp(Tk):
         Haupt methode zur Wiedergabe, ruft die Visualizer klassen auf um die Graphen zu zeichnen
         :return:
         """
-
+        if hasattr(self, "popup") and self.popup.winfo_exists():
+            self.popup.destroy()
+        self.cancel_blink(self.gui_frame.shortest_paths_button)
         self.code_frame.stop_animation()
         if self.selected_algorithm in {"Dijkstra_PQ_lazy", "Dijkstra_PQ"}:
             self.code_frame.priority_queue_label.config(text="Heap")
@@ -587,7 +580,8 @@ class PfadsuchApp(Tk):
 
         #print(f"neighbor: {neighbor} (Type: {type(neighbor)})")
         distances = step["distances"].copy()
-
+        if hasattr(self, "popup") and self.popup.winfo_exists() and self.current_step != -1:
+            self.popup.destroy()
         #Lade entweder eine Priority Queue oder eine Liste, je nach algorithmus.
         if self.selected_algorithm == "Dijkstra_PQ_lazy" or self.selected_algorithm == "Dijkstra_PQ":
             priority_queue = step["priority_queue"].copy()
@@ -617,13 +611,45 @@ class PfadsuchApp(Tk):
                 self.gui_frame.shortest_paths_button.config(state=DISABLED)
             else:
                 self.gui_frame.shortest_paths_button.config(state=NORMAL)
-        if step["step_type"] == "Algorithm Finished":
-            # Zeige das Popup an, das beides enthält
-            if show_popup:
-                self.blink_button(self.gui_frame.shortest_paths_button)
-                messagebox.showinfo("Algorithmus beendet",
-                                    "Der Dijkstra-Algorithmus wurde erfolgreich abgeschlossen.\n\nDer kürzeste Pfade Button ist jetzt verfügbar.")
 
+        if step["step_type"] == "Algorithm Finished":
+            if show_popup:
+
+                self.blink_button(self.gui_frame.shortest_paths_button)
+
+                if hasattr(self, "popup") and self.popup.winfo_exists():
+                    self.popup.lift()
+                    return
+
+                self.popup = Toplevel(self)
+                self.popup.title("Algorithmus beendet")
+                self.tk.eval(f'tk::PlaceWindow {self.popup} center')
+                label = Label(self.popup, text="Der Dijkstra-Algorithmus wurde erfolgreich abgeschlossen.\n\n"
+                                               "Klicken Sie auf den folgenden Button in der Symbolleiste, um die kürzesten Pfade anzuzeigen:",
+                              padx=10, pady=10, wraplength=300, justify="center")
+                label.pack()
+
+                image_label = Label(self.popup, image=self.gui_frame.shortest_paths_icon)
+
+                image_label.pack(pady=5)
+
+                btn_ok = Button(self.popup, text="OK", command=self.popup.destroy)
+                btn_ok.pack(pady=5)
+                self.popup.bind("<Return>", lambda event: btn_ok.invoke())
+
+    def cancel_blink(self, button):
+        """
+        Cancels any ongoing blink cycle and resets the button to its original color.
+        """
+        if hasattr(self, 'blink_after_id') and self.blink_after_id is not None:
+            # Cancel any ongoing blink cycle
+            button.after_cancel(self.blink_after_id)
+
+        # Reset the button color to the original color
+        button.config(bg=self.og_button_colour)
+
+        # Reset blink_after_id to None
+        self.blink_after_id = None
     def blink_button(self, button, times=5, interval=500):
         """
         lässt Button blinken zwischen gelb und weiß
@@ -632,18 +658,28 @@ class PfadsuchApp(Tk):
         :param interval: Intervall
         :return:
         """
+        # Always reset the button color to the original color first
+        button.config(bg=self.og_button_colour)
 
-        original_color = button.cget("bg")
+        # Cancel any existing blinking if it's already running
+        if hasattr(self, 'blink_after_id') and self.blink_after_id is not None:
+            button.after_cancel(self.blink_after_id)
+
         def toggle_color(count):
             if count % 2 == 0:
                 button.config(bg="yellow")
             else:
-                button.config(bg=original_color)
+                button.config(bg=self.og_button_colour)
 
             if count < times * 2 - 1:
-                button.after(interval, toggle_color, count + 1)
+                # Schedule the next toggle
+                self.blink_after_id = button.after(interval, toggle_color, count + 1)
             else:
-                button.config(bg=original_color)
+                # Reset to the original color after blinking
+                button.config(bg=self.og_button_colour)
+                self.blink_after_id = None  # Reset after blinking is complete
+
+        self.blink_after_id = None  # Ensure no residual after ID
         toggle_color(0)
 
     def draw_graph_path(self,path):
