@@ -95,18 +95,7 @@ class PfadsuchApp(Tk):
         """
         welcome_window = Toplevel(self)
         welcome_window.title("Willkommen")
-        win_width = 400
-        win_height = 400
 
-
-        welcome_window.geometry(f"{win_width}x{win_height}")
-
-
-        self.tk.eval(f'tk::PlaceWindow {welcome_window} center')
-
-
-
-        self.raise_above_all(welcome_window)
 
         label = Label(welcome_window, text="Willkommen zur GUI zur Visualisierung von Pfad-Such-Algorithmen!\n\n"
                                            "Startknoten wählen:\n"
@@ -134,6 +123,18 @@ class PfadsuchApp(Tk):
 
         btn_ok = ttk.Button(welcome_window, text="OK", command=welcome_window.destroy)
         btn_ok.pack(pady=10)
+        welcome_window.update_idletasks()
+
+
+        win_width = welcome_window.winfo_width() + 20  # Add some padding
+        win_height = welcome_window.winfo_height() + 20  # Add some padding
+
+
+        welcome_window.geometry(f"{win_width}x{win_height}")
+        self.tk.eval(f'tk::PlaceWindow {welcome_window} center')
+
+
+        self.raise_above_all(welcome_window)
 
     def raise_above_all(self, window):
         """
@@ -335,6 +336,7 @@ class PfadsuchApp(Tk):
         Spring einen Schritt in der Ausführung zurück
         :return:
         """
+        self.gui_frame.close_shortest_path_window()
         if self.debug:
             print("prev step")
         if self.steps_finished_algorithm == []:
