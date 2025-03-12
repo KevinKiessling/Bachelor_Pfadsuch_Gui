@@ -1460,13 +1460,14 @@ class Pseudocode_Frame(Frame):
             return
 
         if self.animation_step == 0:
+            # Step 0: Highlight target node
             target_distance = next(dist for dist, node in self.temp_queue if node == self.target_node)
             self.draw_priority_queue(
                 self.temp_queue,
                 highlight_node=self.target_node,
                 highlight_distance=target_distance
             )
-            self.priority_queue_label.config(text=f"Markiere Zielknoten {self.target_node}")
+            self.priority_queue_label.config(text=f"Lösche Knoten {self.target_node}")
             self.animation_step += 1
             self.after_id = self.canvas.after(1000, self.run_remove_node_heapify_step)
 
@@ -1474,23 +1475,23 @@ class Pseudocode_Frame(Frame):
 
             for i, (dist, node) in enumerate(self.temp_queue):
                 if node == self.target_node:
-                    self.temp_queue[i] = self.temp_queue[-1]
-                    self.temp_queue[-1] = ("empty", None)
+                    self.temp_queue[i] = ("empty", None)
                     self.swapped_index = i
                     break
             self.draw_priority_queue(self.temp_queue)
-            self.priority_queue_label.config(text=f"Knoten {self.target_node} mit dem letzten Knoten getauscht")
+            self.priority_queue_label.config(text=f"Knoten {self.target_node} wird entfernt")
             self.animation_step += 1
             self.after_id = self.canvas.after(1000, self.run_remove_node_heapify_step)
 
         elif self.animation_step == 2:
 
+            self.temp_queue[self.swapped_index], self.temp_queue[-1] = self.temp_queue[-1], self.temp_queue[
+                self.swapped_index]
             self.temp_queue.pop()
             self.draw_priority_queue(self.temp_queue)
-            self.priority_queue_label.config(
-                text=f"Leerer Knoten entfernt. Heap wird neu aufgebaut...")
+            self.priority_queue_label.config(text=f"Knoten an letzter Position wird an freie Stelle verschoben")
             self.animation_step += 1
-            self.after_id = self.canvas.after(2000, self.run_remove_node_heapify_step)
+            self.after_id = self.canvas.after(1000, self.run_remove_node_heapify_step)
 
         elif self.animation_step == 3:
 
