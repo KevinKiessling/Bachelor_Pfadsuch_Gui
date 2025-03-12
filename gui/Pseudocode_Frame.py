@@ -1479,7 +1479,7 @@ class Pseudocode_Frame(Frame):
                     self.swapped_index = i
                     break
             self.draw_priority_queue(self.temp_queue)
-            self.priority_queue_label.config(text=f"Knoten {self.target_node} wird entfernt")
+            self.priority_queue_label.config(text=f"Knoten {self.target_node} wurde entfernt")
             self.animation_step += 1
             self.after_id = self.canvas.after(1000, self.run_remove_node_heapify_step)
 
