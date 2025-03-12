@@ -56,7 +56,7 @@ class PfadsuchApp(Tk):
         self.color_discovered_false = "#00ff40"
         self.color_default = "yellow"
         self.color_edge_highlight = "#4ecdf8"
-        self.color_shortest_path = "light blue"
+        self.color_shortest_path = "#cfa872"
 
         self.show_distance_on_nodes = False
         self.title("Eine Gui zur Visualisierung von Pfad-Such-Algorithmen")

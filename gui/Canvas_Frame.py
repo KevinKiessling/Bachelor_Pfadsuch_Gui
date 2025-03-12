@@ -1362,7 +1362,7 @@ class Canvas_Frame(Frame):
 
             self.parent.save_config()
             settings_window.destroy()
-            self.parent.update_gui()
+            self.parent.update_gui(show_popup=False)
 
 
         # COLOR TAB
@@ -1372,7 +1372,7 @@ class Canvas_Frame(Frame):
             "color_discovered_true": "orange",
             "color_discovered_false": "#00ff40",
             "color_edge_highlight": "#4ecdf8",
-            "color_shortest_path": "light blue"
+            "color_shortest_path": "#cfa872"
         }
 
         color_tab = Frame(notebook)

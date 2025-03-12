@@ -580,54 +580,70 @@ class Pseudocode_Frame(Frame):
             if step == "Pick Node":
                 self.highlight_step("Pick Node")
                 self.set_step("Wähle Knoten")
+                self.pseudocode_display.see(f"{3}.0")
             if step == "Set Start Node Distance":
                 self.highlight_step("Set Start Node Distance")
                 self.set_step("Setze Distanz von Startknoten")
                 self.highlight_row(current_node)
+                self.pseudocode_display.see(f"{4}.0")
             if step == "Push Start Node to Priority Queue":
                 self.highlight_step("Push Start Node to Priority Queue")
                 self.set_step("Füge Startknoten dem Heap hinzu")
+                self.pseudocode_display.see(f"{4}.0")
             if step == "Heap Pop":
                 self.highlight_step("Heap Pop")
                 self.set_step("Entferne das oberste Heap Element")
+                self.pseudocode_display.see(f"{6}.0")
             if step == "Algorithm Finished":
                 self.highlight_step("Algorithm Finished")
                 self.set_step("Algorithmus abgeschlossen")
+                self.pseudocode_display.see(f"{4}.0")
             if step == "Visit Node":
                 self.highlight_step("Visit Node")
                 self.set_step("Setzte Knoten als Besucht")
+                self.pseudocode_display.see(f"{8}.0")
             if step == "Compare Distance":
                 self.highlight_step("Compare Distance")
                 self.highlight_row(current_node, step_for_highlighting_table["neighbor"])
                 self.set_step("Vergleiche Distanz")
+                self.pseudocode_display.see(f"{11}.0")
             if step == "Highlight Edge":
                 self.highlight_step("Highlight Edge")
                 self.set_step("Wähle Kante wobei Zielknoten nicht vorher besucht")
+                self.pseudocode_display.see(f"{10}.0")
             if step == "Begin Outer Loop":
                 self.highlight_step("Begin Outer Loop")
                 self.set_step("Solange der Heap nicht leer is")
+                self.pseudocode_display.see(f"{5}.0")
             if step == "Begin Inner Loop":
                 self.highlight_step("Begin Inner Loop")
                 self.set_step("Iteriere über alle ausgehenden Kanten")
+                self.pseudocode_display.see(f"{9}.0")
             if step == "Update Distance":
                 self.highlight_step("Update Distance")
                 self.highlight_row(current_node, step_for_highlighting_table["neighbor"])
                 self.set_step("Update Distanzen")
+                self.pseudocode_display.see(f"{12}.0")
             if step == "Push to Heap":
                 self.highlight_step("Push to Heap")
                 self.set_step("Füge neue Distanz in den Heap ein")
+                self.pseudocode_display.see(f"{13}.0")
             if step == "Skip Visited Node":
                 self.highlight_step("Skip Visited Node")
                 self.set_step("Überspringe bereits bearbeitete Knoten")
+                self.pseudocode_display.see(f"{7}.0")
             if step == "Skip Visited Neighbor":
                 self.highlight_step("Skip Visited Neighbor")
                 self.set_step("Überspringe Kante zu bereits besuchten Knoten")
+                self.pseudocode_display.see(f"{10}.0")
             if step == "Priority Queue Empty":
                 self.highlight_step("Priority Queue Empty")
                 self.set_step("Keine Elemente In Priority Queue übrig")
+                self.pseudocode_display.see(f"{5}.0")
             if step == "Check if visited":
                 self.highlight_step("Check if visited")
                 self.set_step("Prüfe ob Knoten bereits besucht wurde")
+                self.pseudocode_display.see(f"{7}.0")
 
         if self.parent.selected_algorithm == "Dijkstra_PQ":
             if step == "Initialize Node Distance":
@@ -642,60 +658,78 @@ class Pseudocode_Frame(Frame):
             if step == "Pick Node":
                 self.highlight_step("Pick Node")
                 self.set_step("Wähle Knoten")
+                self.pseudocode_display.see(f"{3}.0")
             if step == "Set Start Node Distance":
                 self.highlight_step("Set Start Node Distance")
                 self.set_step("Initialisiere Distanz des Startknotens")
                 self.highlight_row(current_node)
+                self.pseudocode_display.see(f"{4}.0")
             if step == "Push Start Node to Priority Queue":
                 self.highlight_step("Push Start Node to Priority Queue")
                 self.set_step("Füge Startknoten dem Heap hinzu")
+                self.pseudocode_display.see(f"{4}.0")
             if step == "Heap Pop":
                 self.highlight_step("Heap Pop")
                 self.set_step("Entferne das oberste Heap Element")
+                self.pseudocode_display.see(f"{6}.0")
             if step == "Algorithm Finished":
                 self.highlight_step("Algorithm Finished")
                 self.set_step("Algorithmus abgeschlossen")
+                self.pseudocode_display.see(f"{5}.0")
             if step == "Visit Node":
                 self.highlight_step("Visit Node")
                 self.set_step("Setzte Knoten als Besucht")
+                self.pseudocode_display.see(f"{7}.0")
             if step == "Compare Distance":
                 self.highlight_step("Compare Distance")
                 self.highlight_row(current_node, step_for_highlighting_table["neighbor"])
                 self.set_step("Vergleiche Distanz")
+                self.pseudocode_display.see(f"{10}.0")
             if step == "Highlight Edge":
                 self.highlight_step("Highlight Edge")
                 self.set_step("Wähle Kante wobei Zielknoten nicht vorher besucht")
+                self.pseudocode_display.see(f"{9}.0")
             if step == "Begin Outer Loop":
                 self.highlight_step("Begin Outer Loop")
                 self.set_step("Solange der Heap nicht leer is")
+                self.pseudocode_display.see(f"{5}.0")
             if step == "Begin Inner Loop":
                 self.highlight_step("Begin Inner Loop")
                 self.set_step("Iteriere über alle ausgehenden Kanten")
+                self.pseudocode_display.see(f"{8}.0")
             if step == "Update Distance":
                 self.highlight_step("Update Distance")
                 self.highlight_row(current_node, step_for_highlighting_table["neighbor"])
                 self.set_step("Update Distanzen")
+                self.pseudocode_display.see(f"{13}.0")
             if step == "Push to Heap":
                 self.highlight_step("Push to Heap")
                 self.set_step("Pushe neue Distanz auf Heap")
+                self.pseudocode_display.see(f"{14}.0")
             if step == "Skip Visited Node":
                 self.highlight_step("Skip Visited Node")
                 self.set_step("Überspringe bereits bearbeitete Knoten")
+                self.pseudocode_display.see(f"{9}.0")
             if step == "Skip Visited Neighbor":
                 self.highlight_step("Skip Visited Neighbor")
                 self.set_step("Überspringe Kante zu bereits besuchten Knoten")
+                self.pseudocode_display.see(f"{9}.0")
             if step == "Priority Queue Empty":
                 self.highlight_step("Priority Queue Empty")
                 self.set_step("Keine Elemente In Priority Queue übrig")
+                self.pseudocode_display.see(f"{5}.0")
             if step == "Check if visited":
                 self.highlight_step("Check if visited")
                 self.set_step("Prüfe ob Knoten bereits besucht wurde")
+                self.pseudocode_display.see(f"{9}.0")
             if step == "Find Position in Heap":
                 self.highlight_step("Find Position in Heap")
                 self.set_step("Finde Position i von v im Heap")
+                self.pseudocode_display.see(f"{11}.0")
             if step == "Remove from Heap":
                 self.highlight_step("Remove from Heap")
                 self.set_step("Entferne Element an Position i aus dem Heap")
+                self.pseudocode_display.see(f"{12}.0")
 
 
         if self.parent.selected_algorithm == "Dijkstra_List":
@@ -703,7 +737,7 @@ class Pseudocode_Frame(Frame):
                 self.highlight_step("Initialize Node Distance")
                 self.set_step("Initialisiere Knoten Distanzen")
                 self.highlight_row(current_node)
-                self.pseudocode_display.see(f"{3}.0")
+                self.pseudocode_display.see(f"{4}.0")
             if step == "Initialize Visited":
                 self.highlight_step("Initialize Visited")
                 self.set_step("Initialisiere besuchte Knoten")
@@ -711,66 +745,85 @@ class Pseudocode_Frame(Frame):
             if step == "Pick Node_1":
                 self.highlight_step("Pick Node_1")
                 self.set_step("Wähle Knoten")
+                self.pseudocode_display.see(f"{3}.0")
             if step == "Pick Node_2":
                 self.highlight_step("Pick Node_2")
                 self.set_step("Wähle Knoten")
+                self.pseudocode_display.see(f"{4}.0")
             if step == "Pick Node_3":
                 self.highlight_step("Pick Node_3")
                 self.set_step("Wähle Knoten")
+                self.pseudocode_display.see(f"{6}.0")
             if step == "Set Start Node Distance":
                 self.highlight_step("Set Start Node Distance")
                 self.set_step("Setze Distanz von Startknoten")
                 self.highlight_row(current_node)
+                self.pseudocode_display.see(f"{5}.0")
             if step == "Initialize List":
                 self.highlight_step("Initialize List")
                 self.set_step("Initialisiere List")
+                self.pseudocode_display.see(f"{5}.0")
             if step == "Add Node to List":
                 self.highlight_step("Add Node to List")
                 self.set_step("Füge Knoten der Liste hinzu")
+                self.pseudocode_display.see(f"{6}.0")
             if step == "Algorithm Finished":
                 self.highlight_step("Algorithm Finished")
                 self.set_step("Algorithmus abgeschlossen")
+                self.pseudocode_display.see(f"{7}.0")
             if step == "Visit Node":
                 self.highlight_step("Visit Node")
                 self.set_step("Setzte Knoten als Besucht")
+                self.pseudocode_display.see(f"{10}.0")
             if step == "Compare Distance":
                 self.highlight_step("Compare Distance")
                 self.highlight_row(current_node, step_for_highlighting_table["neighbor"])
                 self.set_step("Vergleiche Distanz")
+                self.pseudocode_display.see(f"{13}.0")
             if step == "Highlight Edge":
                 self.highlight_step("Highlight Edge")
                 self.set_step("Wähle Kante wobei Zielknoten nicht vorher besucht")
+                self.pseudocode_display.see(f"{12}.0")
             if step == "Begin Outer Loop":
                 self.highlight_step("Begin Outer Loop")
                 self.set_step("Solange die Liste nicht leer is")
+                self.pseudocode_display.see(f"{7}.0")
             if step == "Begin Inner Loop":
                 self.highlight_step("Begin Inner Loop")
                 self.set_step("Iteriere über alle ausgehenden Kanten")
+                self.pseudocode_display.see(f"{11}.0")
             if step == "Update Distance":
                 self.highlight_step("Update Distance")
                 self.highlight_row(current_node, step_for_highlighting_table["neighbor"])
                 self.set_step("Update Distanzen")
+                self.pseudocode_display.see(f"{13}.0")
             if step == "Find Min in List":
                 self.highlight_step("Find Min in List")
                 self.set_step("Finde minimal Distanz in der List")
+                self.pseudocode_display.see(f"{8}.0")
             if step == "Skip Visited Node":
                 self.highlight_step("Skip Visited Node")
                 self.set_step("Überspringe bereits bearbeitete Knoten")
+                self.pseudocode_display.see(f"{8}.0")
             if step == "Skip Visited Neighbor":
                 self.highlight_step("Skip Visited Neighbor")
                 self.set_step("Überspringe Kante zu bereits besuchten Knoten")
+                self.pseudocode_display.see(f"{12}.0")
             if step == "Remove min from List":
                 self.highlight_step("Remove min from List")
                 self.set_step("Entferne Minimum aus der Liste")
+                self.pseudocode_display.see(f"{8}.0")
             if step == "Check if visited":
                 self.highlight_step("Check if visited")
                 self.set_step("Prüfe ob Knoten bereits besucht wurde")
             if step == "Visit Node u ":
                 self.highlight_step("Visit Node u ")
                 self.set_step("Setze Knoten u als besucht ")
+                self.pseudocode_display.see(f"{10}.0")
             if step == "List Empty":
                 self.highlight_step("List Empty")
                 self.set_step("Liste ist leer")
+                self.pseudocode_display.see(f"{7}.0")
 
 
         #if self.parent.selected_algorithm == "Dijkstra_List":
