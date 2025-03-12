@@ -465,7 +465,9 @@ class Graph_Visualizer_Dijkstra_lazy:
             # Add any other step types with different weight colors as needed
         weight_text = str(weight)
         text_width = len(weight_text) * 8
-
+        #print(distance)
+        if distance == 0:
+            distance = distance + 1
         middle_space += text_width / distance * 1.5
 
         segment_dx = dx / distance * middle_space * distance
