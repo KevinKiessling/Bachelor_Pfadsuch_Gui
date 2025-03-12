@@ -60,11 +60,11 @@ class Canvas_Frame(Frame):
 
         self.pause_button = Button(self.button_frame, image=self.pause_icon, command=parent.pause, state=DISABLED)
         self.pause_button.grid(row=0, column=3, padx=5)
-        Hovertip(self.pause_button, "Pausiert automatische Wiedergabe")
+        Hovertip(self.pause_button, "Pausiere automatische Wiedergabe")
 
         self.fast_forward_button = Button(self.button_frame, image=self.fast_forward_icon, command=self.go_forward_button)
         self.fast_forward_button.grid(row=0, column=4, padx=5)
-        Hovertip(self.fast_forward_button, "Startet automatische Wiedergabe")
+        Hovertip(self.fast_forward_button, "Starte automatische Wiedergabe")
 
         self.starting_button = Button(
             self.button_frame, image=self.start_icon, command=parent.start_algorithm, width=20

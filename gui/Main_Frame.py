@@ -101,7 +101,7 @@ class PfadsuchApp(Tk):
                                            "Startknoten wählen:\n"
                                            "• Doppelklick auf einen Knoten\n\n"
                                            "Algorithmus starten:\n"
-                                           "• Klicken Sie auf 'Start', '1 Schritt vor' oder 'Vorspulen'\n\n"
+                                           "• Klicken Sie auf 'Algorithmus starten', '1 Schritt vor' oder 'Starte automatische Wiedergabe' in der Symbolleiste\n\n"
                                            "Knoten erstellen:\n"
                                            "• Linksklick auf den Canvas\n\n"
                                            "Kanten erstellen:\n"
