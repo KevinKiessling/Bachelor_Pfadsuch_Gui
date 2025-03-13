@@ -21,7 +21,7 @@ class PfadsuchApp(Tk):
     CONFIG_FILE = "config.json"
     def __init__(self):
         super().__init__()
-        self.enable_tests = True
+        self.enable_tests = False
 
         self.show_welcome = True
 
