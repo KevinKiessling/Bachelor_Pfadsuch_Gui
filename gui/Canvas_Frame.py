@@ -409,7 +409,7 @@ class Canvas_Frame(Frame):
                 continue
             button = Button(
                 scrollable_frame,
-                text=f"Zeichne kürzesten Pfad zu {end_node}",
+                text=f"Kürzester Pfad zu {end_node}",
                 command=lambda node=end_node: self.on_button_click(node, self.shortest_paths_window)
             )
             button.grid(row=index, column=0, sticky="ew", padx=5, pady=5)
@@ -901,7 +901,7 @@ class Canvas_Frame(Frame):
 
         description_text = (
             "Der Heap wird als Binärbaum dargestellt. Jeder Knoten v hat die Form:\n"
-            "(v, d[v])\n"
+            "(v, d[v]), dabei ist d[v] die Distanz vom Startknoten zum Knoten v\n"
         )
 
         Label(features_tab, text=description_text, justify="left", wraplength=750, font=custom_font).pack(padx=20,
@@ -1006,7 +1006,7 @@ class Canvas_Frame(Frame):
         description_text = (
             "Die Liste enthält die Knoten und ihre Distanzen in der Form:\n"
             "(Knoten, d[Knoten] = Distanz)\n"
-            "Dabei repräsentiert d[Knoten] den aktuellen Abstand des Knotens zum Startknoten.\n"
+            "Dabei repräsentiert d[Knoten] die aktuelle Distanz vom Startknoten zum Knoten.\n"
         )
 
         Label(list_tab, text=description_text, justify="left", wraplength=750, font=custom_font).pack(padx=20, pady=10)

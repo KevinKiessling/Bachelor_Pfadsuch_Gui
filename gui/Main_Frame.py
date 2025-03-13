@@ -554,6 +554,7 @@ class PfadsuchApp(Tk):
         self.gui_frame.shortest_paths_button.config(state=DISABLED)
         if self.current_step == -1:
             self.code_frame.set_step("Warte auf Starten eines Algorithmus")
+            self.code_frame.pseudocode_display.see(f"{1}.0")
             if self.selected_algorithm == "Dijkstra_PQ_lazy":
                 self.graph_draw_lazy.draw_graph_dijkstra_lazy(None, None, {node: None for node in self.graph}, set(), set())
             if self.selected_algorithm == "Dijkstra_PQ":

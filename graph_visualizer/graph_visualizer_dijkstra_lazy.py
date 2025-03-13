@@ -208,13 +208,17 @@ class Graph_Visualizer_Dijkstra_lazy:
                 # Überspringe besuchte Nachbarn
                 if step["step_type"] == "Skip Visited Neighbor":
                     color = "light grey"
+                    dis_color = "grey"
+
                     # if visited[node]:
                     # color = discovered_node_true_color
                     if node == current_node:
                         color = "yellow"
+                        dis_color = "black"
                     # if not visited[node]:
                     # color = discovered_node_false_color
                     if node in neighbor_list:
+                        dis_color = "black"
                         color = discovered_node_true_color
 
                 #Priority Queue is leer, alles gray
