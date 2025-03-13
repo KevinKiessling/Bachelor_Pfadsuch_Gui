@@ -244,7 +244,8 @@ class Canvas_Frame(Frame):
         scale_y = new_height / self.initial_height
         average_scale = (scale_x + scale_y) / 2
 
-        self.parent.node_rad = self.parent.node_rad_original * average_scale
+        max_node_size = 50  # Set your desired maximum size here
+        self.parent.node_rad = min(self.parent.node_rad_original * average_scale, max_node_size)
         self.parent.font_size_edge_weight = int(self.parent.font_size_edge_weight_original * average_scale)
         self.parent.font_size_node_label = int(self.parent.font_size_node_label_original * average_scale)
 
