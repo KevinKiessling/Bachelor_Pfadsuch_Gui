@@ -95,7 +95,7 @@ class PfadsuchApp(Tk):
         """
         welcome_window = Toplevel(self)
         welcome_window.title("Willkommen")
-
+        welcome_window.withdraw()
 
         label = Label(welcome_window, text="Willkommen zur GUI zur Visualisierung von Pfad-Such-Algorithmen!\n\n"
                                            "Startknoten wählen:\n"
@@ -132,7 +132,7 @@ class PfadsuchApp(Tk):
 
         welcome_window.geometry(f"{win_width}x{win_height}")
         self.tk.eval(f'tk::PlaceWindow {welcome_window} center')
-
+        welcome_window.deiconify()
 
         self.raise_above_all(welcome_window)
 
